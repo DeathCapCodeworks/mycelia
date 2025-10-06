@@ -1,0 +1,12 @@
+node_modules/
+build/
+.docusaurus/
+.cache/
+dist/
+*.log
+*.DS_Store
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.env*
+

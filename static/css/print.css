@@ -1,0 +1,38 @@
+@page {
+  size: auto;
+  margin: 1in;
+}
+
+/* Hide chrome for print */
+.navbar,
+.theme-doc-sidebar-container,
+.theme-doc-toc-desktop {
+  display: none !important;
+}
+
+/* Expand content */
+.container,
+.theme-doc-markdown {
+  max-width: 100% !important;
+}
+
+/* Page breaks */
+h2 {
+  break-before: page;
+}
+
+/* Keep figures and captions together */
+figure {
+  break-inside: avoid;
+}
+figcaption {
+  page-break-after: avoid;
+}
+
+/* Wrap code blocks and mermaid */
+pre code,
+.mermaid {
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+}
+
