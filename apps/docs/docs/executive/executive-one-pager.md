@@ -16,6 +16,14 @@ New features
 - Context Aware Workspaces, rule based layouts.
 - BLOOM Rewards, privacy safe local decisioning.
 - Portable Social Graph, DID anchored contacts with scoped access.
+- Bitcoin Testnet Redemption, HTLC-based BLOOM to BTC exchange.
+- Proof of Reserves, SPV verification of locked Bitcoin collateral.
+- Staking Preview, validator and delegation mechanics.
+
+BLOOM Token Peg
+The BLOOM token is fixed at a hard peg of 10 BLOOM = 1 BTC. Each BLOOM is fully redeemable for BTC at the fixed rate, backed by locked Bitcoin reserves. Minting halts automatically if reserves would fall below full collateral.
+
+See [Redemption on Bitcoin Testnet](/tokenomics/redemption-bitcoin-testnet), [Proof of Reserves](/tokenomics/proof-of-reserves), and [Staking Preview](/tokenomics/staking-preview) for detailed specifications.
 
 Funding statement
 The project is backed by a treasury of $20,000,000,000, secured entirely through cash donations. This capital underwrites operations, collateralizes the treasury, and guarantees long term financial sovereignty and stability.

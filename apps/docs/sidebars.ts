@@ -19,9 +19,18 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Appendices',
+      label: 'Tokenomics',
       items: [
         'appendices/appendix-tokenomics',
+        'tokenomics/redemption-bitcoin-testnet',
+        'tokenomics/proof-of-reserves',
+        'tokenomics/staking-preview'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Appendices',
+      items: [
         'appendices/appendix-security-threat-model',
         'appendices/appendix-hiring-plan',
         'appendices/appendix-risk-register',

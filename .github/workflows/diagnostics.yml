@@ -2,7 +2,27 @@ name: diagnostics
 on: [push, pull_request]
 jobs:
   diag:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: ['20.16.0']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm run diagnose
+      - run: pnpm --filter @mycelia/diagnostics start -- --short
+
+  btc-bridge-testnet:
     runs-on: ubuntu-latest
+    if: ${{ secrets.BRIDGE_NETWORK == 'testnet' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -13,4 +33,5 @@ jobs:
         with:
           version: 9
       - run: pnpm i --frozen-lockfile
-      - run: pnpm run diagnose
+      - run: pnpm --filter @mycelia/btc-bridge test
+      - run: pnpm --filter @mycelia/redemption test

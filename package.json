@@ -19,7 +19,8 @@
     "dev:sandbox": "pnpm --filter @mycelia/navigator-sandbox dev -- --host 127.0.0.1 --port 5173",
     "dev": "concurrently -n DOCS,SANDBOX -c magenta,cyan \"pnpm run dev:docs\" \"pnpm run dev:sandbox\"",
     "diagnose": "pnpm --filter @mycelia/diagnostics build && pnpm --filter @mycelia/diagnostics start",
-    "diagnose:dev": "pnpm --filter @mycelia/diagnostics dev"
+    "diagnose:dev": "pnpm --filter @mycelia/diagnostics dev",
+    "ops:tail": "pnpm --filter @mycelia/observability start"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",

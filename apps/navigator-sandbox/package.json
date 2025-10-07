@@ -22,7 +22,10 @@
     "@mycelia/ui-components": "workspace:*",
     "@mycelia/tokenomics": "workspace:*",
     "@mycelia/proof-of-reserve": "workspace:*",
-    "@mycelia/redemption": "workspace:*"
+    "@mycelia/redemption": "workspace:*",
+    "@mycelia/btc-bridge": "workspace:*",
+    "@mycelia/staking": "workspace:*",
+    "@mycelia/observability": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.6.3",
