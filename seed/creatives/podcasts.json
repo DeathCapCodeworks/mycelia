@@ -1,0 +1,262 @@
+{
+  "episodes": [
+    {
+      "id": "episode_001",
+      "title": "The Mycelia Vision: Decentralizing the Web",
+      "description": "In this inaugural episode, we explore the vision behind Project Mycelia and how it aims to decentralize the web through personal data ownership, attention economics, and user-centric design.",
+      "hosts": [
+        {
+          "did": "did:mycelia:alice",
+          "name": "Alice Chen",
+          "role": "Lead Developer"
+        },
+        {
+          "did": "did:mycelia:charlie",
+          "name": "Charlie Kim",
+          "role": "Product Manager"
+        }
+      ],
+      "guests": [
+        {
+          "did": "did:mycelia:founder",
+          "name": "Dr. Elena Rodriguez",
+          "role": "Project Founder",
+          "bio": "Dr. Rodriguez is a renowned computer scientist and privacy advocate with over 20 years of experience in distributed systems and cryptography."
+        }
+      ],
+      "duration": 3600,
+      "audioFormat": "mp3",
+      "bitrate": 128,
+      "fileSize": 34560000,
+      "created": "2024-01-15T08:00:00Z",
+      "tags": ["vision", "decentralization", "privacy", "web4"],
+      "engagement": {
+        "listens": 1234,
+        "likes": 89,
+        "shares": 23,
+        "comments": 12,
+        "bloomEarned": 45.67,
+        "averageListenTime": 3240,
+        "completionRate": 0.90
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true
+      },
+      "chapters": [
+        {
+          "title": "Introduction and Welcome",
+          "startTime": 0,
+          "endTime": 300
+        },
+        {
+          "title": "The Problem with Today's Web",
+          "startTime": 300,
+          "endTime": 900
+        },
+        {
+          "title": "Mycelia's Solution",
+          "startTime": 900,
+          "endTime": 1800
+        },
+        {
+          "title": "Personal Data Vaults",
+          "startTime": 1800,
+          "endTime": 2400
+        },
+        {
+          "title": "BLOOM Token Economics",
+          "startTime": 2400,
+          "endTime": 3000
+        },
+        {
+          "title": "Q&A with Dr. Rodriguez",
+          "startTime": 3000,
+          "endTime": 3600
+        }
+      ],
+      "transcript": {
+        "available": true,
+        "language": "en",
+        "wordCount": 5400,
+        "accuracy": 0.95
+      }
+    },
+    {
+      "id": "episode_002",
+      "title": "Building Secure Personal Data Vaults",
+      "description": "A technical deep dive into the security architecture of Mycelia's Personal Data Vault system, featuring insights from our security team and external experts.",
+      "hosts": [
+        {
+          "did": "did:mycelia:bob",
+          "name": "Bob Rodriguez",
+          "role": "Security Architect"
+        }
+      ],
+      "guests": [
+        {
+          "did": "did:mycelia:security-expert",
+          "name": "Dr. Sarah Kim",
+          "role": "Cryptography Researcher",
+          "bio": "Dr. Kim is a leading researcher in applied cryptography and privacy-preserving technologies at Stanford University."
+        }
+      ],
+      "duration": 2700,
+      "audioFormat": "mp3",
+      "bitrate": 128,
+      "fileSize": 25920000,
+      "created": "2024-01-14T10:00:00Z",
+      "tags": ["security", "cryptography", "vault", "privacy", "technical"],
+      "engagement": {
+        "listens": 892,
+        "likes": 67,
+        "shares": 18,
+        "comments": 8,
+        "bloomEarned": 32.14,
+        "averageListenTime": 2430,
+        "completionRate": 0.85
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true
+      },
+      "chapters": [
+        {
+          "title": "Security Challenges",
+          "startTime": 0,
+          "endTime": 450
+        },
+        {
+          "title": "Encryption Architecture",
+          "startTime": 450,
+          "endTime": 900
+        },
+        {
+          "title": "Access Control Systems",
+          "startTime": 900,
+          "endTime": 1350
+        },
+        {
+          "title": "Privacy Guarantees",
+          "startTime": 1350,
+          "endTime": 1800
+        },
+        {
+          "title": "Future Security Considerations",
+          "startTime": 1800,
+          "endTime": 2700
+        }
+      ],
+      "transcript": {
+        "available": true,
+        "language": "en",
+        "wordCount": 4050,
+        "accuracy": 0.92
+      }
+    },
+    {
+      "id": "episode_003",
+      "title": "The Attention Economy Revolution",
+      "description": "Exploring how Mycelia's BLOOM token system creates a fair attention economy where users are compensated for their digital labor and attention.",
+      "hosts": [
+        {
+          "did": "did:mycelia:eve",
+          "name": "Eve Thompson",
+          "role": "Marketing Lead"
+        },
+        {
+          "did": "did:mycelia:diana",
+          "name": "Diana Patel",
+          "role": "Community Manager"
+        }
+      ],
+      "guests": [
+        {
+          "did": "did:mycelia:economist",
+          "name": "Prof. Michael Chen",
+          "role": "Behavioral Economist",
+          "bio": "Prof. Chen specializes in digital economics and attention markets at MIT's Sloan School of Management."
+        }
+      ],
+      "duration": 3300,
+      "audioFormat": "mp3",
+      "bitrate": 128,
+      "fileSize": 31680000,
+      "created": "2024-01-13T15:00:00Z",
+      "tags": ["attention-economy", "bloom", "tokenomics", "economics"],
+      "engagement": {
+        "listens": 1567,
+        "likes": 134,
+        "shares": 45,
+        "comments": 23,
+        "bloomEarned": 78.92,
+        "averageListenTime": 2970,
+        "completionRate": 0.88
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true
+      },
+      "chapters": [
+        {
+          "title": "The Current Attention Economy",
+          "startTime": 0,
+          "endTime": 600
+        },
+        {
+          "title": "Problems with Surveillance Capitalism",
+          "startTime": 600,
+          "endTime": 1200
+        },
+        {
+          "title": "BLOOM Token Design",
+          "startTime": 1200,
+          "endTime": 1800
+        },
+        {
+          "title": "Proof of Contribution",
+          "startTime": 1800,
+          "endTime": 2400
+        },
+        {
+          "title": "Sustainable Tokenomics",
+          "startTime": 2400,
+          "endTime": 3000
+        },
+        {
+          "title": "Community Discussion",
+          "startTime": 3000,
+          "endTime": 3300
+        }
+      ],
+      "transcript": {
+        "available": true,
+        "language": "en",
+        "wordCount": 4950,
+        "accuracy": 0.94
+      }
+    }
+  ],
+  "metadata": {
+    "totalEpisodes": 3,
+    "totalDuration": 9600,
+    "totalListens": 3693,
+    "totalLikes": 290,
+    "totalShares": 86,
+    "totalComments": 43,
+    "totalBloomEarned": 156.73,
+    "averageListenTime": 2880,
+    "averageCompletionRate": 0.88,
+    "mostPopularTag": "attention-economy",
+    "lastUpdated": "2024-01-15T08:00:00Z"
+  }
+}

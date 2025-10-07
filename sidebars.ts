@@ -1,19 +1,13 @@
-import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
-  myceliaSidebar: [
-    {
-      type: 'category',
-      label: 'Executive',
-      collapsed: false,
-      items: ['executive/executive-one-pager']
-    },
+  docs: [
+    'index',
+    { type: 'category', label: 'Executive', items: ['executive/executive-one-pager'] },
     {
       type: 'category',
       label: 'Full Report',
-      collapsed: false,
       items: [
-        'index',
         'report/mycelia-comprehensive-report',
         'report/part-1-blockchain-and-bloom',
         'report/part-2-core-applications',
@@ -25,7 +19,6 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Appendices',
-      collapsed: false,
       items: [
         'appendices/appendix-tokenomics',
         'appendices/appendix-security-threat-model',
@@ -37,21 +30,27 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Diagrams',
-      collapsed: false,
       items: [
         'diagrams/l1-architecture',
         'diagrams/mining-flow',
         'diagrams/navigator-layers',
         'diagrams/roadmap-gantt',
-        'diagrams/data-flows'
+        'diagrams/data-flows',
+        'diagrams/peg-flow',
+        'diagrams/proof-of-reserves'
       ]
     },
     {
       type: 'category',
-      label: 'Reference',
-      collapsed: false,
-      items: ['references/references']
-    }
+      label: 'Developer Documentation',
+      items: [
+        'developer-guide',
+        'api-reference',
+        'tutorials',
+        'testing-guide'
+      ]
+    },
+    'references/references'
   ]
 };
 

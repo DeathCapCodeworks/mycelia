@@ -1,0 +1,25 @@
+{
+  "name": "@mycelia/docs",
+  "private": true,
+  "version": "0.1.0",
+  
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "serve": "docusaurus serve --dir build",
+    "fmt": "prettier -w ."
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.9.1",
+    "@docusaurus/preset-classic": "3.9.1",
+    "@docusaurus/theme-mermaid": "3.9.1",
+    "@mermaid-js/layout-elk": "^0.1.4",
+    "@mycelia/ui-components": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
+

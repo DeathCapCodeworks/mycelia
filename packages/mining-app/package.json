@@ -1,0 +1,26 @@
+{
+  "name": "@mycelia/mining-app",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mycelia/shared-kernel": "workspace:*",
+    "@mycelia/tokenomics": "workspace:*",
+    "@mycelia/bloom-rewards": "workspace:*",
+    "@mycelia/redemption": "workspace:*",
+    "ipfs-core": "^0.18.1",
+    "ipfs-http-client": "^60.0.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.1",
+    "@types/node": "^20.12.12"
+  }
+}

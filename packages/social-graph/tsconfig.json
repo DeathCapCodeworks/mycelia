@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@mycelia/shared-kernel": ["../shared-kernel/dist/src"],
+      "@mycelia/vault-adapter-local": ["../vault-adapter-local/dist/src"]
+    }
+  },
+  "include": ["src", "vitest.config.ts"]
+}
+

@@ -1,28 +1,33 @@
 {
-  "name": "mycelia-docs",
+  "name": "mycelia",
   "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "engines": { "node": ">=20 <21", "npm": ">=9" },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "start": "docusaurus start",
-    "build": "docusaurus build",
-    "serve": "docusaurus serve build",
-    "fmt": "prettier -w .",
-    "lint": "eslint . --ext .ts,.tsx,.md,.mdx || true"
-  },
-  "dependencies": {
-    "@docusaurus/core": "^3.5.2",
-    "@docusaurus/preset-classic": "^3.5.2",
-    "@docusaurus/theme-mermaid": "^3.5.2",
-    "@mermaid-js/layout-elk": "^0.1.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "preinstall": "node -e \"const v=+process.versions.node.split('.')[0]; if(v<20||v>=21){console.error('Node 20 required'); process.exit(1)}\"",
+    "bootstrap": "pnpm i",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint || true",
+    "typecheck": "pnpm -r typecheck || true",
+    "dev:docs": "pnpm --filter @mycelia/docs start -- --host 127.0.0.1 --port 3000",
+    "serve:docs": "pnpm --filter @mycelia/docs serve -- --host 127.0.0.1 --port 3000",
+    "dev:sandbox": "pnpm --filter @mycelia/navigator-sandbox dev -- --host 127.0.0.1 --port 5173",
+    "dev": "concurrently -n DOCS,SANDBOX -c magenta,cyan \"pnpm run dev:docs\" \"pnpm run dev:sandbox\"",
+    "diagnose": "pnpm --filter @mycelia/diagnostics build && pnpm --filter @mycelia/diagnostics start",
+    "diagnose:dev": "pnpm --filter @mycelia/diagnostics dev"
   },
   "devDependencies": {
+    "concurrently": "^9.0.1",
     "eslint": "^9.11.1",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3",
-    "@easyops-cn/docusaurus-search-local": "^0.46.1"
+    "vitest": "^2.1.1",
+    "@types/node": "^20.12.12"
   }
 }
 

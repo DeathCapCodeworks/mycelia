@@ -1,0 +1,187 @@
+{
+  "conversations": [
+    {
+      "id": "conv_001",
+      "participants": [
+        {
+          "did": "did:mycelia:alice",
+          "name": "Alice Chen",
+          "role": "Lead Developer"
+        },
+        {
+          "did": "did:mycelia:bob",
+          "name": "Bob Rodriguez",
+          "role": "Security Architect"
+        },
+        {
+          "did": "did:mycelia:charlie",
+          "name": "Charlie Kim",
+          "role": "Product Manager"
+        }
+      ],
+      "title": "Mycelia Oracle Agent Implementation",
+      "created": "2024-01-15T09:00:00Z",
+      "lastMessage": "2024-01-15T11:30:00Z",
+      "messages": [
+        {
+          "id": "msg_001",
+          "sender": "did:mycelia:alice",
+          "timestamp": "2024-01-15T09:00:00Z",
+          "content": "Hey team, I've been working on the Oracle agent implementation. The local search functionality is working well, but I'm running into some performance issues with large datasets.",
+          "type": "text"
+        },
+        {
+          "id": "msg_002",
+          "sender": "did:mycelia:bob",
+          "timestamp": "2024-01-15T09:15:00Z",
+          "content": "What kind of performance issues are you seeing? Are we hitting memory limits or is it more about query response times?",
+          "type": "text"
+        },
+        {
+          "id": "msg_003",
+          "sender": "did:mycelia:alice",
+          "timestamp": "2024-01-15T09:30:00Z",
+          "content": "Both actually. When I load a user's full browser history (which can be 10k+ entries), the initial indexing takes about 30 seconds. Query times are acceptable once indexed, but the startup delay is problematic.",
+          "type": "text"
+        },
+        {
+          "id": "msg_004",
+          "sender": "did:mycelia:charlie",
+          "timestamp": "2024-01-15T09:45:00Z",
+          "content": "That's a UX concern. Users expect near-instant startup. Can we implement lazy loading or background indexing?",
+          "type": "text"
+        },
+        {
+          "id": "msg_005",
+          "sender": "did:mycelia:alice",
+          "timestamp": "2024-01-15T10:00:00Z",
+          "content": "Good idea. I'm thinking we could: 1) Load recent data first (last 30 days), 2) Index older data in background, 3) Use Web Workers for non-blocking processing. Thoughts?",
+          "type": "text"
+        },
+        {
+          "id": "msg_006",
+          "sender": "did:mycelia:bob",
+          "timestamp": "2024-01-15T10:15:00Z",
+          "content": "That approach sounds solid. We should also consider implementing HNSW indexing for better search performance. I can help with the Web Worker implementation to ensure it doesn't block the main thread.",
+          "type": "text"
+        },
+        {
+          "id": "msg_007",
+          "sender": "did:mycelia:alice",
+          "timestamp": "2024-01-15T10:30:00Z",
+          "content": "Perfect! I'll start with the lazy loading approach and we can add HNSW later. Should I create a PR with the current implementation so you can review the Web Worker integration?",
+          "type": "text"
+        },
+        {
+          "id": "msg_008",
+          "sender": "did:mycelia:charlie",
+          "timestamp": "2024-01-15T11:00:00Z",
+          "content": "Yes, please. Also, let's make sure we have proper error handling for cases where indexing fails. Users should still be able to use basic search even if background indexing encounters issues.",
+          "type": "text"
+        },
+        {
+          "id": "msg_009",
+          "sender": "did:mycelia:alice",
+          "timestamp": "2024-01-15T11:30:00Z",
+          "content": "Absolutely. I'll implement fallback to simple text search if HNSW indexing fails. PR should be ready by EOD. Thanks for the feedback!",
+          "type": "text"
+        }
+      ],
+      "tags": ["development", "oracle", "performance", "ux"],
+      "workspace": "mycelia-dev"
+    },
+    {
+      "id": "conv_002",
+      "participants": [
+        {
+          "did": "did:mycelia:diana",
+          "name": "Diana Patel",
+          "role": "Community Manager"
+        },
+        {
+          "did": "did:mycelia:eve",
+          "name": "Eve Thompson",
+          "role": "Marketing Lead"
+        }
+      ],
+      "title": "Community Feedback on BLOOM Rewards",
+      "created": "2024-01-14T16:00:00Z",
+      "lastMessage": "2024-01-15T08:45:00Z",
+      "messages": [
+        {
+          "id": "msg_010",
+          "sender": "did:mycelia:diana",
+          "timestamp": "2024-01-14T16:00:00Z",
+          "content": "Hey Eve, I've been collecting feedback from our community about the BLOOM rewards system. There's some interesting patterns emerging.",
+          "type": "text"
+        },
+        {
+          "id": "msg_011",
+          "sender": "did:mycelia:eve",
+          "timestamp": "2024-01-14T16:30:00Z",
+          "content": "What are you seeing? I'm curious about user sentiment around the attention economy concept.",
+          "type": "text"
+        },
+        {
+          "id": "msg_012",
+          "sender": "did:mycelia:diana",
+          "timestamp": "2024-01-14T17:00:00Z",
+          "content": "Overall positive, but there are concerns about privacy. Users like the idea of earning tokens for attention, but they want more control over what gets tracked. Some are worried about 'surveillance capitalism' vibes.",
+          "type": "text"
+        },
+        {
+          "id": "msg_013",
+          "sender": "did:mycelia:eve",
+          "timestamp": "2024-01-14T17:30:00Z",
+          "content": "That's a valid concern. We need to emphasize the opt-in nature and local processing. Maybe we should create some educational content about how the attention tracking works?",
+          "type": "text"
+        },
+        {
+          "id": "msg_014",
+          "sender": "did:mycelia:diana",
+          "timestamp": "2024-01-15T08:00:00Z",
+          "content": "Great idea. I'm also seeing requests for more granular controls - like being able to opt out of tracking for specific apps or time periods. Should we prioritize this for the next release?",
+          "type": "text"
+        },
+        {
+          "id": "msg_015",
+          "sender": "did:mycelia:eve",
+          "timestamp": "2024-01-15T08:45:00Z",
+          "content": "Definitely. User control is core to our privacy-first approach. Let's schedule a meeting with the product team to discuss implementation priorities.",
+          "type": "text"
+        }
+      ],
+      "tags": ["community", "bloom", "privacy", "feedback"],
+      "workspace": "mycelia-community"
+    }
+  ],
+  "contacts": [
+    {
+      "did": "did:mycelia:alice",
+      "name": "Alice Chen",
+      "email": "alice@mycelia.network",
+      "role": "Lead Developer",
+      "lastContact": "2024-01-15T11:30:00Z",
+      "relationship": "colleague",
+      "permissions": ["chat", "calendar", "documents"]
+    },
+    {
+      "did": "did:mycelia:bob",
+      "name": "Bob Rodriguez",
+      "email": "bob@mycelia.network",
+      "role": "Security Architect",
+      "lastContact": "2024-01-15T10:15:00Z",
+      "relationship": "colleague",
+      "permissions": ["chat", "calendar", "documents"]
+    },
+    {
+      "did": "did:mycelia:charlie",
+      "name": "Charlie Kim",
+      "email": "charlie@mycelia.network",
+      "role": "Product Manager",
+      "lastContact": "2024-01-15T11:00:00Z",
+      "relationship": "colleague",
+      "permissions": ["chat", "calendar"]
+    }
+  ]
+}

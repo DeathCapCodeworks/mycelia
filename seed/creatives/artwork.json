@@ -1,0 +1,180 @@
+{
+  "artworks": [
+    {
+      "id": "artwork_001",
+      "title": "Mycelia Network Visualization",
+      "description": "A dynamic visualization of the Mycelia network showing interconnected Personal Data Vaults, BLOOM token flows, and social graph connections.",
+      "creator": {
+        "did": "did:mycelia:artist1",
+        "name": "Alex Rivera",
+        "role": "Digital Artist"
+      },
+      "type": "interactive-visualization",
+      "format": "svg",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "fileSize": 245000,
+      "created": "2024-01-15T12:00:00Z",
+      "tags": ["network", "visualization", "interactive", "mycelia"],
+      "engagement": {
+        "views": 2345,
+        "likes": 189,
+        "shares": 45,
+        "comments": 23,
+        "bloomEarned": 67.89,
+        "interactions": 1234
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true,
+        "allowModification": false
+      },
+      "technical": {
+        "frameworks": ["d3.js", "react"],
+        "dataSources": ["network-topology", "token-flows", "social-graph"],
+        "interactivity": ["zoom", "pan", "filter", "animate"],
+        "responsive": true
+      }
+    },
+    {
+      "id": "artwork_002",
+      "title": "Personal Data Vault Architecture Diagram",
+      "description": "A detailed technical diagram showing the layered architecture of Mycelia's Personal Data Vault system, including encryption, access controls, and data flows.",
+      "creator": {
+        "did": "did:mycelia:architect1",
+        "name": "Maria Santos",
+        "role": "System Architect"
+      },
+      "type": "technical-diagram",
+      "format": "png",
+      "dimensions": {
+        "width": 2560,
+        "height": 1440
+      },
+      "fileSize": 890000,
+      "created": "2024-01-14T16:30:00Z",
+      "tags": ["architecture", "vault", "security", "technical"],
+      "engagement": {
+        "views": 1456,
+        "likes": 98,
+        "shares": 34,
+        "comments": 12,
+        "bloomEarned": 45.23,
+        "interactions": 567
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true,
+        "allowModification": true
+      },
+      "technical": {
+        "tools": ["draw.io", "figma"],
+        "layers": ["presentation", "application", "data", "security"],
+        "components": ["vault-core", "encryption-engine", "access-control", "sync-layer"],
+        "standards": ["uml", "archimate"]
+      }
+    },
+    {
+      "id": "artwork_003",
+      "title": "BLOOM Token Ecosystem Infographic",
+      "description": "An informative infographic explaining the BLOOM token ecosystem, including earning mechanisms, use cases, and economic incentives.",
+      "creator": {
+        "did": "did:mycelia:designer1",
+        "name": "Jordan Kim",
+        "role": "UX Designer"
+      },
+      "type": "infographic",
+      "format": "pdf",
+      "dimensions": {
+        "width": 2480,
+        "height": 3508
+      },
+      "fileSize": 1200000,
+      "created": "2024-01-13T14:00:00Z",
+      "tags": ["infographic", "bloom", "tokenomics", "education"],
+      "engagement": {
+        "views": 3456,
+        "likes": 234,
+        "shares": 67,
+        "comments": 34,
+        "bloomEarned": 89.45,
+        "interactions": 1890
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true,
+        "allowModification": false
+      },
+      "technical": {
+        "tools": ["adobe-illustrator", "canva"],
+        "sections": ["token-overview", "earning-mechanisms", "use-cases", "economics"],
+        "style": "minimalist",
+        "colorScheme": "mycelia-brand"
+      }
+    },
+    {
+      "id": "artwork_004",
+      "title": "Web4 Conceptual Art",
+      "description": "Abstract artistic representation of Web4 concepts, showing the transition from centralized to decentralized web architectures through visual metaphor.",
+      "creator": {
+        "did": "did:mycelia:artist2",
+        "name": "Sofia Chen",
+        "role": "Conceptual Artist"
+      },
+      "type": "digital-art",
+      "format": "jpg",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "fileSize": 456000,
+      "created": "2024-01-12T11:00:00Z",
+      "tags": ["web4", "conceptual", "abstract", "art"],
+      "engagement": {
+        "views": 1234,
+        "likes": 87,
+        "shares": 23,
+        "comments": 15,
+        "bloomEarned": 34.56,
+        "interactions": 345
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true,
+        "allowModification": false
+      },
+      "technical": {
+        "tools": ["photoshop", "blender"],
+        "techniques": ["digital-painting", "3d-modeling", "compositing"],
+        "style": "abstract-expressionism",
+        "theme": "technological-transformation"
+      }
+    }
+  ],
+  "metadata": {
+    "totalArtworks": 4,
+    "totalViews": 8491,
+    "totalLikes": 608,
+    "totalShares": 169,
+    "totalComments": 84,
+    "totalBloomEarned": 237.13,
+    "averageInteractions": 1009,
+    "mostPopularType": "infographic",
+    "mostPopularTag": "mycelia",
+    "lastUpdated": "2024-01-15T12:00:00Z"
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "courses": [
+    {
+      "id": "course_001",
+      "title": "Introduction to Mycelia: Personal Data Ownership",
+      "description": "A comprehensive introduction to Mycelia's vision of personal data ownership, covering the core concepts, benefits, and practical applications.",
+      "instructor": {
+        "did": "did:mycelia:instructor1",
+        "name": "Dr. Elena Rodriguez",
+        "role": "Project Founder",
+        "bio": "Dr. Rodriguez is a renowned computer scientist and privacy advocate with over 20 years of experience in distributed systems and cryptography."
+      },
+      "level": "beginner",
+      "duration": 1800,
+      "modules": [
+        {
+          "id": "module_001",
+          "title": "The Problem with Today's Web",
+          "duration": 300,
+          "content": "Understanding the current state of data ownership and privacy on the web, including surveillance capitalism and user exploitation.",
+          "type": "video-lecture",
+          "resources": ["slides", "transcript", "quiz"]
+        },
+        {
+          "id": "module_002",
+          "title": "Mycelia's Solution",
+          "duration": 400,
+          "content": "Exploring how Mycelia addresses data ownership issues through Personal Data Vaults, decentralized identity, and user-centric design.",
+          "type": "interactive-demo",
+          "resources": ["demo", "hands-on-exercise", "discussion"]
+        },
+        {
+          "id": "module_003",
+          "title": "Personal Data Vaults Deep Dive",
+          "duration": 500,
+          "content": "Technical overview of Personal Data Vault architecture, encryption, access controls, and privacy guarantees.",
+          "type": "technical-walkthrough",
+          "resources": ["architecture-diagram", "code-examples", "lab-exercise"]
+        },
+        {
+          "id": "module_004",
+          "title": "BLOOM Token Economics",
+          "duration": 400,
+          "content": "Understanding the BLOOM token system, Proof of Contribution, and the attention economy model.",
+          "type": "economics-explanation",
+          "resources": ["tokenomics-chart", "calculator", "simulation"]
+        },
+        {
+          "id": "module_005",
+          "title": "Getting Started with Mycelia",
+          "duration": 200,
+          "content": "Practical steps to start using Mycelia, including account setup, vault configuration, and first interactions.",
+          "type": "hands-on-tutorial",
+          "resources": ["step-by-step-guide", "checklist", "support-resources"]
+        }
+      ],
+      "created": "2024-01-15T10:00:00Z",
+      "tags": ["introduction", "data-ownership", "privacy", "mycelia"],
+      "engagement": {
+        "enrollments": 1234,
+        "completions": 892,
+        "averageRating": 4.7,
+        "reviews": 156,
+        "bloomEarned": 234.56,
+        "averageCompletionTime": 1650
+      },
+      "permissions": {
+        "public": true,
+        "requireEnrollment": false,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true
+      },
+      "prerequisites": [],
+      "learningOutcomes": [
+        "Understand the problems with current web data ownership",
+        "Explain Mycelia's approach to personal data sovereignty",
+        "Describe Personal Data Vault architecture and benefits",
+        "Understand BLOOM token economics and earning mechanisms",
+        "Set up and configure a basic Mycelia account"
+      ]
+    },
+    {
+      "id": "course_002",
+      "title": "Advanced Mycelia Development",
+      "description": "An advanced technical course for developers who want to build applications on the Mycelia platform, covering APIs, SDKs, and integration patterns.",
+      "instructor": {
+        "did": "did:mycelia:alice",
+        "name": "Alice Chen",
+        "role": "Lead Developer",
+        "bio": "Alice is the lead developer of the Mycelia platform with extensive experience in distributed systems, cryptography, and user-centric design."
+      },
+      "level": "advanced",
+      "duration": 3600,
+      "modules": [
+        {
+          "id": "module_006",
+          "title": "Mycelia SDK Overview",
+          "duration": 600,
+          "content": "Comprehensive overview of the Mycelia SDK, including installation, configuration, and basic usage patterns.",
+          "type": "technical-tutorial",
+          "resources": ["sdk-docs", "code-examples", "lab-environment"]
+        },
+        {
+          "id": "module_007",
+          "title": "Personal Data Vault Integration",
+          "duration": 800,
+          "content": "Deep dive into integrating with Personal Data Vaults, including data storage, retrieval, and permission management.",
+          "type": "hands-on-coding",
+          "resources": ["vault-api", "sample-app", "testing-framework"]
+        },
+        {
+          "id": "module_008",
+          "title": "Oracle Agent Development",
+          "duration": 700,
+          "content": "Building custom Oracle agents for local data processing, including search, analysis, and recommendation systems.",
+          "type": "advanced-programming",
+          "resources": ["oracle-framework", "ml-libraries", "performance-tools"]
+        },
+        {
+          "id": "module_009",
+          "title": "BLOOM Token Integration",
+          "duration": 600,
+          "content": "Implementing BLOOM token rewards in applications, including attention tracking, contribution measurement, and payout systems.",
+          "type": "economics-implementation",
+          "resources": ["token-api", "reward-calculator", "audit-tools"]
+        },
+        {
+          "id": "module_010",
+          "title": "Social Graph Applications",
+          "duration": 500,
+          "content": "Building social features using Mycelia's Social Graph, including contact management, relationship mapping, and privacy controls.",
+          "type": "social-development",
+          "resources": ["graph-api", "privacy-framework", "social-patterns"]
+        },
+        {
+          "id": "module_011",
+          "title": "Deployment and Production",
+          "duration": 400,
+          "content": "Best practices for deploying Mycelia applications to production, including security, performance, and monitoring.",
+          "type": "devops-tutorial",
+          "resources": ["deployment-guide", "monitoring-tools", "security-checklist"]
+        }
+      ],
+      "created": "2024-01-14T14:00:00Z",
+      "tags": ["development", "sdk", "api", "advanced", "technical"],
+      "engagement": {
+        "enrollments": 567,
+        "completions": 234,
+        "averageRating": 4.9,
+        "reviews": 89,
+        "bloomEarned": 456.78,
+        "averageCompletionTime": 3420
+      },
+      "permissions": {
+        "public": true,
+        "requireEnrollment": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true
+      },
+      "prerequisites": ["course_001", "programming-experience"],
+      "learningOutcomes": [
+        "Install and configure the Mycelia SDK",
+        "Integrate applications with Personal Data Vaults",
+        "Develop custom Oracle agents",
+        "Implement BLOOM token rewards",
+        "Build social features using the Social Graph",
+        "Deploy Mycelia applications to production"
+      ]
+    }
+  ],
+  "metadata": {
+    "totalCourses": 2,
+    "totalEnrollments": 1801,
+    "totalCompletions": 1126,
+    "averageRating": 4.8,
+    "totalReviews": 245,
+    "totalBloomEarned": 691.34,
+    "averageCompletionRate": 0.63,
+    "mostPopularLevel": "beginner",
+    "mostPopularTag": "introduction",
+    "lastUpdated": "2024-01-15T10:00:00Z"
+  }
+}

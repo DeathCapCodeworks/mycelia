@@ -1,0 +1,32 @@
+{
+  "name": "@mycelia/bloom-contracts",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "compile:evm": "hardhat compile",
+    "compile:solana": "anchor build",
+    "deploy:evm": "hardhat run scripts/deploy.ts --network localhost",
+    "deploy:solana": "anchor deploy --provider.cluster localnet"
+  },
+  "dependencies": {
+    "@mycelia/shared-kernel": "workspace:*",
+    "@mycelia/tokenomics": "workspace:*",
+    "@mycelia/evm-compat": "workspace:*",
+    "@mycelia/solana-compat": "workspace:*",
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.0",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@coral-xyz/anchor": "^0.30.1",
+    "@solana/web3.js": "^1.95.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.1",
+    "@types/node": "^20.12.12"
+  }
+}

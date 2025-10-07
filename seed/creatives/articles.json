@@ -1,0 +1,99 @@
+{
+  "articles": [
+    {
+      "id": "article_001",
+      "title": "The Future of Personal Data Ownership: A Mycelia Perspective",
+      "author": {
+        "did": "did:mycelia:alice",
+        "name": "Alice Chen",
+        "role": "Lead Developer"
+      },
+      "content": "In the current digital landscape, users have little control over their personal data. Tech giants harvest, analyze, and monetize our information without meaningful consent or compensation. Mycelia represents a paradigm shift toward true data ownership.\n\nOur Personal Data Vault architecture ensures that users maintain complete control over their information. Data is encrypted locally, and users decide exactly what to share, with whom, and for how long. This isn't just about privacy - it's about economic empowerment.\n\nThe BLOOM token system rewards users for their attention and data contributions. Instead of tech companies profiting from our digital footprints, users can earn tokens for participating in the attention economy on their own terms.\n\nKey benefits:\n- Complete data sovereignty\n- Transparent consent mechanisms\n- Fair compensation for attention\n- Offline-first architecture\n- Granular permission controls",
+      "tags": ["data-ownership", "privacy", "mycelia", "bloom"],
+      "created": "2024-01-15T10:00:00Z",
+      "updated": "2024-01-15T10:00:00Z",
+      "wordCount": 156,
+      "readingTime": 1,
+      "engagement": {
+        "views": 1247,
+        "likes": 89,
+        "shares": 23,
+        "comments": 12,
+        "bloomEarned": 45.67
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true
+      }
+    },
+    {
+      "id": "article_002",
+      "title": "Building Decentralized Identity with Mycelia DIDs",
+      "author": {
+        "did": "did:mycelia:bob",
+        "name": "Bob Rodriguez",
+        "role": "Security Architect"
+      },
+      "content": "Decentralized Identifiers (DIDs) form the foundation of Mycelia's identity system. Unlike traditional usernames and passwords, DIDs are cryptographically secure, self-sovereign, and portable across platforms.\n\nOur DID implementation follows W3C standards while adding Mycelia-specific enhancements for privacy and usability. Each DID is anchored to the Mycelia blockchain, ensuring global uniqueness and verifiability.\n\nKey features:\n- Cryptographic key pairs for authentication\n- Verifiable credentials for selective disclosure\n- Privacy-preserving interactions\n- Cross-platform portability\n- Revocation and recovery mechanisms\n\nSecurity considerations:\n- Hardware security module integration\n- Multi-signature support\n- Biometric authentication options\n- Secure key derivation\n- Quantum-resistant algorithms",
+      "tags": ["did", "identity", "security", "blockchain"],
+      "created": "2024-01-14T14:30:00Z",
+      "updated": "2024-01-14T14:30:00Z",
+      "wordCount": 134,
+      "readingTime": 1,
+      "engagement": {
+        "views": 892,
+        "likes": 67,
+        "shares": 18,
+        "comments": 8,
+        "bloomEarned": 32.14
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true
+      }
+    },
+    {
+      "id": "article_003",
+      "title": "The Attention Economy: Fair Compensation for Digital Labor",
+      "author": {
+        "did": "did:mycelia:charlie",
+        "name": "Charlie Kim",
+        "role": "Product Manager"
+      },
+      "content": "Every click, scroll, and interaction generates value for tech platforms. Yet users receive nothing in return for their digital labor. Mycelia's BLOOM token system changes this equation.\n\nOur Proof of Contribution mechanism tracks user engagement across the Mycelia ecosystem. Users earn BLOOM tokens for:\n- Creating and sharing content\n- Providing valuable feedback\n- Contributing to community discussions\n- Completing educational modules\n- Participating in governance\n\nThe system is designed to be transparent and fair. All attention tracking happens locally, with users maintaining full control over their data. No surveillance, no hidden algorithms - just honest compensation for valuable contributions.\n\nEconomic benefits:\n- Direct monetization of attention\n- Reduced dependence on advertising\n- Incentivized quality content creation\n- Community-driven value generation\n- Sustainable tokenomics model",
+      "tags": ["attention-economy", "bloom", "tokenomics", "fair-compensation"],
+      "created": "2024-01-13T16:00:00Z",
+      "updated": "2024-01-13T16:00:00Z",
+      "wordCount": 142,
+      "readingTime": 1,
+      "engagement": {
+        "views": 1567,
+        "likes": 134,
+        "shares": 45,
+        "comments": 23,
+        "bloomEarned": 78.92
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true
+      }
+    }
+  ],
+  "metadata": {
+    "totalArticles": 3,
+    "totalViews": 3706,
+    "totalLikes": 290,
+    "totalShares": 86,
+    "totalComments": 43,
+    "totalBloomEarned": 156.73,
+    "averageReadingTime": 1,
+    "mostPopularTag": "mycelia",
+    "lastUpdated": "2024-01-15T10:00:00Z"
+  }
+}

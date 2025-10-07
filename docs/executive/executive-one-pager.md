@@ -19,9 +19,13 @@ Convergence of scalable blockchain infrastructure, a minable native asset, and a
 2. The BLOOM Token and Core Applications, a minable native currency with a multi asset wallet and an IPFS native contribution app.
 3. The Mycelia Navigator, a Web4 browser that acts as an operating shell for the decentralized web.
 
+### BLOOM Token Peg
+
+The BLOOM token is fixed at a hard peg of 10 BLOOM for 1 BTC. Each BLOOM is fully redeemable for BTC at the fixed rate, backed by locked Bitcoin reserves. Minting halts automatically if reserves would fall below full collateral.
+
 ## 3. Funding Context
 
-Budget, twenty billion dollars, allocated for top talent and a multi year strategy.
+A foundational component of the Mycelia ecosystem is its substantial financial backing. The project is supported by a treasury of $20,000,000,000 (Twenty Billion USD), secured entirely through cash donations. This capital fully underwrites the project's operational budget, collateralizes its treasury, and guarantees the network's long term financial sovereignty and stability.
 
 ## 4. Top Five Strategic Levers
 

@@ -1,0 +1,37 @@
+{
+  "name": "@mycelia/wallet-integration",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mycelia/shared-kernel": "workspace:*",
+    "@mycelia/tokenomics": "workspace:*",
+    "@mycelia/evm-compat": "workspace:*",
+    "@mycelia/solana-compat": "workspace:*",
+    "@mycelia/developer-sdk": "workspace:*",
+    "@mycelia/bridge-infrastructure": "workspace:*",
+    "ethers": "^6.13.2",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-phantom": "^0.9.24",
+    "@solana/wallet-adapter-solflare": "^0.6.24",
+    "@solana/wallet-adapter-backpack": "^0.1.1",
+    "@solana/web3.js": "^1.95.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.1",
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0"
+  }
+}

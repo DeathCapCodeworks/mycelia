@@ -16,5 +16,5 @@ Project Mycelia provides a technical architecture and a strategic plan for a nex
 - Full Report, [Start here](/report/mycelia-comprehensive-report)
 - Appendices, [Browse](/appendices/appendix-tokenomics)
 - Diagrams, [Explore](/diagrams/l1-architecture)
-- References, [Read](/references/references)
+- References, [Read](/references)
 

@@ -1,0 +1,88 @@
+{
+  "browserHistory": [
+    {
+      "url": "https://github.com/mycelia/mycelia",
+      "title": "Project Mycelia - GitHub",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "visitCount": 45,
+      "timeSpent": 1800
+    },
+    {
+      "url": "https://docs.mycelia.network",
+      "title": "Mycelia Documentation",
+      "timestamp": "2024-01-15T11:15:00Z",
+      "visitCount": 23,
+      "timeSpent": 2400
+    },
+    {
+      "url": "https://arxiv.org/abs/2401.12345",
+      "title": "Decentralized Personal Data Vaults: A New Paradigm",
+      "timestamp": "2024-01-14T14:20:00Z",
+      "visitCount": 8,
+      "timeSpent": 1200
+    },
+    {
+      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/",
+      "title": "Consensus Mechanisms - Ethereum.org",
+      "timestamp": "2024-01-13T16:45:00Z",
+      "visitCount": 12,
+      "timeSpent": 900
+    },
+    {
+      "url": "https://ipfs.io/docs/concepts/",
+      "title": "IPFS Concepts - InterPlanetary File System",
+      "timestamp": "2024-01-12T09:30:00Z",
+      "visitCount": 6,
+      "timeSpent": 1500
+    }
+  ],
+  "searchQueries": [
+    {
+      "query": "decentralized identity DID",
+      "timestamp": "2024-01-15T10:45:00Z",
+      "results": 1250000,
+      "clickedResults": 3
+    },
+    {
+      "query": "personal data vault encryption",
+      "timestamp": "2024-01-14T15:30:00Z",
+      "results": 890000,
+      "clickedResults": 5
+    },
+    {
+      "query": "attention economy tokenomics",
+      "timestamp": "2024-01-13T11:20:00Z",
+      "results": 234000,
+      "clickedResults": 2
+    },
+    {
+      "query": "cosmos SDK consensus",
+      "timestamp": "2024-01-12T14:10:00Z",
+      "results": 567000,
+      "clickedResults": 4
+    }
+  ],
+  "applicationUsage": [
+    {
+      "app": "Mycelia Navigator",
+      "sessions": 15,
+      "totalTime": 7200,
+      "lastUsed": "2024-01-15T12:00:00Z",
+      "features": ["oracle", "workspaces", "rewards", "social"]
+    },
+    {
+      "app": "Mycelia Wallet",
+      "sessions": 8,
+      "totalTime": 1800,
+      "lastUsed": "2024-01-14T18:30:00Z",
+      "features": ["multi-asset", "mining", "staking"]
+    },
+    {
+      "app": "Mycelia Oracle",
+      "sessions": 22,
+      "totalTime": 3600,
+      "lastUsed": "2024-01-15T11:45:00Z",
+      "features": ["local-search", "context-aware", "privacy"]
+    }
+  ]
+}

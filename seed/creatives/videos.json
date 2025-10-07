@@ -1,0 +1,194 @@
+{
+  "videos": [
+    {
+      "id": "video_001",
+      "title": "Mycelia Navigator: Your Gateway to Web4",
+      "description": "A comprehensive walkthrough of the Mycelia Navigator interface, showcasing the Oracle agent, Workspaces engine, BLOOM rewards, and Social Graph features.",
+      "creator": {
+        "did": "did:mycelia:diana",
+        "name": "Diana Patel",
+        "role": "Community Manager"
+      },
+      "duration": 720,
+      "resolution": "1920x1080",
+      "format": "mp4",
+      "fileSize": 125000000,
+      "created": "2024-01-15T09:00:00Z",
+      "tags": ["demo", "navigator", "web4", "tutorial"],
+      "engagement": {
+        "views": 3456,
+        "likes": 234,
+        "shares": 67,
+        "comments": 34,
+        "bloomEarned": 123.45,
+        "watchTime": 2456789,
+        "completionRate": 0.78
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": false
+      },
+      "chapters": [
+        {
+          "title": "Introduction to Web4",
+          "startTime": 0,
+          "endTime": 120
+        },
+        {
+          "title": "Oracle Agent Demo",
+          "startTime": 120,
+          "endTime": 240
+        },
+        {
+          "title": "Workspaces Engine",
+          "startTime": 240,
+          "endTime": 360
+        },
+        {
+          "title": "BLOOM Rewards System",
+          "startTime": 360,
+          "endTime": 480
+        },
+        {
+          "title": "Social Graph Features",
+          "startTime": 480,
+          "endTime": 600
+        },
+        {
+          "title": "Q&A and Next Steps",
+          "startTime": 600,
+          "endTime": 720
+        }
+      ]
+    },
+    {
+      "id": "video_002",
+      "title": "Personal Data Vault Security Deep Dive",
+      "description": "Technical deep dive into the security architecture of Mycelia's Personal Data Vault system, covering encryption, access controls, and privacy guarantees.",
+      "creator": {
+        "did": "did:mycelia:bob",
+        "name": "Bob Rodriguez",
+        "role": "Security Architect"
+      },
+      "duration": 900,
+      "resolution": "1920x1080",
+      "format": "mp4",
+      "fileSize": 180000000,
+      "created": "2024-01-14T14:00:00Z",
+      "tags": ["security", "vault", "encryption", "privacy", "technical"],
+      "engagement": {
+        "views": 1234,
+        "likes": 89,
+        "shares": 23,
+        "comments": 12,
+        "bloomEarned": 67.89,
+        "watchTime": 987654,
+        "completionRate": 0.65
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": true
+      },
+      "chapters": [
+        {
+          "title": "Security Architecture Overview",
+          "startTime": 0,
+          "endTime": 180
+        },
+        {
+          "title": "Encryption Mechanisms",
+          "startTime": 180,
+          "endTime": 360
+        },
+        {
+          "title": "Access Control Systems",
+          "startTime": 360,
+          "endTime": 540
+        },
+        {
+          "title": "Privacy Guarantees",
+          "startTime": 540,
+          "endTime": 720
+        },
+        {
+          "title": "Threat Model Analysis",
+          "startTime": 720,
+          "endTime": 900
+        }
+      ]
+    },
+    {
+      "id": "video_003",
+      "title": "BLOOM Tokenomics Explained",
+      "description": "An accessible explanation of the BLOOM token economics, including Proof of Contribution, attention tracking, and the sustainable tokenomics model.",
+      "creator": {
+        "did": "did:mycelia:eve",
+        "name": "Eve Thompson",
+        "role": "Marketing Lead"
+      },
+      "duration": 480,
+      "resolution": "1920x1080",
+      "format": "mp4",
+      "fileSize": 95000000,
+      "created": "2024-01-13T11:00:00Z",
+      "tags": ["tokenomics", "bloom", "economics", "explainer"],
+      "engagement": {
+        "views": 2789,
+        "likes": 198,
+        "shares": 56,
+        "comments": 28,
+        "bloomEarned": 98.76,
+        "watchTime": 1234567,
+        "completionRate": 0.82
+      },
+      "permissions": {
+        "public": true,
+        "allowComments": true,
+        "allowSharing": true,
+        "requireAttribution": true,
+        "allowDownload": false
+      },
+      "chapters": [
+        {
+          "title": "What is BLOOM?",
+          "startTime": 0,
+          "endTime": 120
+        },
+        {
+          "title": "Proof of Contribution",
+          "startTime": 120,
+          "endTime": 240
+        },
+        {
+          "title": "Attention Tracking",
+          "startTime": 240,
+          "endTime": 360
+        },
+        {
+          "title": "Token Distribution",
+          "startTime": 360,
+          "endTime": 480
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "totalVideos": 3,
+    "totalDuration": 2100,
+    "totalViews": 7479,
+    "totalLikes": 521,
+    "totalShares": 146,
+    "totalComments": 74,
+    "totalBloomEarned": 290.10,
+    "averageWatchTime": 1559670,
+    "averageCompletionRate": 0.75,
+    "mostPopularTag": "demo",
+    "lastUpdated": "2024-01-15T09:00:00Z"
+  }
+}
