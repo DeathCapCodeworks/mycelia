@@ -1,0 +1,23 @@
+{
+  "name": "@mycelia/intent-bar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@mycelia/oracle-agent": "workspace:*",
+    "@mycelia/social-graph": "workspace:*",
+    "@mycelia/workspaces-engine": "workspace:*",
+    "@mycelia/shared-kernel": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}

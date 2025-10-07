@@ -13,7 +13,17 @@ const sidebars: SidebarsConfig = {
         'report/part-2-core-applications',
         'report/part-3-mycelia-navigator',
         'report/part-4-roadmap',
-        'report/conclusion-next-steps'
+        'report/conclusion-next-steps',
+        'report/funding-and-governance'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Tokenomics',
+      items: [
+        'tokenomics/redemption-bitcoin-testnet',
+        'tokenomics/proof-of-reserves',
+        'tokenomics/staking-preview'
       ]
     },
     {
@@ -48,6 +58,74 @@ const sidebars: SidebarsConfig = {
         'api-reference',
         'tutorials',
         'testing-guide'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Launch',
+      items: [
+        'launch/announcement',
+        'launch/faq',
+        'launch/press-kit'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Security',
+      items: [
+        'security-overview',
+        'security/bug-bounty'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Governance',
+      items: [
+        'governance-v0'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Runbooks',
+      items: [
+        'runbooks/key-ceremony',
+        'runbooks/incident-playbook',
+        'runbooks/upgrade-playbook',
+        'runbooks/launch-day-checklist',
+        'runbooks/rollback',
+        'runbooks/emergency-controls',
+        'runbooks/chaos-week1'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Attestations',
+      items: [
+        'attestations/mainnet-por'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Status',
+      items: [
+        'status/overview'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Legal',
+      items: [
+        'legal/terms',
+        'legal/privacy'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Governance',
+      items: [
+        'governance-v0',
+        'governance/proposals/P-0001-enable-btc-mainnet-redemption',
+        'governance/proposals/P-0002-min-gas-price'
       ]
     },
     'references/references'

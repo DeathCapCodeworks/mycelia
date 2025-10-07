@@ -17,6 +17,144 @@ export interface Metric {
   labels?: Record<string, string>;
 }
 
+export interface SLO {
+  name: string;
+  target: number; // Target value (e.g., 0.99 for 99%)
+  threshold: number; // Alert threshold (e.g., 0.95 for 95%)
+  current: number; // Current value
+  status: 'healthy' | 'warning' | 'critical';
+  lastUpdated: number;
+}
+
+export class SLOManager {
+  private slos = new Map<string, SLO>();
+
+  constructor() {
+    this.initializeDefaultSLOs();
+  }
+
+  /**
+   * Initialize default SLOs for Mycelia
+   */
+  private initializeDefaultSLOs(): void {
+    this.registerSLO({
+      name: 'redemption_quote_latency_p95',
+      target: 0.99, // 99% of quotes under 100ms
+      threshold: 0.95, // Alert if under 95%
+      current: 0.98, // Mock current value
+      status: 'healthy',
+      lastUpdated: Date.now()
+    });
+
+    this.registerSLO({
+      name: 'por_attestation_age',
+      target: 0.99, // 99% of attestations under 30 minutes
+      threshold: 0.95, // Alert if under 95%
+      current: 0.97, // Mock current value
+      status: 'healthy',
+      lastUpdated: Date.now()
+    });
+
+    this.registerSLO({
+      name: 'diagnostics_pass_rate',
+      target: 0.99, // 99% pass rate
+      threshold: 0.95, // Alert if under 95%
+      current: 0.95, // Mock current value
+      status: 'warning',
+      lastUpdated: Date.now()
+    });
+
+    this.registerSLO({
+      name: 'sandbox_route_tti',
+      target: 0.99, // 99% of routes under 2s TTI
+      threshold: 0.95, // Alert if under 95%
+      current: 0.98, // Mock current value
+      status: 'healthy',
+      lastUpdated: Date.now()
+    });
+  }
+
+  /**
+   * Register an SLO
+   */
+  registerSLO(slo: SLO): void {
+    this.slos.set(slo.name, slo);
+  }
+
+  /**
+   * Update SLO value
+   */
+  updateSLO(name: string, value: number): void {
+    const slo = this.slos.get(name);
+    if (!slo) {
+      throw new Error(`SLO not found: ${name}`);
+    }
+
+    slo.current = value;
+    slo.lastUpdated = Date.now();
+
+    // Update status based on thresholds
+    if (value >= slo.target) {
+      slo.status = 'healthy';
+    } else if (value >= slo.threshold) {
+      slo.status = 'warning';
+    } else {
+      slo.status = 'critical';
+    }
+  }
+
+  /**
+   * Get SLO by name
+   */
+  getSLO(name: string): SLO | undefined {
+    return this.slos.get(name);
+  }
+
+  /**
+   * Get all SLOs
+   */
+  getAllSLOs(): SLO[] {
+    return Array.from(this.slos.values());
+  }
+
+  /**
+   * Get SLO status summary
+   */
+  getSLOStatus(): {
+    total: number;
+    healthy: number;
+    warning: number;
+    critical: number;
+    slos: SLO[];
+  } {
+    const allSLOs = this.getAllSLOs();
+    
+    return {
+      total: allSLOs.length,
+      healthy: allSLOs.filter(s => s.status === 'healthy').length,
+      warning: allSLOs.filter(s => s.status === 'warning').length,
+      critical: allSLOs.filter(s => s.status === 'critical').length,
+      slos: allSLOs
+    };
+  }
+
+  /**
+   * Check if any SLOs are in critical state
+   */
+  hasCriticalSLOs(): boolean {
+    return this.getAllSLOs().some(slo => slo.status === 'critical');
+  }
+
+  /**
+   * Get SLOs that need attention
+   */
+  getSLOsNeedingAttention(): SLO[] {
+    return this.getAllSLOs().filter(slo => 
+      slo.status === 'warning' || slo.status === 'critical'
+    );
+  }
+}
+
 export class Counter {
   private value: number = 0;
   private labels: Record<string, string>;
@@ -80,6 +218,7 @@ export class ObservabilityManager {
   private gauges = new Map<string, Gauge>();
   private events: LogEvent[] = [];
   private maxEvents: number = 10000; // Keep last 10k events
+  private sloManager = new SLOManager();
 
   /**
    * Log a structured event
@@ -185,6 +324,88 @@ export class ObservabilityManager {
     this.gauges.clear();
     this.events = [];
   }
+
+  /**
+   * Get SLO manager
+   */
+  getSLOManager(): SLOManager {
+    return this.sloManager;
+  }
+
+  /**
+   * Export status JSON for health endpoints
+   */
+  exportStatus(): string {
+    const status = {
+      timestamp: Date.now(),
+      buildSha: process.env.BUILD_SHA || 'unknown',
+      diagnostics: this.getDiagnosticsSummary(),
+      slos: this.sloManager.getSLOStatus(),
+      metrics: {
+        counters: Array.from(this.counters.values()).map(c => ({
+          name: c.getName(),
+          value: c.getValue(),
+          labels: c.getLabels()
+        })),
+        gauges: Array.from(this.gauges.values()).map(g => ({
+          name: g.getName(),
+          value: g.getValue(),
+          labels: g.getLabels()
+        }))
+      },
+      recentEvents: this.getRecentEvents(10),
+      // Additional status fields for public status.json
+      redemptionQueueLength: this.getRedemptionQueueLength(),
+      redemptionsPerHour: this.getRedemptionsPerHour(),
+      attestationAgeMinutes: this.getAttestationAgeMinutes(),
+      sandboxRouteTTIP95: this.getSandboxRouteTTIP95()
+    };
+
+    return JSON.stringify(status, null, 2);
+  }
+
+  /**
+   * Get diagnostics summary
+   */
+  private getDiagnosticsSummary(): { passRate: number; lastRun: number } {
+    // Mock diagnostics summary - in production would integrate with diagnostics package
+    return {
+      passRate: 0.95, // 95% pass rate
+      lastRun: Date.now() - 300000 // 5 minutes ago
+    };
+  }
+
+  /**
+   * Get redemption queue length
+   */
+  private getRedemptionQueueLength(): number {
+    // Mock redemption queue length
+    return 45;
+  }
+
+  /**
+   * Get redemptions per hour
+   */
+  private getRedemptionsPerHour(): number {
+    // Mock redemptions per hour
+    return 750;
+  }
+
+  /**
+   * Get attestation age in minutes
+   */
+  private getAttestationAgeMinutes(): number {
+    // Mock attestation age
+    return 15;
+  }
+
+  /**
+   * Get sandbox route TTI P95
+   */
+  private getSandboxRouteTTIP95(): number {
+    // Mock sandbox route TTI P95
+    return 0.98;
+  }
 }
 
 /**
@@ -243,6 +464,14 @@ export function counter(name: string, labels: Record<string, string> = {}): Coun
 
 export function gauge(name: string, labels: Record<string, string> = {}): Gauge {
   return getObservability().gauge(name, labels);
+}
+
+export function getSLOManager(): SLOManager {
+  return getObservability().getSLOManager();
+}
+
+export function exportStatus(): string {
+  return getObservability().exportStatus();
 }
 
 // CLI for tailing logs

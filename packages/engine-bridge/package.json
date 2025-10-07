@@ -1,0 +1,23 @@
+{
+  "name": "@mycelia/engine-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/dev.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mycelia/media-pipeline": "workspace:*",
+    "@mycelia/webrtc-enhanced": "workspace:*",
+    "@mycelia/net-stack": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.1"
+  }
+}
+

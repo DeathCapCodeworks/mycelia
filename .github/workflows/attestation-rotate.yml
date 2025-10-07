@@ -1,0 +1,32 @@
+name: attestation-rotate
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  rotate-por:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.16.0'
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+      - name: Sign PoR attestation
+        run: pnpm --filter @mycelia/attestations start -- sign --out ./release/mainnet/por.json
+      - name: Verify PoR attestation
+        run: pnpm --filter @mycelia/attestations start -- verify ./release/mainnet/por.json
+      - name: Publish docs
+        run: pnpm run release:publish
+      - name: Release verify
+        run: pnpm run release:verify

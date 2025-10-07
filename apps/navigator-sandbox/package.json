@@ -25,7 +25,13 @@
     "@mycelia/redemption": "workspace:*",
     "@mycelia/btc-bridge": "workspace:*",
     "@mycelia/staking": "workspace:*",
-    "@mycelia/observability": "workspace:*"
+    "@mycelia/observability": "workspace:*",
+    "@mycelia/pilot-kit": "workspace:*",
+    "@mycelia/web4-feature-flags": "workspace:*",
+    "@mycelia/engine-bridge": "workspace:*",
+    "@mycelia/media-pipeline": "workspace:*",
+    "@mycelia/webrtc-enhanced": "workspace:*",
+    "@mycelia/net-stack": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.6.3",

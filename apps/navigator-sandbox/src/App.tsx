@@ -8,6 +8,11 @@ import FundingPage from './pages/FundingPage';
 import RedemptionPage from './pages/RedemptionPage';
 import StakingPage from './pages/StakingPage';
 import { PegBadge } from '@mycelia/ui-components';
+import PrivacyPage from './pages/PrivacyPage';
+import TimeMachinePage from './pages/TimeMachinePage';
+import MediaPage from './pages/MediaPage';
+import PublisherPilotPage from './pages/PublisherPilotPage';
+import OrgPilotPage from './pages/OrgPilotPage';
 
 function App() {
   return (
@@ -21,6 +26,11 @@ function App() {
           <Link to="/funding">Funding</Link>
           <Link to="/redemption">Redemption</Link>
           <Link to="/staking">Staking</Link>
+          <Link to="/privacy">Privacy</Link>
+          <Link to="/time-machine">Time Machine</Link>
+          <Link to="/media">Media Engine</Link>
+          <Link to="/pilot/publisher">Publisher Pilot</Link>
+          <Link to="/pilot/org">Org Pilot</Link>
         </nav>
         <main className="myc-main">
           <div className="myc-grid">
@@ -35,6 +45,11 @@ function App() {
               <Route path="/funding" element={<FundingPage />} />
               <Route path="/redemption" element={<RedemptionPage />} />
               <Route path="/staking" element={<StakingPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/time-machine" element={<TimeMachinePage />} />
+            <Route path="/media" element={<MediaPage />} />
+            <Route path="/pilot/publisher" element={<PublisherPilotPage />} />
+            <Route path="/pilot/org" element={<OrgPilotPage />} />
               <Route path="/" element={<div className="card myc-muted">Navigate to a demo above</div>} />
             </Routes>
           </div>

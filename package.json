@@ -20,15 +20,37 @@
     "dev": "concurrently -n DOCS,SANDBOX -c magenta,cyan \"pnpm run dev:docs\" \"pnpm run dev:sandbox\"",
     "diagnose": "pnpm --filter @mycelia/diagnostics build && pnpm --filter @mycelia/diagnostics start",
     "diagnose:dev": "pnpm --filter @mycelia/diagnostics dev",
-    "ops:tail": "pnpm --filter @mycelia/observability start"
+    "ops:tail": "pnpm --filter @mycelia/observability start",
+    "ops:lint": "node -e \"const obs = require('./packages/observability/dist/index.js'); const slo = obs.getSLOManager(); const status = slo.getSLOStatus(); if (status.critical > 0) { console.error('Critical SLO violations:', status.critical); process.exit(1); } else { console.log('All SLOs healthy'); }\"",
+    "sec:scan": "pnpm -r lint -- --rule 'security/*'",
+    "release:build": "pnpm --filter @mycelia/genesis build && pnpm --filter @mycelia/attestations build",
+    "release:verify": "pnpm run diagnose -- --release ./release/mainnet",
+    "release:publish": "pnpm -r build && pnpm --filter @mycelia/docs build",
+    "test:accessibility": "npx @axe-core/cli http://localhost:3000 --exit && npx @axe-core/cli http://localhost:5173 --exit",
+    "native:build": "node scripts/native build",
+    "dev:media": "pnpm --filter @mycelia/engine-bridge dev",
+    "bench:media": "pnpm --filter @mycelia/media-pipeline start -- bench",
+    "bench:webrtc": "pnpm --filter @mycelia/webrtc-enhanced run bench:webrtc",
+    "bench:av1": "pnpm --filter @mycelia/standards-test run bench:av1",
+    "bench:all": "pnpm run bench:media && pnpm run bench:webrtc && pnpm run bench:av1",
+    "flags": "pnpm --filter @mycelia/web4-feature-flags run cli",
+    "pilot:create": "pnpm --filter @mycelia/pilot-kit run start",
+    "dev:webrtc": "pnpm --filter @mycelia/webrtc-enhanced dev",
+    "dev:net": "pnpm --filter @mycelia/net-stack dev",
+    "test:compat": "pnpm --filter @mycelia/compat-modern start -- runSubset",
+    "test:standards": "pnpm --filter @mycelia/standards-test start -- runWptSubset",
+    "dev:tm": "pnpm --filter @mycelia/workspaces-engine dev",
+    "dev:privacy": "pnpm --filter @mycelia/ui-components dev"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
     "eslint": "^9.11.1",
+    "eslint-plugin-security": "^3.0.1",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3",
     "vitest": "^2.1.1",
-    "@types/node": "^20.12.12"
+    "@types/node": "^20.12.12",
+    "@axe-core/cli": "^4.10.0"
   }
 }
 

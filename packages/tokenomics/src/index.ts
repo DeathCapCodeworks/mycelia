@@ -1,3 +1,4 @@
+// Peg is an immutable protocol constant: 10 BLOOM equals 1 BTC. Changing this requires a new chain ID.
 // Canonical peg constants - exact rational math using bigint
 export const SATS_PER_BTC = 100_000_000n;
 export const BTC_PER_BLOOM = 10n; // 10 BLOOM = 1 BTC

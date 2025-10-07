@@ -30,18 +30,24 @@ export interface EpochRewards {
   reason?: string;
 }
 
-export interface ValidatorStats {
-  pubkey: string;
-  totalStake: bigint;
-  delegationCount: number;
-  delegators: string[];
-  isActive: boolean;
+export interface SlashingEvent {
+  validator: string;
+  reason: 'double-signing' | 'downtime' | 'malicious-behavior';
+  amount: bigint;
+  timestamp: number;
+  epoch: number;
+}
+
+export interface SlashingHook {
+  onSlash(event: SlashingEvent): Promise<void>;
 }
 
 export class StakingEngine {
   private validators = new Map<string, Validator>();
   private delegations = new Map<string, Delegation>();
   private currentEpoch = 0;
+  private slashingEvents: SlashingEvent[] = [];
+  private slashingHook: SlashingHook | null = null;
   private stakingCounter = counter('staking_operations');
   private validatorGauge = gauge('active_validators');
   private delegationGauge = gauge('total_delegations');
@@ -259,6 +265,72 @@ export class StakingEngine {
    */
   getCurrentEpoch(): number {
     return this.currentEpoch;
+  }
+
+  /**
+   * Set slashing hook
+   */
+  setSlashingHook(hook: SlashingHook): void {
+    this.slashingHook = hook;
+  }
+
+  /**
+   * Simulate slashing event (for testing/demo)
+   */
+  async simulateSlashing(validatorPubkey: string, reason: 'double-signing' | 'downtime' | 'malicious-behavior', amount: bigint): Promise<SlashingEvent> {
+    const validator = this.validators.get(validatorPubkey);
+    if (!validator) {
+      throw new Error('Validator not found');
+    }
+
+    const slashingEvent: SlashingEvent = {
+      validator: validatorPubkey,
+      reason,
+      amount,
+      timestamp: Date.now(),
+      epoch: this.currentEpoch
+    };
+
+    this.slashingEvents.push(slashingEvent);
+
+    // Log slashing event
+    logEvent('slashing_event', {
+      validator: validatorPubkey,
+      reason,
+      amount: amount.toString(),
+      epoch: this.currentEpoch,
+      timestamp: slashingEvent.timestamp
+    });
+
+    // Call slashing hook if set
+    if (this.slashingHook) {
+      await this.slashingHook.onSlash(slashingEvent);
+    }
+
+    return slashingEvent;
+  }
+
+  /**
+   * Get slashing events
+   */
+  getSlashingEvents(): SlashingEvent[] {
+    return [...this.slashingEvents];
+  }
+
+  /**
+   * Get slashing events for a specific validator
+   */
+  getValidatorSlashingEvents(validatorPubkey: string): SlashingEvent[] {
+    return this.slashingEvents.filter(event => event.validator === validatorPubkey);
+  }
+
+  /**
+   * Calculate total slashed amount for a validator
+   */
+  getTotalSlashed(validatorPubkey: string): bigint {
+    return this.slashingEvents
+      .filter(event => event.validator === validatorPubkey)
+      .reduce((total, event) => total + event.amount, 0n);
   }
 
   /**

@@ -2,6 +2,7 @@ import { SupplyLedger } from '@mycelia/shared-kernel';
 import { quoteRedeemBloomToSats as tokenomicsQuoteRedeemBloomToSats, maxRedeemableBloom } from '@mycelia/tokenomics';
 import { BitcoinBridge, HtlcResult, ClaimConfig, RefundConfig } from '@mycelia/btc-bridge';
 import { logEvent, counter, gauge } from '@mycelia/observability';
+import { LocalKMS } from '@mycelia/kms-local';
 
 export interface RedeemIntent {
   id: string;
@@ -104,7 +105,8 @@ export class RedemptionEngine {
   private htlcSimulator: HtlcSimulator;
   private btcBridge: BitcoinBridge;
   private rateLimits = new Map<string, { count: number; resetTime: number }>();
-  private operatorKey: string;
+  private kms: LocalKMS;
+  private operatorKeyPair: { publicKey: Uint8Array; privateKey: Uint8Array } | null = null;
   private redemptionCounter = counter('redemption_requests');
   private redemptionGauge = gauge('pending_redemptions');
 
@@ -112,7 +114,16 @@ export class RedemptionEngine {
     this.supplyLedger = supplyLedger;
     this.htlcSimulator = htlcSimulator;
     this.btcBridge = btcBridge || new BitcoinBridge('testnet');
-    this.operatorKey = 'mock-operator-key'; // In production, load from secure storage
+    this.kms = new LocalKMS();
+    this.initializeOperatorKey();
+  }
+
+  private async initializeOperatorKey(): Promise<void> {
+    try {
+      this.operatorKeyPair = await this.kms.generateEd25519KeyPair();
+    } catch (error) {
+      console.warn('Failed to initialize operator key:', error);
+    }
   }
 
   /**
@@ -287,7 +298,7 @@ export class RedemptionEngine {
       createdAt: Date.now(),
       htlc: htlcResult,
       secretHash,
-      signature: this.signIntent(bloomAmount, btcAddress, secretHash)
+      signature: await this.signIntent(bloomAmount, btcAddress, secretHash)
     };
 
     this.intents.set(intent.id, intent);
@@ -397,11 +408,42 @@ export class RedemptionEngine {
   }
 
   /**
-   * Sign redemption intent
+   * Sign redemption intent with operator key
    */
-  private signIntent(bloomAmount: bigint, btcAddress: string, secretHash: string): string {
-    // In production, use proper digital signature
+  private async signIntent(bloomAmount: bigint, btcAddress: string, secretHash: string): Promise<string> {
+    if (!this.operatorKeyPair) {
+      throw new Error('Operator key not initialized');
+    }
+
     const data = `${bloomAmount}-${btcAddress}-${secretHash}`;
-    return `sig-${Buffer.from(data).toString('base64')}`;
+    const message = new TextEncoder().encode(data);
+    
+    const signature = await this.kms.sign(message, this.operatorKeyPair.privateKey);
+    return Buffer.from(signature).toString('hex');
+  }
+
+  /**
+   * Verify redemption intent signature
+   */
+  async verifyIntentSignature(bloomAmount: bigint, btcAddress: string, secretHash: string, signature: string): Promise<boolean> {
+    if (!this.operatorKeyPair) {
+      return false;
+    }
+
+    const data = `${bloomAmount}-${btcAddress}-${secretHash}`;
+    const message = new TextEncoder().encode(data);
+    const signatureBytes = Buffer.from(signature, 'hex');
+    
+    return this.kms.verify(message, signatureBytes, this.operatorKeyPair.publicKey);
+  }
+
+  /**
+   * Get operator public key for verification
+   */
+  getOperatorPublicKey(): string | null {
+    if (!this.operatorKeyPair) {
+      return null;
+    }
+    return Buffer.from(this.operatorKeyPair.publicKey).toString('hex');
   }
 }

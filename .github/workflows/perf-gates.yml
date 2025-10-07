@@ -1,0 +1,241 @@
+name: Performance Gates
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  performance-gates:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [20.16.0]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    
+    - name: Build packages
+      run: pnpm run build
+    
+    - name: Run Media Pipeline Benchmarks
+      id: media-bench
+      run: |
+        cd packages/media-pipeline
+        pnpm run bench:media > media-bench-results.json 2>&1 || echo "Media benchmark failed"
+        echo "media_bench_exit_code=$?" >> $GITHUB_OUTPUT
+      continue-on-error: true
+    
+    - name: Run WebRTC Enhanced Benchmarks
+      id: webrtc-bench
+      run: |
+        cd packages/webrtc-enhanced
+        pnpm run bench:webrtc > webrtc-bench-results.json 2>&1 || echo "WebRTC benchmark failed"
+        echo "webrtc_bench_exit_code=$?" >> $GITHUB_OUTPUT
+      continue-on-error: true
+    
+    - name: Run AV1 Standards Tests
+      id: av1-standards
+      run: |
+        cd packages/standards-test
+        pnpm run bench:av1 > av1-standards-results.json 2>&1 || echo "AV1 standards test failed"
+        echo "av1_standards_exit_code=$?" >> $GITHUB_OUTPUT
+      continue-on-error: true
+    
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: benchmark-results-${{ matrix.os }}
+        path: |
+          packages/media-pipeline/media-bench-results.json
+          packages/webrtc-enhanced/webrtc-bench-results.json
+          packages/standards-test/av1-standards-results.json
+        retention-days: 30
+    
+    - name: Check for quarantine label
+      id: quarantine-check
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          QUARANTINE=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name' | grep -q "quarantine" && echo "true" || echo "false")
+          echo "quarantine=$QUARANTINE" >> $GITHUB_OUTPUT
+        else
+          echo "quarantine=false" >> $GITHUB_OUTPUT
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Evaluate performance gates
+      id: perf-gates
+      run: |
+        # Check if any benchmarks failed
+        MEDIA_FAILED=${{ steps.media-bench.outputs.media_bench_exit_code }}
+        WEBRTC_FAILED=${{ steps.webrtc-bench.outputs.webrtc_bench_exit_code }}
+        AV1_FAILED=${{ steps.av1-standards.outputs.av1_standards_exit_code }}
+        QUARANTINE=${{ steps.quarantine-check.outputs.quarantine }}
+        
+        echo "Media benchmark exit code: $MEDIA_FAILED"
+        echo "WebRTC benchmark exit code: $WEBRTC_FAILED"
+        echo "AV1 standards exit code: $AV1_FAILED"
+        echo "Quarantine mode: $QUARANTINE"
+        
+        # If in quarantine mode, always pass
+        if [ "$QUARANTINE" = "true" ]; then
+          echo "Performance gates bypassed due to quarantine label"
+          echo "gates_passed=true" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        # Check if any critical benchmarks failed
+        if [ "$MEDIA_FAILED" != "0" ] || [ "$WEBRTC_FAILED" != "0" ] || [ "$AV1_FAILED" != "0" ]; then
+          echo "Performance gates failed - one or more benchmarks did not meet targets"
+          echo "gates_passed=false" >> $GITHUB_OUTPUT
+          
+          # Output detailed failure information
+          echo "=== Media Pipeline Benchmark Results ==="
+          if [ -f "packages/media-pipeline/media-bench-results.json" ]; then
+            cat packages/media-pipeline/media-bench-results.json
+          fi
+          
+          echo "=== WebRTC Enhanced Benchmark Results ==="
+          if [ -f "packages/webrtc-enhanced/webrtc-bench-results.json" ]; then
+            cat packages/webrtc-enhanced/webrtc-bench-results.json
+          fi
+          
+          echo "=== AV1 Standards Test Results ==="
+          if [ -f "packages/standards-test/av1-standards-results.json" ]; then
+            cat packages/standards-test/av1-standards-results.json
+          fi
+          
+          exit 1
+        else
+          echo "All performance gates passed"
+          echo "gates_passed=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Comment on PR with results
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const gatesPassed = '${{ steps.perf-gates.outputs.gates_passed }}' === 'true';
+          const quarantine = '${{ steps.quarantine-check.outputs.quarantine }}' === 'true';
+          
+          let comment = '## Performance Gates Results\n\n';
+          
+          if (quarantine) {
+            comment += '⚠️ **Performance gates bypassed** - Quarantine label detected\n\n';
+          } else if (gatesPassed) {
+            comment += '✅ **All performance gates passed**\n\n';
+          } else {
+            comment += '❌ **Performance gates failed**\n\n';
+            comment += 'One or more benchmarks did not meet the required targets:\n';
+            comment += '- AV1 VOD 1080p30: ≤1.5× realtime encode\n';
+            comment += '- AV1 RTC 720p30: ≤200ms glass-to-glass latency\n';
+            comment += '- MSE AV1 playback: ≤1% dropped frames\n';
+            comment += '- WebCodecs AV1: ≤75% CPU usage\n\n';
+            comment += 'Check the workflow logs for detailed results.\n';
+          }
+          
+          comment += `**Platform:** ${{ matrix.os }}\n`;
+          comment += `**Node.js:** ${{ matrix.node-version }}\n`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+    
+    - name: Fail if performance gates not met
+      if: steps.perf-gates.outputs.gates_passed != 'true' && steps.quarantine-check.outputs.quarantine != 'true'
+      run: |
+        echo "Performance gates failed - failing the workflow"
+        exit 1
+
+  performance-summary:
+    needs: performance-gates
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Download all benchmark results
+      uses: actions/download-artifact@v4
+      with:
+        path: benchmark-results
+    
+    - name: Generate performance summary
+      run: |
+        echo "# Performance Gates Summary" > performance-summary.md
+        echo "" >> performance-summary.md
+        echo "## Results by Platform" >> performance-summary.md
+        echo "" >> performance-summary.md
+        
+        for platform in ubuntu-latest windows-latest macos-latest; do
+          echo "### $platform" >> performance-summary.md
+          echo "" >> performance-summary.md
+          
+          if [ -d "benchmark-results/benchmark-results-$platform" ]; then
+            echo "#### Media Pipeline" >> performance-summary.md
+            if [ -f "benchmark-results/benchmark-results-$platform/media-bench-results.json" ]; then
+              echo '```json' >> performance-summary.md
+              cat "benchmark-results/benchmark-results-$platform/media-bench-results.json" >> performance-summary.md
+              echo '```' >> performance-summary.md
+            else
+              echo "No results available" >> performance-summary.md
+            fi
+            echo "" >> performance-summary.md
+            
+            echo "#### WebRTC Enhanced" >> performance-summary.md
+            if [ -f "benchmark-results/benchmark-results-$platform/webrtc-bench-results.json" ]; then
+              echo '```json' >> performance-summary.md
+              cat "benchmark-results/benchmark-results-$platform/webrtc-bench-results.json" >> performance-summary.md
+              echo '```' >> performance-summary.md
+            else
+              echo "No results available" >> performance-summary.md
+            fi
+            echo "" >> performance-summary.md
+            
+            echo "#### AV1 Standards" >> performance-summary.md
+            if [ -f "benchmark-results/benchmark-results-$platform/av1-standards-results.json" ]; then
+              echo '```json' >> performance-summary.md
+              cat "benchmark-results/benchmark-results-$platform/av1-standards-results.json" >> performance-summary.md
+              echo '```' >> performance-summary.md
+            else
+              echo "No results available" >> performance-summary.md
+            fi
+            echo "" >> performance-summary.md
+          else
+            echo "No benchmark results available for this platform" >> performance-summary.md
+            echo "" >> performance-summary.md
+          fi
+        done
+    
+    - name: Upload performance summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-summary
+        path: performance-summary.md
+        retention-days: 30

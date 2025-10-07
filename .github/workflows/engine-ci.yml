@@ -1,0 +1,56 @@
+name: engine-ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-bench:
+    name: Build (Node 20) and bench media
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.16.0'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Build engine packages
+        run: |
+          pnpm --filter @mycelia/media-pipeline build
+          pnpm --filter @mycelia/webrtc-enhanced build
+          pnpm --filter @mycelia/net-stack build
+          pnpm --filter @mycelia/engine-bridge build
+
+      - name: Native build (placeholder)
+        run: pnpm run native:build
+
+      - name: Media bench
+        run: pnpm run bench:media
+
+      - name: Typecheck engine packages
+        run: |
+          pnpm --filter @mycelia/media-pipeline typecheck
+          pnpm --filter @mycelia/webrtc-enhanced typecheck
+          pnpm --filter @mycelia/net-stack typecheck
+          pnpm --filter @mycelia/engine-bridge typecheck
+
+

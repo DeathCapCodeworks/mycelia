@@ -1,0 +1,30 @@
+[
+  {
+    "pubkey": "validator1-pubkey-abc123def456",
+    "stake": "1000000"
+  },
+  {
+    "pubkey": "validator2-pubkey-789ghi012jkl",
+    "stake": "2000000"
+  },
+  {
+    "pubkey": "validator3-pubkey-345mno678pqr",
+    "stake": "1500000"
+  },
+  {
+    "pubkey": "validator4-pubkey-901stu234vwx",
+    "stake": "1800000"
+  },
+  {
+    "pubkey": "validator5-pubkey-567yza890bcd",
+    "stake": "1200000"
+  },
+  {
+    "pubkey": "validator6-pubkey-123efg456hij",
+    "stake": "2200000"
+  },
+  {
+    "pubkey": "validator7-pubkey-789klm012nop",
+    "stake": "1600000"
+  }
+]

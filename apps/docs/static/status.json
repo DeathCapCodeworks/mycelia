@@ -1,0 +1,66 @@
+{
+  "status": "operational",
+  "timestamp": 1704067200000,
+  "buildSha": "abc123def456",
+  "version": "1.0.0",
+  "chainId": "mycelia-mainnet-1",
+  "peg": {
+    "status": "ok",
+    "ratio": "10 BLOOM = 1 BTC",
+    "collateralization": 1.0
+  },
+  "proofOfReserves": {
+    "status": "fresh",
+    "ageMinutes": 15,
+    "totalSats": "850000000",
+    "outstandingBloom": "85000000",
+    "collateralizationRatio": 1.0,
+    "lastAttestation": "2024-01-01T12:00:00Z"
+  },
+  "featureFlags": {
+    "btc_mainnet_redemption": false,
+    "staking_slashing": true,
+    "rewards_mainnet": true,
+    "governance_v1": true,
+    "spv_proofs": true,
+    "testnet_features": false
+  },
+  "diagnostics": {
+    "passRate": 0.95,
+    "lastRun": "2024-01-01T12:00:00Z",
+    "totalChecks": 15,
+    "passedChecks": 14,
+    "failedChecks": 1
+  },
+  "slos": {
+    "redemption_quote_latency_p95": {
+      "status": "healthy",
+      "value": 0.98,
+      "target": 0.99
+    },
+    "por_attestation_age": {
+      "status": "healthy",
+      "value": 0.97,
+      "target": 0.99
+    },
+    "diagnostics_pass_rate": {
+      "status": "warning",
+      "value": 0.95,
+      "target": 0.99
+    },
+    "sandbox_route_tti": {
+      "status": "healthy",
+      "value": 0.98,
+      "target": 0.99
+    }
+  },
+  "validators": {
+    "total": 7,
+    "active": 7,
+    "totalStake": "1000000000"
+  },
+  "treasury": {
+    "address": "bc1qtreasury123456789abcdefghijklmnopqrstuvwxyz",
+    "descriptor": "cash-backed-custodian-policy"
+  }
+}

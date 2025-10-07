@@ -1,4 +1,5 @@
 import { Capability, CapScope, assertCap, Result } from '@mycelia/shared-kernel';
+import { createConsentCard, verifyConsentCard } from '@mycelia/shared-kernel';
 
 export interface LocalModel {
   generate(prompt: string, ctx?: Record<string, unknown>): Promise<string>;
@@ -14,9 +15,11 @@ export interface OracleInit {
   vault: {
     get(key: string, caps?: Capability[]): Uint8Array | undefined;
     list(prefix?: string, caps?: Capability[]): string[];
+    put?: (key: string, data: Uint8Array, caps?: Capability[]) => void;
   };
   model: LocalModel;
   index: VectorIndex;
+  kms?: { sign: (m: Uint8Array, p: Uint8Array)=>Promise<Uint8Array>|Uint8Array; verify:(m:Uint8Array,s:Uint8Array,k:Uint8Array)=>Promise<boolean>|boolean; getOperatorPublicKey:()=>string|null; getOperatorPrivateKey:()=>Uint8Array|null };
 }
 
 // Global oracle agent instance for diagnostics
@@ -35,19 +38,46 @@ export class OracleAgent {
   private model!: LocalModel;
   private index!: VectorIndex;
   private caps: Capability[] = [];
+  private kms?: OracleInit['kms'];
 
   init(cfg: OracleInit) {
     this.vault = cfg.vault;
     this.model = cfg.model;
     this.index = cfg.index;
+    this.kms = cfg.kms;
   }
 
-  grant(cap: Capability) {
+  private persistConsent(card: any) {
+    try {
+      const key = `consent/${card.id}.json`;
+      const data = new TextEncoder().encode(JSON.stringify(card));
+      this.vault.put?.(key, data, this.caps);
+    } catch {}
+  }
+
+  async grant(cap: Capability) {
     this.caps.push(cap);
+    if (this.kms) {
+      const card = await createConsentCard({ requester: 'oracle', scopes: [cap.scope as any], durationMs: cap.durationMs ?? 3600000, purpose: cap.reason ?? 'cap-grant' }, this.kms as any);
+      this.persistConsent(card);
+    }
   }
 
   revoke(capId: string) {
     this.caps = this.caps.filter((c) => c.id !== capId);
+    // Mark revoked if stored
+    try {
+      const keys = this.vault.list('consent/', this.caps);
+      for (const k of keys) {
+        const raw = this.vault.get(k, this.caps);
+        if (!raw) continue;
+        const card = JSON.parse(new TextDecoder().decode(raw));
+        if (Array.isArray(card.scopes) && card.scopes.some((s:string)=> capId.includes(s))) {
+          card.revoked = true;
+          this.vault.put?.(k, new TextEncoder().encode(JSON.stringify(card)), this.caps);
+        }
+      }
+    } catch {}
   }
 
   async mem(doc: { id: string; text: string; meta?: Record<string, unknown> }): Promise<void> {

@@ -1,0 +1,33 @@
+{
+  "canonical": {
+    "status": "https://status.mycelia.com/status.json",
+    "por": "https://docs.mycelia.com/attestations/mainnet-por",
+    "governance": "https://docs.mycelia.com/governance-v0",
+    "docs": "https://docs.mycelia.com",
+    "sandbox": "https://sandbox.mycelia.com",
+    "api": "https://api.mycelia.com"
+  },
+  "social": {
+    "twitter": "https://twitter.com/MyceliaNetwork",
+    "discord": "https://discord.gg/mycelia",
+    "github": "https://github.com/MyceliaNetwork",
+    "linkedin": "https://linkedin.com/company/mycelia-network"
+  },
+  "governance": {
+    "proposals": "https://docs.mycelia.com/governance/proposals",
+    "voting": "https://vote.mycelia.com",
+    "forum": "https://community.mycelia.com"
+  },
+  "technical": {
+    "chainId": "mycelia-mainnet-1",
+    "rpc": "https://rpc.mycelia.com",
+    "explorer": "https://explorer.mycelia.com",
+    "faucet": "https://faucet.mycelia.com"
+  },
+  "support": {
+    "docs": "https://docs.mycelia.com",
+    "faq": "https://docs.mycelia.com/launch/faq",
+    "support": "https://support.mycelia.com",
+    "bugBounty": "https://docs.mycelia.com/security/bug-bounty"
+  }
+}

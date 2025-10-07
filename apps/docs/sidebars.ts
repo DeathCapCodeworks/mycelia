@@ -50,12 +50,26 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Demos',
+      label: 'Navigator',
       items: [
-        'demos/oracle',
-        'demos/workspaces',
-        'demos/rewards',
-        'demos/social-graph'
+        'navigator/session-time-machine'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Privacy',
+      items: [
+        'privacy/consent-cards'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Web4 Engine',
+      items: [
+        'engine/overview',
+        'engine/media-pipeline',
+        'engine/webrtc-enhanced',
+        'engine/net-stack'
       ]
     },
     'references/references'

@@ -1,0 +1,51 @@
+{
+  "targets": {
+    "redemption_quote_latency_p95": {
+      "target": 0.99,
+      "threshold": 0.95,
+      "description": "95% of redemption quotes under 100ms",
+      "unit": "ratio"
+    },
+    "por_attestation_age": {
+      "target": 0.99,
+      "threshold": 0.95,
+      "description": "99% of PoR attestations under 30 minutes",
+      "unit": "ratio"
+    },
+    "diagnostics_pass_rate": {
+      "target": 0.99,
+      "threshold": 0.95,
+      "description": "99% diagnostics pass rate",
+      "unit": "ratio"
+    },
+    "sandbox_route_tti": {
+      "target": 0.99,
+      "threshold": 0.95,
+      "description": "99% of sandbox routes under 2s TTI",
+      "unit": "ratio"
+    },
+    "redemption_queue_length": {
+      "target": 100,
+      "threshold": 500,
+      "description": "Redemption queue length under 100",
+      "unit": "count"
+    },
+    "redemptions_per_hour": {
+      "target": 1000,
+      "threshold": 500,
+      "description": "Redemptions per hour under 1000",
+      "unit": "count"
+    },
+    "attestation_age_minutes": {
+      "target": 30,
+      "threshold": 60,
+      "description": "PoR attestation age under 30 minutes",
+      "unit": "minutes"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2024-01-01T00:00:00Z",
+    "chainId": "mycelia-mainnet-1"
+  }
+}

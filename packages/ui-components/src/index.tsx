@@ -123,3 +123,71 @@ export function PegConverter({ className = '' }: { className?: string }) {
 
 export { default as Background } from './Background';
 
+// =====================
+// Consent Cards UI
+// =====================
+import React, { useMemo, useState } from 'react';
+
+export interface ConsentCardRowProps {
+  card: { id: string; requester: string; scopes: string[]; issuedAt: number; durationMs: number; purpose: string; signature: string; revoked?: boolean };
+  onRevoke?: (id: string) => void;
+}
+
+export const ConsentCardRow: React.FC<ConsentCardRowProps> = ({ card, onRevoke }) => {
+  const expiresAt = card.issuedAt + card.durationMs;
+  const remainingMs = Math.max(0, expiresAt - Date.now());
+  const remainingMin = Math.floor(remainingMs / 60000);
+  return (
+    <div className={`mc-consent-row ${card.revoked ? 'revoked' : ''}`}>
+      <div className="mc-consent-main">
+        <div className="mc-consent-requester">{card.requester}</div>
+        <div className="mc-consent-purpose">{card.purpose}</div>
+        <div className="mc-consent-scopes">{card.scopes.join(', ')}</div>
+      </div>
+      <div className="mc-consent-meta">
+        <div className="mc-consent-expiry">{card.revoked ? 'revoked' : `${remainingMin} min left`}</div>
+        {!card.revoked && onRevoke && (
+          <button className="mc-btn mc-btn-danger" onClick={() => onRevoke(card.id)}>Revoke</button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export interface ConsentDrawerProps {
+  cards: ConsentCardRowProps['card'][];
+  onRevoke?: (id: string) => void;
+}
+
+export const ConsentDrawer: React.FC<ConsentDrawerProps> = ({ cards, onRevoke }) => {
+  const [query, setQuery] = useState('');
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase();
+    return cards.filter(c => c.requester.toLowerCase().includes(q) || c.scopes.join(',').toLowerCase().includes(q) || c.purpose.toLowerCase().includes(q));
+  }, [cards, query]);
+
+  const exportJsonl = () => {
+    const lines = filtered.map(c => JSON.stringify(c)).join('\n');
+    const blob = new Blob([lines], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'consent-cards.jsonl'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="mc-consent-drawer">
+      <div className="mc-consent-toolbar">
+        <input className="mc-input" placeholder="Search cards" value={query} onChange={e => setQuery(e.target.value)} />
+        <button className="mc-btn" onClick={exportJsonl}>Export JSON Lines</button>
+      </div>
+      <div className="mc-consent-list">
+        {filtered.map(c => (
+          <ConsentCardRow key={c.id} card={c} onRevoke={onRevoke} />
+        ))}
+        {filtered.length === 0 && <div className="mc-empty">No matching consent cards</div>}
+      </div>
+    </div>
+  );
+};
+

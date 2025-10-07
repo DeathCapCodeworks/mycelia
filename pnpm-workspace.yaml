@@ -1,5 +1,7 @@
 packages:
   - 'apps/*'
   - 'packages/*'
-  - 'packages/diagnostics'
+  - 'packages/compat-matrix'
+  - 'packages/pilot-kit'
+  - 'packages/web4-feature-flags'
 

@@ -55,6 +55,8 @@ export interface SpvProofFeed extends ReserveFeed {
 export class SpvUtxoFeed implements ReserveFeed {
   private config: SpvUtxoConfig;
   private utxos = new Map<string, { value: bigint; confirmed: boolean }>();
+  private lastHeaderHash?: string;
+  private merkleRoots = new Map<string, string>();
 
   constructor(config: SpvUtxoConfig) {
     this.config = config;
@@ -70,7 +72,10 @@ export class SpvUtxoFeed implements ReserveFeed {
    */
   async getUtxoResult(): Promise<SpvUtxoResult> {
     try {
-      // In production, would fetch from Bitcoin node or API
+      // Sync headers first
+      await this.syncHeaders();
+      
+      // Fetch and verify UTXOs
       const utxos = await this.fetchUtxos();
       
       let totalSats = 0n;
@@ -99,6 +104,37 @@ export class SpvUtxoFeed implements ReserveFeed {
         warning: 'spv-unavailable',
         utxoCount: 0
       };
+    }
+  }
+
+  /**
+   * Sync Bitcoin headers for SPV verification
+   */
+  private async syncHeaders(): Promise<void> {
+    try {
+      // In production, would connect to Bitcoin node and sync headers
+      // For demo, simulate header sync
+      this.lastHeaderHash = 'mock-header-hash-' + Date.now();
+      
+      // Mock Merkle roots for demo
+      this.merkleRoots.set('mock-txid-1', 'mock-merkle-root-1');
+      this.merkleRoots.set('mock-txid-2', 'mock-merkle-root-2');
+      this.merkleRoots.set('mock-txid-3', 'mock-merkle-root-3');
+    } catch (error) {
+      throw new Error('Failed to sync headers: ' + error);
+    }
+  }
+
+  /**
+   * Verify Merkle proof for a transaction
+   */
+  private async verifyMerkleProof(txid: string, merkleRoot: string): Promise<boolean> {
+    try {
+      // In production, would verify Merkle proof against block header
+      // For demo, just check if we have the Merkle root
+      return this.merkleRoots.has(txid);
+    } catch (error) {
+      return false;
     }
   }
 
@@ -134,6 +170,20 @@ export class SpvUtxoFeed implements ReserveFeed {
   removeUtxo(txid: string, vout: number): void {
     const key = `${txid}:${vout}`;
     this.utxos.delete(key);
+  }
+
+  /**
+   * Get last synced header hash
+   */
+  getLastHeaderHash(): string | undefined {
+    return this.lastHeaderHash;
+  }
+
+  /**
+   * Get Merkle root for a transaction
+   */
+  getMerkleRoot(txid: string): string | undefined {
+    return this.merkleRoots.get(txid);
   }
 }
 

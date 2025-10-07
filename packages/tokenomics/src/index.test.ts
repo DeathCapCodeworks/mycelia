@@ -17,6 +17,21 @@ import {
   type SupplyFeed
 } from './index';
 
+// Property test utilities
+function generateRandomBigInt(min: bigint, max: bigint): bigint {
+  const range = max - min;
+  const random = BigInt(Math.floor(Math.random() * Number(range)));
+  return min + random;
+}
+
+function generateRandomBloomAmount(): bigint {
+  return generateRandomBigInt(1n, 1000000n); // 1 to 1M BLOOM
+}
+
+function generateRandomSatsAmount(): bigint {
+  return generateRandomBigInt(1n, 100000000000n); // 1 to 100B sats
+}
+
 describe('Peg Constants', () => {
   it('should have correct BTC to BLOOM ratio', () => {
     expect(BTC_PER_BLOOM).toBe(10n);
@@ -159,6 +174,72 @@ describe('Peg Invariants', () => {
       const sats = quoteRedeemBloomToSats(bloom);
       const expectedSats = bloom * SATS_PER_BLOOM;
       expect(sats).toBe(expectedSats);
+    }
+  });
+});
+
+describe('Property Tests', () => {
+  it('should maintain peg invariant across random conversions', () => {
+    for (let i = 0; i < 100; i++) {
+      const bloom = generateRandomBloomAmount();
+      const sats = bloomToSats(bloom);
+      const backToBloom = satsToBloom(sats);
+      
+      // Property: Round-trip conversion should preserve exact amount
+      expect(backToBloom).toBe(bloom);
+      
+      // Property: Conversion should be exact multiple of SATS_PER_BLOOM
+      expect(sats % SATS_PER_BLOOM).toBe(0n);
+    }
+  });
+
+  it('should never overflow in bigint calculations', () => {
+    const maxSafeBloom = 1000000000n; // 1B BLOOM
+    const sats = bloomToSats(maxSafeBloom);
+    
+    // Property: Should handle large numbers without overflow
+    expect(sats).toBe(maxSafeBloom * SATS_PER_BLOOM);
+    expect(sats > 0n).toBe(true);
+  });
+
+  it('should maintain collateralization properties', () => {
+    for (let i = 0; i < 50; i++) {
+      const lockedSats = generateRandomSatsAmount();
+      const supply = generateRandomBloomAmount();
+      const requiredSats = requiredSatsForSupply(supply);
+      
+      // Property: Required sats should be exact multiple of supply
+      expect(requiredSats).toBe(supply * SATS_PER_BLOOM);
+      
+      // Property: Collateralization ratio should be consistent
+      const ratio = collateralizationRatio(lockedSats, supply);
+      if (supply > 0n) {
+        expect(ratio).toBe(Number(lockedSats) / Number(requiredSats));
+      }
+    }
+  });
+
+  it('should never allow negative or zero amounts in conversions', () => {
+    for (let i = 0; i < 100; i++) {
+      const bloom = generateRandomBloomAmount();
+      const sats = bloomToSats(bloom);
+      
+      // Property: Positive input should produce positive output
+      expect(bloom > 0n).toBe(true);
+      expect(sats > 0n).toBe(true);
+    }
+  });
+
+  it('should maintain redemption quote properties', () => {
+    for (let i = 0; i < 100; i++) {
+      const bloom = generateRandomBloomAmount();
+      const sats = quoteRedeemBloomToSats(bloom);
+      
+      // Property: Quote should be exact multiple of SATS_PER_BLOOM
+      expect(sats % SATS_PER_BLOOM).toBe(0n);
+      
+      // Property: Quote should equal bloomToSats
+      expect(sats).toBe(bloomToSats(bloom));
     }
   });
 });

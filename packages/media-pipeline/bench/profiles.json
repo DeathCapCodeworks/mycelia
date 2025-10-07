@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "targets": {
+    "vod_1080p30_high": {
+      "description": "VOD AV1 1080p30 high quality encoding",
+      "targets": {
+        "encode_time_ratio": {
+          "description": "Encode time vs realtime (1.0 = realtime, 1.5 = 1.5x realtime)",
+          "target": 1.5,
+          "unit": "ratio",
+          "condition": "mid_tier_cpu OR hw_encode_active"
+        },
+        "hardware_accelerated": {
+          "description": "Hardware acceleration should be active when available",
+          "target": true,
+          "unit": "boolean",
+          "condition": "hw_encode_available"
+        }
+      },
+      "test_duration": 30000,
+      "sample_frames": 900
+    },
+    "realtime_720p30_lowdelay": {
+      "description": "RTC AV1 SVC 720p30 low delay encoding",
+      "targets": {
+        "encode_time_ratio": {
+          "description": "Encode time vs realtime for low delay",
+          "target": 0.8,
+          "unit": "ratio",
+          "condition": "always"
+        },
+        "hardware_accelerated": {
+          "description": "Hardware acceleration preferred for realtime",
+          "target": true,
+          "unit": "boolean",
+          "condition": "hw_encode_available"
+        }
+      },
+      "test_duration": 10000,
+      "sample_frames": 300
+    }
+  },
+  "hardware_tiers": {
+    "mid_tier_cpu": {
+      "description": "Mid-tier CPU performance baseline",
+      "cpu_cores": 4,
+      "cpu_frequency": 2500,
+      "memory_gb": 8
+    }
+  },
+  "test_config": {
+    "warmup_frames": 30,
+    "cooldown_frames": 10,
+    "measurement_interval": 1000
+  }
+}

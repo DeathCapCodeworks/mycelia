@@ -80,3 +80,58 @@ export function load(json: string) {
   active = obj.active;
 }
 
+// =====================
+// Session Time Machine
+// =====================
+export type Snapshot = {
+  name: string;
+  createdAt: number;
+  tabs: Array<{ id: string; url: string }>;
+  scrollPositions: Record<string, number>;
+  formStates?: Record<string, unknown>;
+  walletContext?: { address?: string; chain?: string };
+};
+
+const snapshots: Map<string, Snapshot> = new Map();
+
+export function saveSnapshot(name: string, data: Omit<Snapshot, 'name' | 'createdAt'>) {
+  const redactedForms: Record<string, unknown> = {};
+  if (data.formStates) {
+    for (const [k, v] of Object.entries(data.formStates)) {
+      if (k.toLowerCase().includes('secret') || k.toLowerCase().includes('password')) continue;
+      redactedForms[k] = v;
+    }
+  }
+  const snap: Snapshot = {
+    name,
+    createdAt: Date.now(),
+    tabs: data.tabs,
+    scrollPositions: data.scrollPositions,
+    formStates: redactedForms,
+    walletContext: data.walletContext
+  };
+  snapshots.set(name, snap);
+}
+
+export function restoreSnapshot(name: string): Snapshot | null {
+  return snapshots.get(name) ?? null;
+}
+
+export function listSnapshots(): Snapshot[] {
+  return Array.from(snapshots.values()).sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export function deleteSnapshot(name: string): boolean {
+  return snapshots.delete(name);
+}
+
+export function onExitSaveSnapshot(getName: () => string, getData: () => Omit<Snapshot, 'name' | 'createdAt'>) {
+  try {
+    const name = getName();
+    const data = getData();
+    saveSnapshot(name, data);
+  } catch {
+    // no-op safeguard
+  }
+}
+

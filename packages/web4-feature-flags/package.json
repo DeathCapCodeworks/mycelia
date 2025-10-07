@@ -1,0 +1,22 @@
+{
+  "name": "@mycelia/web4-feature-flags",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "cli": "tsx src/cli.ts"
+  },
+  "bin": {
+    "mycelia-flags": "dist/cli.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.1"
+  }
+}

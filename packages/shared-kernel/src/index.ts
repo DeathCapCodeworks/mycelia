@@ -133,3 +133,69 @@ export class SupplyLedger {
   }
 }
 
+// =====================
+// Consent Cards (privacy)
+// =====================
+
+export type ConsentScope = string;
+
+export interface ConsentCard {
+  id: string;
+  issuedAt: number;
+  requester: string;
+  scopes: ConsentScope[];
+  durationMs: number;
+  purpose: string;
+  signature: string;
+  revoked?: boolean;
+}
+
+export interface CapabilityRequest {
+  requester: string;
+  scopes: ConsentScope[];
+  durationMs: number;
+  purpose: string;
+}
+
+export interface MinimalKms {
+  sign(message: Uint8Array, privateKey: Uint8Array): Promise<Uint8Array> | Uint8Array;
+  verify(message: Uint8Array, signature: Uint8Array, publicKey: Uint8Array): Promise<boolean> | boolean;
+  getOperatorPublicKey?(): string | null;
+  getOperatorPrivateKey?(): Uint8Array | null;
+}
+
+function encodeCardForSigning(payload: Omit<ConsentCard, 'signature'>): Uint8Array {
+  const text = JSON.stringify(payload);
+  return new TextEncoder().encode(text);
+}
+
+export async function createConsentCard(capRequest: CapabilityRequest, kms: MinimalKms): Promise<ConsentCard> {
+  const base: Omit<ConsentCard, 'signature'> = {
+    id: `cc_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    issuedAt: Date.now(),
+    requester: capRequest.requester,
+    scopes: [...capRequest.scopes],
+    durationMs: capRequest.durationMs,
+    purpose: capRequest.purpose
+  } as any;
+
+  const msg = encodeCardForSigning(base);
+  const priv = kms.getOperatorPrivateKey?.();
+  if (!priv) {
+    throw new Error('Consent card signing requires operator private key');
+  }
+  const sigBytes = await Promise.resolve(kms.sign(msg, priv));
+  const signature = Buffer.from(sigBytes).toString('hex');
+  return { ...base, signature } as ConsentCard;
+}
+
+export async function verifyConsentCard(card: ConsentCard, kms: MinimalKms): Promise<boolean> {
+  const { signature, ...rest } = card;
+  const msg = encodeCardForSigning(rest as ConsentCard);
+  const pubHex = kms.getOperatorPublicKey?.();
+  if (!pubHex) return false;
+  const sig = Buffer.from(signature, 'hex');
+  const pub = Buffer.from(pubHex, 'hex');
+  return Promise.resolve(kms.verify(msg, sig, pub));
+}
+
