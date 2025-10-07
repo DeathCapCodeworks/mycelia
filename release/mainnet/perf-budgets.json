@@ -1,0 +1,8 @@
+{
+  "sandbox_bundle_kb_max": 350,
+  "docs_bundle_kb_max": 250,
+  "tti_p95_ms_max": 1500,
+  "battery_cost_per_minute_max": 0.5,
+  "cpu_usage_percent_max": 75,
+  "memory_usage_mb_max": 100
+}

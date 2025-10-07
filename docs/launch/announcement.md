@@ -1,148 +1,124 @@
----
-title: Mycelia Mainnet Launch Announcement
----
+# Golden Path Demo
 
-# 🚀 Mycelia Mainnet is Live
+Watch our 60-second demonstration of Mycelia's core features and capabilities.
 
-We are excited to announce the launch of the Mycelia mainnet, a revolutionary blockchain ecosystem that brings together decentralized applications, a hard-pegged token, and a comprehensive governance framework.
+## 🎬 Watch the Demo
 
-## Core Pillars
+[![Golden Path Demo](https://img.youtube.com/vi/placeholder/maxresdefault.jpg)](https://youtu.be/placeholder)
 
-### 1. Hard Protocol-Level Peg
-**10 BLOOM = 1 BTC** - Each BLOOM token is fully redeemable for Bitcoin at a fixed rate, backed by locked Bitcoin reserves. This peg is enforced programmatically across all system components and cannot be changed without creating a new chain.
+**Duration:** ~60 seconds  
+**Resolution:** 1080p  
+**Features:** Publisher onboarding, Applets gallery, Media pipeline, Governance simulation
 
-### 2. Decentralized Ecosystem
-Mycelia provides a complete ecosystem for decentralized applications, including:
-- **Oracle Agent**: AI-powered data processing and analysis
-- **Social Graph**: Decentralized contact management and permissions
-- **Workspaces Engine**: Context-aware application switching
-- **Mining Application**: IPFS-based contribution and reward system
+## What You'll See
 
-### 3. Governance and Treasury
-- **Treasury**: $20,000,000,000 (Twenty Billion USD) backed by cash donations
-- **Governance v0**: Community-driven decision making with technical oversight
-- **Transparent Operations**: All decisions and financial transactions are public
+### 1. Publisher Onboarding
+- Domain verification process
+- Mycelia snippet installation
+- Feature enablement (Rewards, Live Captions)
 
-## Proof of Reserves
+### 2. Applets Gallery
+- Browse installable, offline-ready applets
+- Filter by category and verification status
+- Install flow with consent cards
 
-Our Bitcoin reserves are continuously verified through:
-- **SPV Verification**: Simplified Payment Verification of Bitcoin UTXOs
-- **Regular Attestations**: Cryptographically signed reserve snapshots
-- **Public Transparency**: Real-time reserve status and verification
+### 3. Media Pipeline
+- AV1 end-to-end encoding
+- WebRTC with SVC (Scalable Video Coding)
+- Performance monitoring and optimization
 
-[View Current Proof of Reserves →](/attestations/mainnet-por)
+### 4. Governance Simulation
+- Proposal P-0001 simulator
+- Health checks and risk assessment
+- Safe voting package generation
 
-## Governance Framework
+## Technical Details
 
-Mycelia operates under a transparent governance model:
-- **Community Council**: Elected community representatives
-- **Technical Committee**: Protocol development and security oversight
-- **Treasury Committee**: Financial management and audit compliance
+- **Recording:** Automated with Playwright
+- **Processing:** FFmpeg with burned-in captions
+- **Quality:** 1080p @ 30fps
+- **Format:** MP4 with AAC audio
+- **Captions:** SRT and ASS subtitle formats
 
-[Explore Governance v0 →](/governance-v0)
+## Local Recording
 
-## Redemption Status
+To record your own demo:
 
-**Current Status**: Bitcoin mainnet redemption is currently **disabled** and requires governance approval through [Proposal P-0001](/governance/proposals/P-0001-enable-btc-mainnet-redemption).
+```bash
+# Start servers
+pnpm demo:serve:win  # Windows
+# or
+pnpm demo:serve      # macOS/Linux
 
-- **Testnet Redemption**: Fully functional on Bitcoin testnet
-- **Mainnet Redemption**: Pending governance approval
-- **Security**: All redemption infrastructure is ready and audited
+# Record demo
+pnpm demo:record                    # Captioned only
+pnpm demo:record:narrated          # With TTS narration (local only)
+```
 
-## Key Features
+Output files:
+- `release/public/golden-path.mp4` - Video file
+- `release/public/golden-path.srt` - Subtitle file
 
-### For Developers
-- **Multi-Chain Compatibility**: EVM and Solana support
-- **Developer SDK**: Unified interface for cross-chain development
-- **Comprehensive Documentation**: Complete API reference and tutorials
-- **Testing Framework**: Built-in testing utilities and examples
+## CI Integration
 
-### For Users
-- **Hard Peg Stability**: Predictable BLOOM/BTC exchange rate
-- **Transparent Operations**: All system operations are verifiable
-- **Community Governance**: Direct participation in protocol decisions
-- **Secure Redemption**: Cryptographically secured redemption process
+The demo is automatically recorded on every push to main and available as a GitHub Actions artifact.
 
-### For Validators
-- **Staking Rewards**: Earn rewards for network participation
-- **Governance Rights**: Participate in protocol governance
-- **Slashing Protection**: Secure staking with slashing penalties
-- **Delegation Support**: Support for delegated staking
+## Accessibility
 
-## Technical Specifications
+- **Captions:** Burned into video for accessibility
+- **Narration:** Optional TTS support (Windows/macOS)
+- **Keyboard Navigation:** All interactions accessible via keyboard
+- **Screen Reader:** Compatible with assistive technologies
 
-- **Chain ID**: `mycelia-mainnet-1`
-- **Block Time**: 1 second
-- **Consensus**: Proof of Stake with BLOOM token
-- **Peg Ratio**: 10 BLOOM = 1 BTC (immutable)
-- **Initial Supply**: 0 BLOOM (minted through mining and rewards)
+## Requirements
 
-## Security and Audits
+- Node.js 20 LTS
+- FFmpeg (for video processing)
+- Playwright browsers
+- Windows/macOS for TTS narration
 
-- **Security Audits**: Comprehensive third-party security audits completed
-- **Threat Modeling**: STRIDE-based threat analysis and mitigation
-- **Key Management**: Hardware security module integration
-- **Incident Response**: Complete incident response procedures
+## Troubleshooting
 
-## Getting Started
+### Recording Issues
 
-### For Users
-1. **Explore the Ecosystem**: Visit our [sandbox](/sandbox) to try the applications
-2. **Learn About Governance**: Read our [governance documentation](/governance-v0)
-3. **Check System Status**: Monitor our [real-time status](/status.json)
+**"Servers not responding"**
+- Ensure ports 3000 and 5173 are available
+- Check firewall settings
+- Verify server startup logs
 
-### For Developers
-1. **Read the Documentation**: Start with our [developer guide](/developer-guide)
-2. **Try the SDK**: Explore our [API reference](/api-reference)
-3. **Join the Community**: Participate in governance and development
+**"Playwright browser launch failed"**
+- Install Playwright browsers: `npx playwright install chromium`
+- Check system dependencies
+- Verify display settings (for headless mode)
 
-### For Validators
-1. **Review Staking Documentation**: Learn about [staking and delegation](/tokenomics/staking-preview)
-2. **Check Validator Requirements**: Ensure you meet the technical requirements
-3. **Join the Network**: Participate in network consensus and governance
+**"FFmpeg processing failed"**
+- Install FFmpeg: `npm install -g ffmpeg-static`
+- Check video file permissions
+- Verify output directory exists
 
-## Community and Support
+### Quality Issues
 
-- **Documentation**: [docs.mycelia.com](https://docs.mycelia.com)
-- **Status Page**: [status.mycelia.com](https://status.mycelia.com)
-- **Governance**: [governance.mycelia.com](https://governance.mycelia.com)
-- **Support**: [support@mycelia.com](mailto:support@mycelia.com)
+**"Video quality poor"**
+- Increase CRF value in ffmpeg settings
+- Check input video resolution
+- Verify encoding preset
 
-## What's Next
+**"Captions not visible"**
+- Check subtitle file format
+- Verify ASS styling parameters
+- Test with different video players
 
-### Immediate (Week 1)
-- **System Monitoring**: Continuous monitoring and optimization
-- **Community Onboarding**: User and developer onboarding programs
-- **Governance Activation**: First governance proposals and voting
+## Future Enhancements
 
-### Short-term (Month 1)
-- **Bitcoin Mainnet Redemption**: Governance proposal P-0001 voting
-- **Enhanced Features**: Additional applications and integrations
-- **Community Growth**: Expanded community programs and partnerships
+- **Multiple Languages:** Support for international captions
+- **Interactive Elements:** Clickable hotspots in video
+- **Custom Themes:** Branded video styling
+- **Analytics:** View tracking and engagement metrics
 
-### Long-term (Year 1)
-- **Ecosystem Expansion**: Additional blockchain integrations
-- **Advanced Governance**: Enhanced governance mechanisms
-- **Global Adoption**: Worldwide adoption and partnerships
+## Support
 
-## Transparency Commitment
-
-Mycelia is committed to complete transparency:
-- **Open Source**: All code is open source and auditable
-- **Public Audits**: Regular third-party audits and reports
-- **Real-time Status**: Live system status and monitoring
-- **Community Governance**: Transparent decision-making processes
-
-## Contact Information
-
-- **General Inquiries**: [info@mycelia.com](mailto:info@mycelia.com)
-- **Technical Support**: [tech@mycelia.com](mailto:tech@mycelia.com)
-- **Partnerships**: [partnerships@mycelia.com](mailto:partnerships@mycelia.com)
-- **Media**: [media@mycelia.com](mailto:media@mycelia.com)
-
----
-
-**Launch Date**: [Date]  
-**Chain ID**: `mycelia-mainnet-1`  
-**Status**: [Live Status Link](/status.json)  
-**Proof of Reserves**: [Current Attestation](/attestations/mainnet-por)
+For demo recording issues:
+- Check the troubleshooting section above
+- Review CI logs for automated recordings
+- Contact the demo team
+- Submit issues to the Mycelia repository

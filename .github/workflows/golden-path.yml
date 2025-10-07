@@ -1,0 +1,78 @@
+name: Golden Path Demo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  golden-path:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        
+      - name: Build packages
+        run: pnpm build
+        
+      - name: Start servers
+        run: pnpm demo:serve:win
+        env:
+          CI: true
+          
+      - name: Wait for servers
+        run: |
+          timeout 30 bash -c 'until curl -f http://127.0.0.1:5173 > /dev/null 2>&1; do sleep 1; done'
+          timeout 30 bash -c 'until curl -f http://127.0.0.1:3000 > /dev/null 2>&1; do sleep 1; done'
+          
+      - name: Record Golden Path Demo
+        run: pnpm demo:record
+        timeout-minutes: 10
+        
+      - name: Upload Golden Path Demo
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-path-demo
+          path: |
+            release/public/golden-path.mp4
+            release/public/golden-path.srt
+          retention-days: 30
+          
+      - name: Comment PR with demo link
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Check if video file exists
+            const videoPath = 'release/public/golden-path.mp4';
+            if (fs.existsSync(videoPath)) {
+              const stats = fs.statSync(videoPath);
+              const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🎬 Golden Path Demo recorded successfully!\n\n- Video: \`golden-path.mp4\` (${sizeMB} MB)\n- Captions: \`golden-path.srt\`\n- Duration: ~60 seconds\n\nCheck the artifacts tab to download the demo video.`
+              });
+            }

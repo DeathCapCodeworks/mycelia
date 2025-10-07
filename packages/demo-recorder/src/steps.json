@@ -1,0 +1,30 @@
+[
+  {
+    "route": "/publisher/start",
+    "waitFor": ".publisher-onboarding-container",
+    "click": ".wizard-content button",
+    "pauseMs": 2000,
+    "caption": "Onboard a publisher: verify domain, enable Rewards."
+  },
+  {
+    "route": "/gallery",
+    "waitFor": ".applets-gallery-container",
+    "click": ".applet-card button",
+    "pauseMs": 1500,
+    "caption": "Browse installable, offline-ready applets."
+  },
+  {
+    "route": "/media",
+    "waitFor": ".media-page-container",
+    "click": ".tab-button[data-tab='vod']",
+    "pauseMs": 1000,
+    "caption": "AV1 end-to-end: VOD encode, WebRTC with SVC."
+  },
+  {
+    "route": "/governance",
+    "waitFor": ".governance-container",
+    "click": ".simulate-button",
+    "pauseMs": 3000,
+    "caption": "Simulate Proposal P-0001 safely before voting."
+  }
+]

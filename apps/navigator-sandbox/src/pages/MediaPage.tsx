@@ -5,6 +5,8 @@ import { NetworkStack, TransportProfile, Protocol } from '@mycelia/net-stack';
 import { engine, EngineCapabilities } from '@mycelia/engine-bridge';
 import { compatMatrix, CompatibilityResult } from '@mycelia/compat-matrix';
 import { featureFlags } from '@mycelia/web4-feature-flags';
+import { batteryMonitor, PowerCostEstimate } from '@mycelia/observability';
+import { sr, SuperResolutionOptions, SuperResolutionResult, WebGPUCapabilities } from '@mycelia/webgpu-sr';
 
 const MediaPage: React.FC = () => {
   const [mediaPipeline] = useState(() => new MediaPipeline());
@@ -19,6 +21,14 @@ const MediaPage: React.FC = () => {
   const [sideBySideResults, setSideBySideResults] = useState<any>(null);
   const [compatibilityResult, setCompatibilityResult] = useState<CompatibilityResult | null>(null);
   const [activeTab, setActiveTab] = useState<'vod' | 'live' | 'capability' | 'compat'>('vod');
+  const [powerCostEstimate, setPowerCostEstimate] = useState<PowerCostEstimate | null>(null);
+  const [lowPowerMode, setLowPowerMode] = useState(false);
+  const [webgpuCapabilities, setWebgpuCapabilities] = useState<WebGPUCapabilities | null>(null);
+  const [srEnabled, setSrEnabled] = useState(false);
+  const [srScale, setSrScale] = useState<1.5 | 2.0>(2.0);
+  const [srQuality, setSrQuality] = useState<'fast' | 'high'>('fast');
+  const [srResult, setSrResult] = useState<SuperResolutionResult | null>(null);
+  const [sampleVideoLoaded, setSampleVideoLoaded] = useState(false);
 
   // Media Pipeline State
   const [encodeOptions, setEncodeOptions] = useState<EncodeOptions>({
@@ -74,9 +84,25 @@ const MediaPage: React.FC = () => {
       // Detect compatibility
       const compatResult = await compatMatrix.detect();
       setCompatibilityResult(compatMatrix.getResult());
+      
+              // Initialize battery monitoring
+              const powerEstimate = batteryMonitor.getPowerCostEstimate();
+              setPowerCostEstimate(powerEstimate);
+              
+              // Initialize WebGPU SR capabilities
+              const webgpuCaps = sr.getCapabilities();
+              setWebgpuCapabilities(webgpuCaps);
     };
 
     initCapabilities().catch(console.error);
+
+    // Update power cost estimate every 5 seconds
+    const powerInterval = setInterval(() => {
+      const powerEstimate = batteryMonitor.getPowerCostEstimate();
+      setPowerCostEstimate(powerEstimate);
+    }, 5000);
+
+    return () => clearInterval(powerInterval);
 
     // Initialize SFU connection
     const initSFU = async () => {
@@ -256,6 +282,68 @@ const MediaPage: React.FC = () => {
     }
   };
 
+  const handleLoadSampleVideo = () => {
+    // Simulate loading a sample video for demo purposes
+    setSampleVideoLoaded(true);
+    console.log('Sample video loaded for demo');
+  };
+
+  const handleTestSuperResolution = async () => {
+    try {
+      // Create a mock video element for testing
+      const videoElement = document.createElement('video');
+      videoElement.width = 640;
+      videoElement.height = 480;
+      
+      // Create a test canvas with some content
+      const canvas = document.createElement('canvas');
+      canvas.width = 640;
+      canvas.height = 480;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Draw a test pattern
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(0, 0, 320, 240);
+        ctx.fillStyle = '#00ff00';
+        ctx.fillRect(320, 0, 320, 240);
+        ctx.fillStyle = '#0000ff';
+        ctx.fillRect(0, 240, 320, 240);
+        ctx.fillStyle = '#ffff00';
+        ctx.fillRect(320, 240, 320, 240);
+        
+        // Add some text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '24px Arial';
+        ctx.fillText('Test Pattern', 250, 250);
+      }
+      
+      // Convert canvas to video element (mock)
+      const stream = canvas.captureStream(30);
+      videoElement.srcObject = stream;
+      
+      const options: SuperResolutionOptions = {
+        scale: srScale,
+        quality: srQuality,
+        fallbackToWasm: true
+      };
+      
+      const result = await sr.upscale(videoElement, options);
+      setSrResult(result);
+      
+      console.log('Super-resolution test completed:', result);
+    } catch (error) {
+      console.error('Super-resolution test failed:', error);
+      setSrResult({
+        success: false,
+        method: 'none',
+        processingTimeMs: 0,
+        outputWidth: 0,
+        outputHeight: 0,
+        error: (error as Error).message
+      });
+    }
+  };
+
   const handleNetworkConfigChange = (key: string, value: any) => {
     setNetworkConfig(prev => ({ ...prev, [key]: value }));
     
@@ -399,6 +487,14 @@ const MediaPage: React.FC = () => {
                 }))}
               />
               <span>bytes</span>
+            </div>
+            <div className="form-row">
+              <button onClick={handleLoadSampleVideo} className="load-sample-btn">
+                Load Sample Video
+              </button>
+              {sampleVideoLoaded && (
+                <span className="sample-status">✅ Sample loaded</span>
+              )}
             </div>
             <button onClick={handleAV1Encode} disabled={isProcessing}>
               {isProcessing ? 'AV1 Encoding...' : 'AV1 Encode'}
@@ -739,7 +835,176 @@ const MediaPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Compatibility Tab */}
+      {/* Power Hints Section */}
+      {powerCostEstimate && (
+        <div className="power-hints-section">
+          <h2>Power & Performance</h2>
+          
+          <div className="power-status">
+            <div className="power-metric">
+              <span>Battery Cost:</span>
+              <span className={powerCostEstimate.battery_cost_per_minute > 0.5 ? 'power-high' : 'power-normal'}>
+                {powerCostEstimate.battery_cost_per_minute.toFixed(2)}/min
+              </span>
+            </div>
+            <div className="power-metric">
+              <span>CPU Load:</span>
+              <span className={powerCostEstimate.cpu_load_percent > 75 ? 'power-high' : 'power-normal'}>
+                {powerCostEstimate.cpu_load_percent.toFixed(1)}%
+              </span>
+            </div>
+            <div className="power-metric">
+              <span>Thermal State:</span>
+              <span className={`thermal-${powerCostEstimate.thermal_state}`}>
+                {powerCostEstimate.thermal_state}
+              </span>
+            </div>
+            <div className="power-metric">
+              <span>Power Mode:</span>
+              <span className={`power-mode-${powerCostEstimate.power_mode}`}>
+                {powerCostEstimate.power_mode}
+              </span>
+            </div>
+          </div>
+
+          <div className="power-controls">
+            <div className="low-power-toggle">
+              <label>
+                <input 
+                  type="checkbox" 
+                  checked={lowPowerMode}
+                  onChange={(e) => setLowPowerMode(e.target.checked)}
+                />
+                Low Power Mode
+              </label>
+              <p>Reduces frame rate and encoder complexity to save battery</p>
+            </div>
+
+            <div className="power-recommendations">
+              <h3>Recommendations:</h3>
+              <ul>
+                {batteryMonitor.getPowerRecommendations().map((rec, index) => (
+                  <li key={index}>{rec}</li>
+                ))}
+              </ul>
+            </div>
+                  </div>
+                </div>
+              )}
+
+              {/* WebGPU Super-Resolution Section */}
+              {webgpuCapabilities && (
+                <div className="webgpu-sr-section">
+                  <h2>WebGPU Super-Resolution</h2>
+                  
+                  <div className="sr-status">
+                    <div className="sr-capability">
+                      <span>WebGPU Available:</span>
+                      <span className={webgpuCapabilities.available ? 'capability-yes' : 'capability-no'}>
+                        {webgpuCapabilities.available ? 'Yes' : 'No'}
+                      </span>
+                    </div>
+                    {webgpuCapabilities.available && webgpuCapabilities.adapterInfo && (
+                      <div className="sr-capability">
+                        <span>Adapter:</span>
+                        <span>{webgpuCapabilities.adapterInfo.vendor} {webgpuCapabilities.adapterInfo.architecture}</span>
+                      </div>
+                    )}
+                    <div className="sr-capability">
+                      <span>WASM Fallback:</span>
+                      <span className={sr.isWasmAvailable() ? 'capability-yes' : 'capability-no'}>
+                        {sr.isWasmAvailable() ? 'Available' : 'Not Available'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="sr-controls">
+                    <div className="sr-toggle">
+                      <label>
+                        <input 
+                          type="checkbox" 
+                          checked={srEnabled}
+                          onChange={(e) => setSrEnabled(e.target.checked)}
+                          disabled={!webgpuCapabilities.available && !sr.isWasmAvailable()}
+                        />
+                        Enable Super-Resolution
+                      </label>
+                      <p>Enhance video quality using AI upscaling</p>
+                    </div>
+
+                    {srEnabled && (
+                      <div className="sr-settings">
+                        <div className="sr-setting">
+                          <label>
+                            Scale Factor:
+                            <select 
+                              value={srScale} 
+                              onChange={(e) => setSrScale(parseFloat(e.target.value) as 1.5 | 2.0)}
+                            >
+                              <option value={1.5}>1.5x</option>
+                              <option value={2.0}>2.0x</option>
+                            </select>
+                          </label>
+                        </div>
+
+                        <div className="sr-setting">
+                          <label>
+                            Quality:
+                            <select 
+                              value={srQuality} 
+                              onChange={(e) => setSrQuality(e.target.value as 'fast' | 'high')}
+                            >
+                              <option value="fast">Fast</option>
+                              <option value="high">High</option>
+                            </select>
+                          </label>
+                        </div>
+
+                        <button 
+                          onClick={handleTestSuperResolution}
+                          disabled={!webgpuCapabilities.available && !sr.isWasmAvailable()}
+                        >
+                          Test Super-Resolution
+                        </button>
+                      </div>
+                    )}
+
+                    {srResult && (
+                      <div className="sr-result">
+                        <h3>Last Test Result:</h3>
+                        <div className="sr-result-metrics">
+                          <div className="sr-metric">
+                            <span>Method:</span>
+                            <span className={`method-${srResult.method}`}>{srResult.method}</span>
+                          </div>
+                          <div className="sr-metric">
+                            <span>Success:</span>
+                            <span className={srResult.success ? 'success-yes' : 'success-no'}>
+                              {srResult.success ? 'Yes' : 'No'}
+                            </span>
+                          </div>
+                          <div className="sr-metric">
+                            <span>Processing Time:</span>
+                            <span>{srResult.processingTimeMs.toFixed(2)} ms</span>
+                          </div>
+                          <div className="sr-metric">
+                            <span>Output Resolution:</span>
+                            <span>{srResult.outputWidth}x{srResult.outputHeight}</span>
+                          </div>
+                          {srResult.error && (
+                            <div className="sr-error">
+                              <span>Error:</span>
+                              <span>{srResult.error}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Compatibility Tab */}
       {activeTab === 'compat' && (
         <div className="compat-section">
           <h2>Compatibility Matrix</h2>
@@ -1208,6 +1473,336 @@ const MediaPage: React.FC = () => {
         .perf-poor {
           color: #ff6666;
           font-weight: bold;
+        }
+
+        /* Power Hints Styles */
+        .power-hints-section {
+          background: rgba(0, 212, 255, 0.1);
+          border: 1px solid #00d4ff;
+          border-radius: 8px;
+          padding: 30px;
+          margin-top: 20px;
+        }
+
+        .power-hints-section h2 {
+          color: #00d4ff;
+          margin-bottom: 20px;
+        }
+
+        .power-status {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .power-metric {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .power-metric span:first-child {
+          color: #ccc;
+          font-weight: bold;
+        }
+
+        .power-normal {
+          color: #00ff88;
+          font-weight: bold;
+        }
+
+        .power-high {
+          color: #ff6666;
+          font-weight: bold;
+        }
+
+        .thermal-normal {
+          color: #00ff88;
+          font-weight: bold;
+        }
+
+        .thermal-warm {
+          color: #ffaa00;
+          font-weight: bold;
+        }
+
+        .thermal-hot {
+          color: #ff6666;
+          font-weight: bold;
+        }
+
+        .power-mode-low {
+          color: #00ff88;
+          font-weight: bold;
+        }
+
+        .power-mode-balanced {
+          color: #00d4ff;
+          font-weight: bold;
+        }
+
+        .power-mode-high {
+          color: #ffaa00;
+          font-weight: bold;
+        }
+
+        .power-controls {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+
+        .low-power-toggle {
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          padding: 15px;
+          border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .low-power-toggle label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          color: #00d4ff;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .low-power-toggle p {
+          color: #ccc;
+          font-size: 0.9rem;
+          margin: 0;
+        }
+
+        .power-recommendations {
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          padding: 15px;
+          border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .power-recommendations h3 {
+          color: #00d4ff;
+          margin: 0 0 10px 0;
+        }
+
+        .power-recommendations ul {
+          margin: 0;
+          padding-left: 20px;
+        }
+
+        .power-recommendations li {
+          color: #ccc;
+          margin-bottom: 5px;
+          font-size: 0.9rem;
+        }
+
+        /* WebGPU Super-Resolution Styles */
+        .webgpu-sr-section {
+          background: rgba(0, 212, 255, 0.1);
+          border: 1px solid #00d4ff;
+          border-radius: 8px;
+          padding: 30px;
+          margin-top: 20px;
+        }
+
+        .webgpu-sr-section h2 {
+          color: #00d4ff;
+          margin-bottom: 20px;
+        }
+
+        .sr-status {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .sr-capability {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .sr-capability span:first-child {
+          color: #ccc;
+          font-weight: bold;
+        }
+
+        .capability-yes {
+          color: #00ff88;
+          font-weight: bold;
+        }
+
+        .capability-no {
+          color: #ff6666;
+          font-weight: bold;
+        }
+
+        .sr-controls {
+          margin-top: 20px;
+        }
+
+        .sr-toggle {
+          margin-bottom: 20px;
+        }
+
+        .sr-toggle label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #ccc;
+          font-weight: bold;
+        }
+
+        .sr-toggle input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+        }
+
+        .sr-toggle p {
+          margin: 5px 0 0 30px;
+          font-size: 0.9rem;
+          color: #888;
+        }
+
+        .sr-settings {
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(0, 212, 255, 0.2);
+          border-radius: 4px;
+          padding: 20px;
+          margin-top: 15px;
+        }
+
+        .sr-setting {
+          margin-bottom: 15px;
+        }
+
+        .sr-setting label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #ccc;
+          font-weight: bold;
+        }
+
+        .sr-setting select {
+          background: #333;
+          border: 1px solid #555;
+          color: #eee;
+          padding: 5px 10px;
+          border-radius: 4px;
+        }
+
+        .sr-result {
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(0, 212, 255, 0.2);
+          border-radius: 4px;
+          padding: 20px;
+          margin-top: 20px;
+        }
+
+        .sr-result h3 {
+          color: #00d4ff;
+          margin-top: 0;
+          margin-bottom: 15px;
+        }
+
+        .sr-result-metrics {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 10px;
+        }
+
+        .sr-metric {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px;
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+        }
+
+        .sr-metric span:first-child {
+          color: #ccc;
+          font-weight: bold;
+        }
+
+        .method-webgpu {
+          color: #00ff88;
+          font-weight: bold;
+        }
+
+        .method-wasm {
+          color: #ffaa00;
+          font-weight: bold;
+        }
+
+        .method-none {
+          color: #ff6666;
+          font-weight: bold;
+        }
+
+        .success-yes {
+          color: #00ff88;
+          font-weight: bold;
+        }
+
+        .success-no {
+          color: #ff6666;
+          font-weight: bold;
+        }
+
+        .sr-error {
+          grid-column: 1 / -1;
+          background: rgba(255, 102, 102, 0.1);
+          border: 1px solid #ff6666;
+          border-radius: 4px;
+          padding: 10px;
+          margin-top: 10px;
+        }
+
+        .sr-error span:first-child {
+          color: #ff6666;
+          font-weight: bold;
+        }
+
+        .sr-error span:last-child {
+          color: #ffcccc;
+          font-family: monospace;
+        }
+
+        /* Sample Video Styles */
+        .load-sample-btn {
+          background: #00ff88;
+          color: #1a1a1a;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 0.9rem;
+          margin-right: 10px;
+        }
+
+        .load-sample-btn:hover {
+          background: #00e677;
+        }
+
+        .sample-status {
+          color: #00ff88;
+          font-weight: bold;
+          font-size: 0.9rem;
         }
       `}</style>
     </div>

@@ -494,3 +494,201 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   console.log('\n=== Metrics ===');
   console.log(manager.exportMetrics());
 }
+
+// Battery monitoring and power cost estimation
+export interface BatteryStatus {
+  charging: boolean;
+  chargingTime: number;
+  dischargingTime: number;
+  level: number; // 0.0 to 1.0
+  available: boolean;
+}
+
+export interface PowerCostEstimate {
+  battery_cost_per_minute: number;
+  cpu_load_percent: number;
+  thermal_state: 'normal' | 'warm' | 'hot';
+  power_mode: 'high' | 'balanced' | 'low';
+}
+
+export class BatteryMonitor {
+  private batteryStatus: BatteryStatus | null = null;
+  private powerCostEstimate: PowerCostEstimate | null = null;
+  private monitoringInterval: NodeJS.Timeout | null = null;
+
+  constructor() {
+    this.initializeBatteryAPI();
+  }
+
+  private async initializeBatteryAPI(): Promise<void> {
+    try {
+      // Check if Battery Status API is available
+      if ('getBattery' in navigator) {
+        const battery = await (navigator as any).getBattery();
+        this.batteryStatus = {
+          charging: battery.charging,
+          chargingTime: battery.chargingTime,
+          dischargingTime: battery.dischargingTime,
+          level: battery.level,
+          available: true
+        };
+
+        // Listen for battery changes
+        battery.addEventListener('chargingchange', () => {
+          this.batteryStatus!.charging = battery.charging;
+          this.updatePowerCostEstimate();
+        });
+
+        battery.addEventListener('levelchange', () => {
+          this.batteryStatus!.level = battery.level;
+          this.updatePowerCostEstimate();
+        });
+
+        this.startMonitoring();
+      } else {
+        this.batteryStatus = {
+          charging: false,
+          chargingTime: Infinity,
+          dischargingTime: Infinity,
+          level: 1.0,
+          available: false
+        };
+      }
+    } catch (error) {
+      console.warn('Battery API not available:', error);
+      this.batteryStatus = {
+        charging: false,
+        chargingTime: Infinity,
+        dischargingTime: Infinity,
+        level: 1.0,
+        available: false
+      };
+    }
+  }
+
+  private startMonitoring(): void {
+    this.monitoringInterval = setInterval(() => {
+      this.updatePowerCostEstimate();
+    }, 5000); // Update every 5 seconds
+  }
+
+  private updatePowerCostEstimate(): void {
+    if (!this.batteryStatus) return;
+
+    // Estimate CPU load (mock implementation)
+    const cpuLoad = this.estimateCpuLoad();
+    
+    // Calculate battery cost per minute
+    let batteryCostPerMinute = 0;
+    if (this.batteryStatus.available && !this.batteryStatus.charging) {
+      // Estimate based on CPU load and battery level
+      batteryCostPerMinute = cpuLoad * 0.1; // Base cost
+      if (cpuLoad > 50) {
+        batteryCostPerMinute *= 1.5; // Higher cost for high CPU usage
+      }
+    }
+
+    // Determine thermal state based on CPU load
+    let thermalState: 'normal' | 'warm' | 'hot' = 'normal';
+    if (cpuLoad > 70) thermalState = 'warm';
+    if (cpuLoad > 90) thermalState = 'hot';
+
+    // Determine power mode
+    let powerMode: 'high' | 'balanced' | 'low' = 'balanced';
+    if (cpuLoad < 30) powerMode = 'low';
+    if (cpuLoad > 70) powerMode = 'high';
+
+    this.powerCostEstimate = {
+      battery_cost_per_minute: batteryCostPerMinute,
+      cpu_load_percent: cpuLoad,
+      thermal_state: thermalState,
+      power_mode: powerMode
+    };
+
+    // Log power metrics
+    observability.logEvent('power_metrics', {
+      battery_cost_per_minute: batteryCostPerMinute,
+      cpu_load_percent: cpuLoad,
+      thermal_state: thermalState,
+      power_mode: powerMode,
+      battery_level: this.batteryStatus.level,
+      battery_charging: this.batteryStatus.charging
+    });
+  }
+
+  private estimateCpuLoad(): number {
+    // Mock CPU load estimation
+    // In real implementation, this would use Performance API or other methods
+    const baseLoad = 20;
+    const randomVariation = Math.random() * 40;
+    const timeBasedLoad = Math.sin(Date.now() / 10000) * 20;
+    
+    return Math.max(0, Math.min(100, baseLoad + randomVariation + timeBasedLoad));
+  }
+
+  getBatteryStatus(): BatteryStatus | null {
+    return this.batteryStatus;
+  }
+
+  getPowerCostEstimate(): PowerCostEstimate | null {
+    return this.powerCostEstimate;
+  }
+
+  isLowPowerMode(): boolean {
+    return this.powerCostEstimate?.power_mode === 'low';
+  }
+
+  isThermalThrottling(): boolean {
+    return this.powerCostEstimate?.thermal_state === 'hot';
+  }
+
+  getPowerRecommendations(): string[] {
+    const recommendations: string[] = [];
+    
+    if (!this.powerCostEstimate) return recommendations;
+
+    if (this.powerCostEstimate.battery_cost_per_minute > 0.5) {
+      recommendations.push('High battery usage detected. Consider reducing video quality or frame rate.');
+    }
+
+    if (this.powerCostEstimate.cpu_load_percent > 75) {
+      recommendations.push('High CPU usage detected. Consider enabling low power mode.');
+    }
+
+    if (this.powerCostEstimate.thermal_state === 'hot') {
+      recommendations.push('Device is running hot. Thermal throttling may occur.');
+    }
+
+    if (this.powerCostEstimate.power_mode === 'high') {
+      recommendations.push('High performance mode active. Battery life may be reduced.');
+    }
+
+    return recommendations;
+  }
+
+  destroy(): void {
+    if (this.monitoringInterval) {
+      clearInterval(this.monitoringInterval);
+      this.monitoringInterval = null;
+    }
+  }
+}
+
+// Global battery monitor instance
+let globalBatteryMonitor: BatteryMonitor | null = null;
+
+export function getBatteryMonitor(): BatteryMonitor {
+  if (!globalBatteryMonitor) {
+    globalBatteryMonitor = new BatteryMonitor();
+  }
+  return globalBatteryMonitor;
+}
+
+// Convenience exports
+export const batteryMonitor = {
+  getBatteryStatus: () => getBatteryMonitor().getBatteryStatus(),
+  getPowerCostEstimate: () => getBatteryMonitor().getPowerCostEstimate(),
+  isLowPowerMode: () => getBatteryMonitor().isLowPowerMode(),
+  isThermalThrottling: () => getBatteryMonitor().isThermalThrottling(),
+  getPowerRecommendations: () => getBatteryMonitor().getPowerRecommendations()
+};

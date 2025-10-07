@@ -12,6 +12,8 @@ import PrivacyPage from './pages/PrivacyPage';
 import TimeMachinePage from './pages/TimeMachinePage';
 import MediaPage from './pages/MediaPage';
 import PublisherPilotPage from './pages/PublisherPilotPage';
+import OraclePage from './pages/OraclePage';
+import GovernancePage from './pages/GovernancePage';
 import OrgPilotPage from './pages/OrgPilotPage';
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
           <Link to="/media">Media Engine</Link>
           <Link to="/pilot/publisher">Publisher Pilot</Link>
           <Link to="/pilot/org">Org Pilot</Link>
+          <Link to="/oracle">Oracle WebNN</Link>
+          <Link to="/governance">Governance</Link>
         </nav>
         <main className="myc-main">
           <div className="myc-grid">
@@ -50,6 +54,8 @@ function App() {
             <Route path="/media" element={<MediaPage />} />
             <Route path="/pilot/publisher" element={<PublisherPilotPage />} />
             <Route path="/pilot/org" element={<OrgPilotPage />} />
+            <Route path="/oracle" element={<OraclePage />} />
+            <Route path="/governance" element={<GovernancePage />} />
               <Route path="/" element={<div className="card myc-muted">Navigate to a demo above</div>} />
             </Routes>
           </div>

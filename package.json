@@ -40,7 +40,11 @@
     "test:compat": "pnpm --filter @mycelia/compat-modern start -- runSubset",
     "test:standards": "pnpm --filter @mycelia/standards-test start -- runWptSubset",
     "dev:tm": "pnpm --filter @mycelia/workspaces-engine dev",
-    "dev:privacy": "pnpm --filter @mycelia/ui-components dev"
+    "dev:privacy": "pnpm --filter @mycelia/ui-components dev",
+    "demo:serve": "pnpm -r build && pnpm --filter @mycelia/docs serve -- --host 127.0.0.1 --port 3000 & pnpm --filter @mycelia/navigator-sandbox preview -- --host 127.0.0.1 --port 5173",
+    "demo:serve:win": "concurrently -n DOCS,SANDBOX -c magenta,cyan \"pnpm --filter @mycelia/docs serve -- --host 127.0.0.1 --port 3000\" \"pnpm --filter @mycelia/navigator-sandbox preview -- --host 127.0.0.1 --port 5173\"",
+    "demo:record": "pnpm --filter @mycelia/demo-recorder tsx src/record.ts --base http://127.0.0.1:5173 --maxSec 60",
+    "demo:record:narrated": "pnpm --filter @mycelia/demo-recorder tsx src/record.ts --base http://127.0.0.1:5173 --maxSec 60 --narrate"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",

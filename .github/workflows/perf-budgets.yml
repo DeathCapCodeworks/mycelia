@@ -1,0 +1,76 @@
+name: Performance Budget Gates
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  perf-budgets:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm run build
+
+      - name: Generate mock bundle stats
+        run: pnpm --filter @mycelia/perf-budget run mock-stats
+
+      - name: Generate mock performance metrics
+        run: pnpm --filter @mycelia/perf-budget run mock-metrics
+
+      - name: Check performance budgets
+        id: perf_check
+        run: pnpm --filter @mycelia/perf-budget run check --json --output perf-report.json
+        continue-on-error: true
+
+      - name: Check budget violations
+        id: check_budgets
+        run: |
+          if [ -f perf-report.json ]; then
+            BUDGET_STATUS=$(jq -r '.passed' perf-report.json)
+            echo "Budget Status: $BUDGET_STATUS"
+            if [ "$BUDGET_STATUS" = "false" ]; then
+              echo "BUDGET_FAILED=true" >> $GITHUB_ENV
+            else
+              echo "BUDGET_FAILED=false" >> $GITHUB_ENV
+            fi
+          else
+            echo "BUDGET_FAILED=true" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Fail if budgets exceeded
+        if: env.BUDGET_FAILED == 'true' && !contains(github.event.pull_request.labels.*.name, 'quarantine')
+        run: |
+          echo "Performance budgets exceeded. Failing CI."
+          if [ -f perf-report.json ]; then
+            cat perf-report.json
+          fi
+          exit 1
+        shell: bash
+
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-report-${{ matrix.os }}
+          path: perf-report.json
+          if-no-files-found: ignore
