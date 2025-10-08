@@ -3,16 +3,20 @@
   "private": true,
   "version": "0.9.0-rc.1",
   "engines": {
-    "node": ">=20 <21",
-    "npm": ">=9"
+    "node": ">=20"
   },
   "packageManager": "pnpm@9.0.0",
+  "pnpm": {
+    "overrides": {
+      "@libp2p/websockets": "^9.0.0"
+    }
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "preinstall": "node -e \"const v=+process.versions.node.split('.')[0]; if(v<20||v>=21){console.error('Node 20 required'); process.exit(1)}\"",
+    "preinstall": "node -e \"const v=+process.versions.node.split('.')[0]; if(v<20){console.error('Node 20+ required'); process.exit(1)}\"",
     "bootstrap": "pnpm i",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
@@ -60,10 +64,12 @@
     "deploy:compose": "docker compose -f deploy/docker-compose.yml up --build",
     "report:state": "node scripts/tmp/extract-state.js",
     "setup:pm": "node -e \"require('child_process').spawnSync('corepack', ['enable'], {stdio: 'inherit'})\"",
+    "setup:lock": "node -e \"require('fs').writeFileSync('.lock-policy','pnpm-lock.yaml')\"",
     "setup:env": "node -e \"console.log('Node',process.version)\"",
     "release:version": "node scripts/release/version-bump.js",
     "release:changelog": "node scripts/release/changelog.js",
-    "release:docs": "pnpm --filter @mycelia/docs build",
+    "docs:check": "tsx packages/docs-tools/src/mdx-check.ts",
+    "release:docs": "pnpm run docs:check && pnpm --filter @mycelia/docs build",
     "release:demo": "pnpm demo:record && pnpm demo:publish:ipfs",
     "release:ipfs": "node scripts/ipfs-publish.js",
     "release:docker": "node scripts/release/docker-build.js",
@@ -83,6 +89,6 @@
     "tsx": "^4.0.0",
     "zod": "^3.0.0",
     "cyclonedx-bom": "^0.0.9",
-    "@cyclonedx/cyclonedx-npm": "^1.0.0"
+    "@cyclonedx/cyclonedx-npm": "^1.18.0"
   }
 }

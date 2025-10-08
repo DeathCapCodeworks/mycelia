@@ -1,149 +1,180 @@
-#!/usr/bin/env node
-
 const { execSync } = require('child_process');
-const { readFileSync, writeFileSync, mkdirSync, existsSync } = require('fs');
+const { existsSync, mkdirSync, writeFileSync, readFileSync, rmSync } = require('fs');
 const { join } = require('path');
+const { tmpdir } = require('os');
 
 function getGitSha() {
   try {
-    return execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+    return execSync('git rev-parse --short HEAD').toString().trim();
   } catch (error) {
-    console.error('Failed to get git SHA:', error);
+    console.warn('Could not get git SHA:', error.message);
     return 'unknown';
   }
 }
 
-function findTargets(targetDir) {
-  const targets = [];
+function generateSbomWithCycloneDX(targetPath, type, gitSha) {
+  const name = targetPath.split('/').pop();
+  const outputDir = join(process.cwd(), 'release', 'sbom');
+  if (!existsSync(outputDir)) {
+    mkdirSync(outputDir, { recursive: true });
+  }
+
+  const jsonOutputPath = join(outputDir, `${name}-${gitSha}.bom.json`);
+
+  console.log(`Generating SBOM for ${name} (${type}) using cyclonedx-bom...`);
   
   try {
-    const items = execSync(`dir ${targetDir} /b`, { encoding: 'utf8' }).trim().split('\n');
+    // Create a temporary directory for isolated install
+    const tempDir = join(tmpdir(), `sbom-${name}-${Date.now()}`);
+    mkdirSync(tempDir, { recursive: true });
     
-    for (const item of items) {
-      const packagePath = join(targetDir, item, 'package.json');
-      if (existsSync(packagePath)) {
-        targets.push(join(targetDir, item));
-      }
+    // Copy package.json and pnpm-lock.yaml to temp dir
+    const packageJsonPath = join(targetPath, 'package.json');
+    const pnpmLockPath = join(process.cwd(), 'pnpm-lock.yaml');
+    
+    if (existsSync(packageJsonPath)) {
+      execSync(`cp "${packageJsonPath}" "${tempDir}/"`);
     }
+    
+    if (existsSync(pnpmLockPath)) {
+      execSync(`cp "${pnpmLockPath}" "${tempDir}/"`);
+    }
+    
+    // Install dependencies in temp dir
+    console.log(`Installing dependencies for ${name}...`);
+    execSync('pnpm i --prefer-offline --frozen-lockfile', {
+      cwd: tempDir,
+      stdio: 'inherit'
+    });
+    
+    // Generate SBOM using cyclonedx-bom
+    execSync(`npx cyclonedx-bom -o "${jsonOutputPath}" --json`, {
+      cwd: tempDir,
+      stdio: 'inherit'
+    });
+    
+    console.log(`✅ Generated SBOM: ${jsonOutputPath}`);
+    
+    // Clean up temp dir
+    rmSync(tempDir, { recursive: true, force: true });
+    
+    return { json: jsonOutputPath };
+    
   } catch (error) {
-    console.error(`Failed to find targets in ${targetDir}:`, error);
+    console.error(`❌ Failed to generate SBOM for ${name}:`, error.message);
+    return null;
   }
-  
-  return targets;
 }
 
-function generateSbom(targetPath, outputDir, shortSha) {
+function generateSbomWithSyft(targetPath, type, gitSha) {
+  const name = targetPath.split('/').pop();
+  const outputDir = join(process.cwd(), 'release', 'sbom');
+  
+  const jsonOutputPath = join(outputDir, `${name}-syft-${gitSha}.bom.json`);
+
+  console.log(`Generating SBOM for ${name} (${type}) using syft...`);
+  
   try {
-    const packageJson = JSON.parse(readFileSync(join(targetPath, 'package.json'), 'utf8'));
-    const name = packageJson.name || require('path').basename(targetPath);
-    const safeName = name.replace(/[^a-zA-Z0-9-]/g, '-');
+    // Check if syft is available via docker
+    execSync('docker --version', { stdio: 'pipe' });
     
-    const jsonFile = join(outputDir, `${safeName}-${shortSha}.bom.json`);
-    const xmlFile = join(outputDir, `${safeName}-${shortSha}.bom.xml`);
-    
-    console.log(`📦 Generating SBOM for ${name}...`);
-    
-    // Generate JSON SBOM
-    execSync(`npx @cyclonedx/cyclonedx-npm --output-file ${jsonFile} --output-format json`, {
+    // Run syft via docker
+    const syftCmd = `docker run --rm -v "${process.cwd()}:/work" anchore/syft:latest dir:/work --output cyclonedx-json`;
+    const output = execSync(syftCmd, { 
       cwd: targetPath,
-      stdio: 'inherit'
+      encoding: 'utf8'
     });
     
-    // Generate XML SBOM
-    execSync(`npx @cyclonedx/cyclonedx-npm --output-file ${xmlFile} --output-format xml`, {
-      cwd: targetPath,
-      stdio: 'inherit'
-    });
+    writeFileSync(jsonOutputPath, output);
+    console.log(`✅ Generated Syft SBOM: ${jsonOutputPath}`);
     
-    return { json: jsonFile, xml: xmlFile };
+    return { json: jsonOutputPath };
     
   } catch (error) {
-    console.error(`Failed to generate SBOM for ${targetPath}:`, error);
+    console.warn(`⚠️ Syft not available for ${name}:`, error.message);
     return null;
   }
 }
 
 function signSbom(filePath) {
-  const cosignKey = process.env.COSIGN_KEY;
-  const cosignOidc = process.env.COSIGN_OIDC;
-  
-  if (!cosignKey && !cosignOidc) {
-    console.log(`⚠️  No COSIGN_KEY or COSIGN_OIDC found, skipping signature for ${filePath}`);
-    return false;
-  }
-  
-  try {
-    const sigFile = `${filePath}.sig`;
-    
-    if (cosignKey) {
-      execSync(`cosign sign-blob --key ${cosignKey} --output-signature ${sigFile} ${filePath}`, {
-        stdio: 'inherit'
-      });
-    } else if (cosignOidc) {
-      execSync(`cosign sign-blob --oidc-issuer ${cosignOidc} --output-signature ${sigFile} ${filePath}`, {
-        stdio: 'inherit'
-      });
+  if (process.env.COSIGN_KEY) {
+    console.log(`✍️ Signing SBOM: ${filePath}`);
+    try {
+      execSync(`cosign sign-blob --key ${process.env.COSIGN_KEY} ${filePath}`, { stdio: 'inherit' });
+      console.log(`✅ Signed SBOM: ${filePath}.sig`);
+      return true;
+    } catch (error) {
+      console.warn(`⚠️ Failed to sign SBOM ${filePath}:`, error.message);
+      return false;
     }
-    
-    console.log(`✅ Signed ${filePath}`);
-    return true;
-    
-  } catch (error) {
-    console.error(`Failed to sign ${filePath}:`, error);
+  } else {
+    console.log(`ℹ️ COSIGN_KEY not present, skipping signing for ${filePath}`);
     return false;
   }
 }
 
 function main() {
-  const targetDir = process.argv[2];
-  
-  if (!targetDir) {
+  const targetType = process.argv[2]; // 'apps' or 'packages'
+  if (!targetType) {
     console.error('Usage: node scripts/release/sbom.js <apps|packages>');
     process.exit(1);
   }
-  
-  if (targetDir !== 'apps' && targetDir !== 'packages') {
-    console.error('Target directory must be "apps" or "packages"');
+
+  const gitSha = getGitSha();
+  const baseDir = process.cwd();
+  const targetDir = join(baseDir, targetType);
+
+  if (!existsSync(targetDir)) {
+    console.error(`Error: Directory not found: ${targetDir}`);
     process.exit(1);
   }
-  
-  console.log(`🔍 Generating SBOMs for ${targetDir}...`);
-  
-  const shortSha = getGitSha().substring(0, 8);
-  const outputDir = 'release/sbom';
-  
-  // Ensure output directory exists
-  if (!existsSync(outputDir)) {
-    mkdirSync(outputDir, { recursive: true });
-  }
-  
-  const targets = findTargets(targetDir);
-  console.log(`Found ${targets.length} targets in ${targetDir}`);
-  
-  const generatedFiles = [];
+
+  const items = execSync(`ls ${targetDir}`).toString().trim().split('\n').map(d => d.trim()).filter(Boolean);
+  let generatedCount = 0;
   let signedCount = 0;
-  
-  for (const target of targets) {
-    const result = generateSbom(target, outputDir, shortSha);
-    
-    if (result) {
-      generatedFiles.push(result.json);
-      generatedFiles.push(result.xml);
+  const generatedFiles = [];
+
+  for (const item of items) {
+    const itemPath = join(targetDir, item);
+    const packageJsonPath = join(itemPath, 'package.json');
+
+    if (existsSync(packageJsonPath)) {
+      console.log(`\n📦 Processing ${item}...`);
       
-      // Sign the files if possible
-      if (signSbom(result.json)) signedCount++;
-      if (signSbom(result.xml)) signedCount++;
+      // Try cyclonedx-bom first
+      const cycloneResult = generateSbomWithCycloneDX(itemPath, targetType, gitSha);
+      if (cycloneResult) {
+        generatedFiles.push(cycloneResult.json);
+        generatedCount++;
+        
+        if (signSbom(cycloneResult.json)) {
+          signedCount++;
+        }
+      }
+      
+      // Try syft as fallback/enhancement
+      const syftResult = generateSbomWithSyft(itemPath, targetType, gitSha);
+      if (syftResult) {
+        generatedFiles.push(syftResult.json);
+        generatedCount++;
+        
+        if (signSbom(syftResult.json)) {
+          signedCount++;
+        }
+      }
     }
   }
-  
-  console.log(`\n📊 SBOM Generation Summary:`);
-  console.log(`  Generated: ${generatedFiles.length} files`);
+
+  console.log('\n📊 SBOM Generation Summary:');
+  console.log(`  Generated: ${generatedCount} files`);
   console.log(`  Signed: ${signedCount} files`);
-  console.log(`  Output: ${outputDir}/`);
-  
-  // List generated files
-  for (const file of generatedFiles) {
-    console.log(`  - ${file}`);
+  console.log(`  Output: ${join(baseDir, 'release', 'sbom')}/`);
+
+  if (generatedCount === 0) {
+    console.error('❌ No SBOMs were generated');
+    process.exit(1);
+  } else {
+    console.log('✅ SBOM generation completed successfully');
   }
 }
 

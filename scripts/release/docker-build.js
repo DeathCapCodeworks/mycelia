@@ -26,10 +26,21 @@ function buildImage(serviceName, version) {
     
     const imageName = `mycelia-${serviceName}`;
     const versionTag = `${imageName}:${version}`;
-    const latestRcTag = `${imageName}:latest-rc`;
+    const latestRcTag = `${imageName}:rc-latest`;
     
-    // Build the image
-    execSync(`docker build -t ${versionTag} -t ${latestRcTag} packages/${serviceName}/`, {
+    // Determine build context and dockerfile path
+    let buildContext, dockerfilePath;
+    if (serviceName === 'docs') {
+      buildContext = '.';
+      dockerfilePath = 'apps/docs/Dockerfile';
+    } else {
+      buildContext = '.';
+      dockerfilePath = `packages/${serviceName}/Dockerfile`;
+    }
+    
+    // Build the image with build args
+    const buildCmd = `docker build -f ${dockerfilePath} --build-arg COMMIT_SHA=${getGitSha()} --build-arg VERSION=${version} -t ${versionTag} -t ${latestRcTag} ${buildContext}`;
+    execSync(buildCmd, {
       stdio: 'inherit'
     });
     
@@ -145,6 +156,7 @@ function main() {
   const services = [
     'public-directory',
     'radio-sfu',
+    'docs',
     'navigator'
   ];
   

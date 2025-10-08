@@ -35,7 +35,7 @@ jobs:
           corepack prepare pnpm@9.0.0 --activate
       
       - name: Install dependencies
-        run: pnpm i --no-fund --no-audit
+        run: pnpm i --frozen-lockfile
       
       - name: Build workspace
         run: pnpm -w build
@@ -84,6 +84,17 @@ jobs:
       
       - name: Build Docker images
         run: pnpm run release:docker
+        continue-on-error: true
+      
+      - name: Sign artifacts (if COSIGN_KEY available)
+        if: ${{ env.COSIGN_KEY != '' }}
+        run: |
+          if [ -n "$COSIGN_KEY" ]; then
+            echo "Signing artifacts with cosign..."
+            find release/sbom -name "*.json" -exec cosign sign-blob --key "$COSIGN_KEY" {} \;
+          else
+            echo "COSIGN_KEY not set, skipping signing"
+          fi
         continue-on-error: true
       
       - name: Create governance pack

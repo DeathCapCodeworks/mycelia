@@ -39,6 +39,9 @@ class DemoRecorder {
   async start(): Promise<void> {
     console.log('🎬 Starting Golden Path Demo Recorder...');
     
+    // Check server reachability first
+    await this.checkServerReachability();
+    
     // Ensure output directories exist
     await this.ensureDirectories();
     
@@ -58,6 +61,43 @@ class DemoRecorder {
 
     this.startTime = Date.now();
     console.log(`📹 Recording started at ${format(new Date(), 'HH:mm:ss')}`);
+  }
+
+  private async checkServerReachability(): Promise<void> {
+    console.log(`🔍 Checking server reachability: ${this.config.baseUrl}`);
+    
+    const maxAttempts = 5;
+    const timeoutMs = 5000;
+    
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const response = await fetch(this.config.baseUrl, {
+          method: 'HEAD',
+          signal: AbortSignal.timeout(timeoutMs)
+        });
+        
+        if (response.ok) {
+          console.log(`✅ Server is reachable (${response.status})`);
+          return;
+        }
+        
+        console.log(`⚠️ Server responded with ${response.status}, retrying...`);
+      } catch (error) {
+        console.log(`❌ Attempt ${attempt}/${maxAttempts} failed: ${error.message}`);
+        
+        if (attempt === maxAttempts) {
+          console.error('🚨 SERVER NOT REACHABLE - DEMO RECORDING FAILED');
+          console.error('🔴 Please ensure the development server is running:');
+          console.error(`   pnpm demo:serve:win`);
+          console.error(`   or`);
+          console.error(`   pnpm demo:serve`);
+          process.exit(1);
+        }
+        
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
   }
 
   async recordSteps(): Promise<void> {

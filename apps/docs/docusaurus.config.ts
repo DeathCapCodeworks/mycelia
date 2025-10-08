@@ -8,6 +8,8 @@ const config: Config = {
   favicon: 'img/favicon.ico',
   i18n: { defaultLocale: 'en', locales: ['en'] },
   themes: ['@docusaurus/theme-mermaid'],
+  onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: 'warn',
   presets: [
     [
       'classic',

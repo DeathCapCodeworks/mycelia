@@ -5,6 +5,13 @@ import { DemoStep } from './captions.js';
 
 export async function generateTTS(steps: DemoStep[]): Promise<string> {
   const platform = process.platform;
+  
+  // Gracefully skip TTS on Linux
+  if (platform === 'linux') {
+    console.log('ℹ️ TTS not available on Linux, skipping narration');
+    throw new Error('TTS not available on Linux platform');
+  }
+  
   const outputDir = '.cache/demo/tts';
   
   // Ensure output directory exists
@@ -45,6 +52,9 @@ async function generateStepTTS(text: string, outputFile: string, platform: strin
     case 'darwin':
       await generateMacOSTTS(text, outputFile);
       break;
+    case 'linux':
+      // Gracefully skip on Linux
+      throw new Error('TTS not available on Linux');
     default:
       throw new Error(`TTS not supported on platform: ${platform}`);
   }

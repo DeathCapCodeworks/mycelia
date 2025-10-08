@@ -1,27 +1,49 @@
-# Use an official Node.js runtime as a parent image
-FROM node:20-alpine
+# Build stage
+FROM node:20-bullseye as build
 
-# Set the working directory in the container
+# Enable corepack for pnpm
+RUN corepack enable
+
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+# Copy package files first for better caching
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/navigator/package.json ./packages/navigator/
 
-# Install pnpm
-RUN npm install -g pnpm
+# Fetch dependencies (cache-friendly)
+RUN pnpm fetch
 
-# Install dependencies
-RUN pnpm install --prod --frozen-lockfile
-
-# Copy the rest of the application code
+# Copy source code
 COPY . .
 
-# Build the TypeScript application
-RUN pnpm build
+# Install dependencies and build
+RUN pnpm i --frozen-lockfile
+RUN pnpm -w build
+
+# Runtime stage
+FROM node:20-bullseye
+
+# Enable corepack for pnpm
+RUN corepack enable
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/navigator/package.json ./packages/navigator/
+
+# Install production dependencies only
+RUN pnpm i --prod --frozen-lockfile
+
+# Copy built application
+COPY --from=build /app/packages/navigator/dist ./packages/navigator/dist
 
 # Expose the port the app runs on
 EXPOSE 3000
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/status.json || exit 1
+
 # Define the command to run the app
-CMD ["node", "dist/index.js"]
+CMD ["pnpm", "--filter", "@mycelia/navigator", "start"]
