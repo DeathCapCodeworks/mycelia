@@ -1,0 +1,6 @@
+{
+  "timestamp": "2025-10-08T07:06:11.592Z",
+  "sats_total": 1000000000,
+  "signer": "mycelia-mainnet-signer",
+  "signature": "mock-signature-for-testing"
+}

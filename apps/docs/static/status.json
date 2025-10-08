@@ -7,14 +7,14 @@
   "peg": {
     "status": "ok",
     "ratio": "10 BLOOM = 1 BTC",
-    "collateralization": 1.0
+    "collateralization": 1
   },
   "proofOfReserves": {
     "status": "fresh",
     "ageMinutes": 15,
     "totalSats": "850000000",
     "outstandingBloom": "85000000",
-    "collateralizationRatio": 1.0,
+    "collateralizationRatio": 1,
     "lastAttestation": "2024-01-01T12:00:00Z"
   },
   "featureFlags": {
@@ -62,5 +62,10 @@
   "treasury": {
     "address": "bc1qtreasury123456789abcdefghijklmnopqrstuvwxyz",
     "descriptor": "cash-backed-custodian-policy"
+  },
+  "por": {
+    "fresh": true,
+    "timestamp": "2025-10-08T07:06:23.036Z",
+    "status": "green"
   }
 }
