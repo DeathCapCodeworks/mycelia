@@ -1,6 +1,11 @@
 {
-  "timestamp": "2025-10-08T07:06:11.592Z",
-  "sats_total": 1000000000,
-  "signer": "mycelia-mainnet-signer",
-  "signature": "mock-signature-for-testing"
+  "payload": {
+    "timestamp": "2025-10-08T07:30:45.870Z",
+    "sats_total": 1000000000,
+    "signer": "mycelia-mainnet-signer",
+    "version": "v1.0.0"
+  },
+  "signature": "eyJzYXRzX3RvdGFsIjoxMDAwMDAwMDAwLCJzaWduZXIiOiJteWNlbGlhLW1haW5uZXQtc2lnbmVyIiwidGltZXN0YW1wIjoiMjAyNS0xMC0wOFQwNzozMDo0NS44NzBaIiwidmVyc2lvbiI6InYxLjAuMCJ9.sig",
+  "publicKey": "mock-public-key-mock-pri",
+  "alg": "ed25519"
 }

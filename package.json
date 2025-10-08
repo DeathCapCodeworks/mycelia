@@ -75,7 +75,7 @@
     "docs:build": "pnpm run docs:fix && pnpm run docs:patch:specific && pnpm run docs:check && pnpm --filter @mycelia/docs build",
     "release:docs": "pnpm run docs:build",
     "release:demo": "pnpm demo:build && pnpm demo:record && pnpm demo:publish:ipfs",
-    "release:ipfs": "node scripts/ipfs-publish.js",
+    "release:ipfs": "node scripts/ipfs-manifest.js v1.0.0",
     "release:docker": "node scripts/release/docker-build.js",
     "release:govpack": "node scripts/release/govpack.js",
     "sbom:apps": "node scripts/release/sbom.js apps",
@@ -85,7 +85,10 @@
     "ga:slo": "pnpm run ops:lint",
     "ga:perf": "pnpm run perf:budgets",
     "build:ga": "node -e \"require('child_process').spawnSync('pnpm',['-r','--filter-file','release/cfg/workspaces-ga.txt','build'],{stdio:'inherit'})\"",
-    "por:rotate": "pnpm run attest:rotate"
+    "por:rotate": "node packages/attestations/src/sign-json.cjs sign",
+    "por:verify": "node packages/attestations/src/sign-json.cjs verify",
+    "release:docker:promote": "node scripts/release/docker-build.js --promote v1.0.0",
+    "report:tplus24": "node packages/observability/src/reports/tplus24.cjs v1.0.0"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",

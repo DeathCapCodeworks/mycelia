@@ -1,0 +1,83 @@
+{
+  "version": "v1.0.0",
+  "timestamp": "2025-10-08T07:31:58.701Z",
+  "window": "24h",
+  "summary": {
+    "sloBreaches": 0,
+    "incidents": 0,
+    "status": "green"
+  },
+  "diagnostics": {
+    "passRate": {
+      "target": 0.99,
+      "actual": 0.95,
+      "min": 0.92,
+      "max": 0.98,
+      "avg": 0.95,
+      "breaches": 1
+    }
+  },
+  "attestation": {
+    "freshness": {
+      "target": 30,
+      "min": 5,
+      "max": 45,
+      "avg": 18,
+      "breaches": 0
+    }
+  },
+  "redemption": {
+    "queueLength": {
+      "target": 100,
+      "p95": 45,
+      "max": 67,
+      "breaches": 0
+    },
+    "rate": {
+      "target": 1000,
+      "actual": 750,
+      "breaches": 0
+    }
+  },
+  "demo": {
+    "plays": 1250,
+    "successRate": 0.98,
+    "avgDuration": 180
+  },
+  "slos": [
+    {
+      "name": "redemption_quote_latency_p95",
+      "target": 0.99,
+      "actual": 0.98,
+      "status": "healthy",
+      "breaches": 0
+    },
+    {
+      "name": "por_attestation_age",
+      "target": 0.99,
+      "actual": 0.97,
+      "status": "healthy",
+      "breaches": 0
+    },
+    {
+      "name": "diagnostics_pass_rate",
+      "target": 0.99,
+      "actual": 0.95,
+      "status": "warning",
+      "breaches": 1
+    },
+    {
+      "name": "sandbox_route_tti",
+      "target": 0.99,
+      "actual": 0.98,
+      "status": "healthy",
+      "breaches": 0
+    }
+  ],
+  "incidents": [],
+  "recommendations": [
+    "Monitor diagnostics pass rate closely - currently at warning threshold",
+    "Consider optimizing diagnostic checks that are failing",
+    "Review PoR attestation frequency to ensure consistent freshness"
+  ]
+}

@@ -5,6 +5,7 @@ interface PatchResult {
   file: string;
   edits: Array<{ line: number; before: string; after: string }>;
   success: boolean;
+  error?: string;
 }
 
 class MDXSpecificPatcher {
@@ -72,7 +73,13 @@ class MDXSpecificPatcher {
       }
 
     } catch (error) {
-      console.error(`❌ Failed to patch ${filePath}:`, error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error(`❌ Failed to patch ${filePath}:`, errorMsg);
+      result.error = errorMsg;
+      
+      // Write error log
+      const errorLogPath = filePath + '.err.log';
+      writeFileSync(errorLogPath, `Error patching ${filePath}:\n${errorMsg}\n\nStack:\n${error instanceof Error ? error.stack : 'No stack trace'}`);
     }
 
     this.results.push(result);
@@ -84,7 +91,7 @@ class MDXSpecificPatcher {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       
-      // Fix missing closing brace in expressions like {por.freshness}
+      // Fix missing closing brace in expressions
       if (line.includes('`{') && !line.includes('}`)) {
         const openBraces = (line.match(/\{/g) || []).length;
         const closeBraces = (line.match(/\}/g) || []).length;
@@ -97,128 +104,122 @@ class MDXSpecificPatcher {
           modified = true;
         }
       }
+      
+      // Normalize inline code backticks if they accidentally wrap JSX
+      const jsxInBackticksRegex = /`(<[^>]+>)`/g;
+      if (jsxInBackticksRegex.test(lines[i])) {
+        const before = lines[i];
+        lines[i] = lines[i].replace(jsxInBackticksRegex, '`$1`');
+        if (lines[i] !== before) {
+          result.edits.push({ line: i + 1, before, after: lines[i] });
+          modified = true;
+        }
+      }
     }
-
     return modified;
   }
 
   private patchMediaPipeline(lines: string[], result: PatchResult): boolean {
     let modified = false;
+    const unclosedTagRegex = /<EncodedChunkStream>(?!.*<\/EncodedChunkStream>)/g;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
-      // Fix unclosed <EncodedChunkStream> tags
-      if (line.includes('<EncodedChunkStream>') && !line.includes('</EncodedChunkStream>')) {
+      if (unclosedTagRegex.test(line)) {
         const before = line;
-        
-        // Find the content and convert to fenced code block
-        const content = line.replace('<EncodedChunkStream>', '').trim();
-        const after = `\`\`\`tsx\n${content}\n\`\`\``;
-        
-        lines[i] = after;
-        result.edits.push({ line: i + 1, before, after });
+        // Replace with fenced code block
+        lines[i] = `\`\`\`tsx\n${line}\n\`\`\``;
+        result.edits.push({ line: i + 1, before, after: lines[i] });
         modified = true;
       }
     }
-
     return modified;
   }
 
   private patchNetStack(lines: string[], result: PatchResult): boolean {
     let modified = false;
+    // Regex to find pseudo-tags like <http/3> or <foo/bar>
+    const pseudoTagRegex = /<([^>\s\/]+(?:\/[^>\s\/]+)*)>/g;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
-      // Fix invalid JSX tag names like <http/3>
-      const invalidTagRegex = /<([^>]*[\/"'<>][^>]*)>/g;
-      let match;
-      
-      while ((match = invalidTagRegex.exec(line)) !== null) {
-        const before = line;
-        const tagContent = match[1];
-        const replacement = `\`${tagContent}\``;
-        const after = line.replace(match[0], replacement);
-        
-        lines[i] = after;
-        result.edits.push({ line: i + 1, before, after });
+      const newLine = line.replace(pseudoTagRegex, (match, tagContent) => {
+        // Convert to inline code
+        return `\`${tagContent}\``;
+      });
+
+      if (newLine !== line) {
+        result.edits.push({ line: i + 1, before: line, after: newLine });
+        lines[i] = newLine;
         modified = true;
       }
     }
-
     return modified;
   }
 
   private patchWebrtcEnhanced(lines: string[], result: PatchResult): boolean {
     let modified = false;
+    const voidTagRegex = /<void>(?!.*<\/void>)/g; // <void> without a closing </void>
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
-      // Fix unclosed <void> tags
-      if (line.includes('<void>') && !line.includes('</void>') && !line.includes('<void />')) {
+      if (voidTagRegex.test(line)) {
         const before = line;
-        
-        // Check if there's content on the same line
-        const content = line.replace('<void>', '').trim();
-        if (content && content !== '') {
-          // Has content, wrap in span
-          const after = `<span class="void">${content}</span>`;
-          lines[i] = after;
+        let after = line;
+
+        // If it's just <void> on its own, convert to self-closing
+        if (line.trim() === '<void>') {
+          after = '<void />';
         } else {
-          // No content, make self-closing
-          const after = line.replace('<void>', '<void />');
-          lines[i] = after;
+          // If it has content, wrap it in a span to avoid JSX invalidity
+          after = line.replace(/<void>(.*)/, '<span class="void">$1</span>');
         }
-        
-        result.edits.push({ line: i + 1, before, after });
-        modified = true;
+
+        if (after !== before) {
+          lines[i] = after;
+          result.edits.push({ line: i + 1, before, after });
+          modified = true;
+        }
       }
     }
-
     return modified;
   }
-
-  printReport(): void {
-    const totalFiles = this.results.length;
-    const filesPatched = this.results.filter(r => r.success).length;
-    const totalEdits = this.results.reduce((sum, r) => sum + r.edits.length, 0);
-
-    console.log(`\n📋 MDX Specific Patch Report:`);
-    console.log(`  Total files: ${totalFiles}`);
-    console.log(`  Files patched: ${filesPatched}`);
-    console.log(`  Total edits: ${totalEdits}`);
-
-    if (totalEdits > 0) {
-      console.log(`\n✅ Edits made:`);
-      this.results.filter(r => r.success).forEach(result => {
-        console.log(`  ${result.file}:`);
-        result.edits.forEach(edit => {
-          console.log(`    Line ${edit.line}: ${edit.before} → ${edit.after}`);
-        });
-      });
-    }
-
-    if (totalEdits === 0) {
-      console.log('\nℹ️ No patches were needed - all files are clean');
-    }
-  }
 }
 
-async function main(): Promise<void> {
+async function main() {
   const patcher = new MDXSpecificPatcher();
   const results = await patcher.patchAll();
-  patcher.printReport();
+
+  console.log('\n--- MDX Specific Patch Report ---');
+  let totalEdits = 0;
+  let totalErrors = 0;
   
-  // Exit with success
-  console.log('\n✅ MDX specific patching completed');
-  process.exit(0);
+  results.forEach(r => {
+    if (r.edits.length > 0) {
+      console.log(`File: ${r.file} (${r.edits.length} edits)`);
+      r.edits.forEach(edit => {
+        console.log(`  L${edit.line}: - ${edit.before}`);
+        console.log(`  L${edit.line}: + ${edit.after}`);
+      });
+      totalEdits += r.edits.length;
+    }
+    
+    if (r.error) {
+      console.log(`File: ${r.file} (ERROR)`);
+      console.log(`  Error: ${r.error}`);
+      totalErrors++;
+    }
+  });
+
+  if (totalEdits === 0 && totalErrors === 0) {
+    console.log('No specific MDX patches applied.');
+  } else {
+    console.log(`Total specific MDX edits: ${totalEdits}`);
+    if (totalErrors > 0) {
+      console.log(`Total errors: ${totalErrors}`);
+    }
+  }
+  console.log('---------------------------------');
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch(error => {
-    console.error('MDX specific patching failed:', error);
-    process.exit(1);
-  });
-}
+main().catch(console.error);

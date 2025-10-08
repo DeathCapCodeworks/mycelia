@@ -1,218 +1,215 @@
-const { execSync } = require('child_process');
-const { readFileSync, writeFileSync, existsSync } = require('fs');
+#!/usr/bin/env node
+
+/**
+ * Docker Image Promotion Script for GA Release
+ */
+
+const { execSync, spawnSync } = require('child_process');
+const { writeFileSync, existsSync, mkdirSync } = require('fs');
 const { join } = require('path');
 
-function getVersion() {
+function getBuildSha() {
   try {
-    return readFileSync('release/VERSION', 'utf8').trim();
-  } catch (error) {
-    console.error('Failed to read VERSION file:', error);
-    process.exit(1);
-  }
-}
-
-function getGitSha() {
-  try {
-    return execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
-  } catch (error) {
-    console.error('Failed to get git SHA:', error);
+    return execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim();
+  } catch {
     return 'unknown';
   }
 }
 
-function buildImage(serviceName, version) {
+function buildDockerImage(serviceName, version, tag) {
+  console.log(`🐳 Building ${serviceName}:${tag}...`);
+  
+  const dockerfile = `packages/${serviceName}/Dockerfile`;
+  if (!existsSync(dockerfile)) {
+    console.log(`⚠️ Dockerfile not found for ${serviceName}, skipping`);
+    return null;
+  }
+  
   try {
-    console.log(`🐳 Building ${serviceName}...`);
+    const buildCmd = [
+      'docker', 'build',
+      '-t', `${serviceName}:${tag}`,
+      '-f', dockerfile,
+      '--build-arg', `VERSION=${version}`,
+      '--build-arg', `COMMIT_SHA=${getBuildSha()}`,
+      'packages'
+    ];
     
-    const imageName = `mycelia-${serviceName}`;
-    const versionTag = `${imageName}:${version}`;
-    const latestRcTag = `${imageName}:rc-latest`;
-    
-    // Determine build context and dockerfile path
-    let buildContext, dockerfilePath;
-    if (serviceName === 'docs') {
-      buildContext = '.';
-      dockerfilePath = 'apps/docs/Dockerfile';
-    } else {
-      buildContext = '.';
-      dockerfilePath = `packages/${serviceName}/Dockerfile`;
-    }
-    
-    // Build the image with build args
-    const buildCmd = `docker build -f ${dockerfilePath} --build-arg COMMIT_SHA=${getGitSha()} --build-arg VERSION=${version} -t ${versionTag} -t ${latestRcTag} ${buildContext}`;
-    execSync(buildCmd, {
-      stdio: 'inherit'
+    const result = spawnSync(buildCmd[0], buildCmd.slice(1), { 
+      stdio: 'inherit',
+      cwd: process.cwd()
     });
     
-    // Get the digest
-    const digestOutput = execSync(`docker inspect ${versionTag} --format='{{index .RepoDigests 0}}'`, {
-      encoding: 'utf8'
-    }).trim();
+    if (result.status !== 0) {
+      console.log(`❌ Failed to build ${serviceName}:${tag}`);
+      return null;
+    }
     
-    const digest = digestOutput.split('@')[1] || 'unknown';
+    console.log(`✅ Built ${serviceName}:${tag}`);
     
-    console.log(`✅ Built ${serviceName}: ${digest.substring(0, 12)}...`);
-    
-    return {
-      name: imageName,
-      digest,
-      tags: [versionTag, latestRcTag]
-    };
-    
+    // Get image digest
+    try {
+      const digestCmd = ['docker', 'images', '--digests', '--format', '{{.Digest}}', `${serviceName}:${tag}`];
+      const digest = execSync(digestCmd.join(' '), { encoding: 'utf8' }).trim();
+      return {
+        service: serviceName,
+        tag: tag,
+        digest: digest || 'no-digest',
+        size: getImageSize(serviceName, tag)
+      };
+    } catch {
+      return {
+        service: serviceName,
+        tag: tag,
+        digest: 'no-digest',
+        size: 'unknown'
+      };
+    }
   } catch (error) {
-    console.error(`Failed to build ${serviceName}:`, error);
+    console.log(`❌ Error building ${serviceName}:${tag}:`, error.message);
     return null;
   }
 }
 
-function pushImage(imageInfo) {
-  const dockerRegistry = process.env.DOCKER_REGISTRY;
-  const dockerRepo = process.env.DOCKER_REPO;
+function getImageSize(serviceName, tag) {
+  try {
+    const sizeCmd = ['docker', 'images', '--format', '{{.Size}}', `${serviceName}:${tag}`];
+    return execSync(sizeCmd.join(' '), { encoding: 'utf8' }).trim();
+  } catch {
+    return 'unknown';
+  }
+}
+
+function pushDockerImage(serviceName, tag) {
+  const registry = process.env.DOCKER_REGISTRY;
+  const repo = process.env.DOCKER_REPO;
   
-  if (!dockerRegistry || !dockerRepo) {
-    console.log(`⚠️  No DOCKER_REGISTRY or DOCKER_REPO found, skipping push for ${imageInfo.name}`);
+  if (!registry || !repo) {
+    console.log(`⚠️ DOCKER_REGISTRY or DOCKER_REPO not set, skipping push for ${serviceName}:${tag}`);
     return false;
   }
   
+  const fullTag = `${registry}/${repo}/${serviceName}:${tag}`;
+  
   try {
-    console.log(`📤 Pushing ${imageInfo.name}...`);
+    console.log(`📤 Pushing ${fullTag}...`);
     
-    for (const tag of imageInfo.tags) {
-      const remoteTag = `${dockerRegistry}/${dockerRepo}/${tag}`;
-      
-      // Tag for remote registry
-      execSync(`docker tag ${tag} ${remoteTag}`, { stdio: 'inherit' });
-      
-      // Push to registry
-      execSync(`docker push ${remoteTag}`, { stdio: 'inherit' });
-      
-      console.log(`✅ Pushed ${remoteTag}`);
-    }
+    // Tag for registry
+    execSync(`docker tag ${serviceName}:${tag} ${fullTag}`);
     
+    // Push to registry
+    execSync(`docker push ${fullTag}`);
+    
+    console.log(`✅ Pushed ${fullTag}`);
     return true;
-    
   } catch (error) {
-    console.error(`Failed to push ${imageInfo.name}:`, error);
+    console.log(`❌ Failed to push ${fullTag}:`, error.message);
     return false;
   }
 }
 
-function signImage(imageInfo) {
+function signDockerImage(serviceName, tag) {
   const cosignKey = process.env.COSIGN_KEY;
-  const cosignOidc = process.env.COSIGN_OIDC;
   
-  if (!cosignKey && !cosignOidc) {
-    console.log(`⚠️  No COSIGN_KEY or COSIGN_OIDC found, skipping signature for ${imageInfo.name}`);
+  if (!cosignKey) {
+    console.log(`⚠️ COSIGN_KEY not set, skipping signing for ${serviceName}:${tag}`);
     return false;
   }
   
   try {
-    console.log(`🔐 Signing ${imageInfo.name}...`);
+    console.log(`🔐 Signing ${serviceName}:${tag}...`);
     
-    for (const tag of imageInfo.tags) {
-      if (cosignKey) {
-        execSync(`cosign sign --key ${cosignKey} ${tag}`, { stdio: 'inherit' });
-      } else if (cosignOidc) {
-        execSync(`cosign sign --oidc-issuer ${cosignOidc} ${tag}`, { stdio: 'inherit' });
-      }
-    }
+    // Sign with cosign
+    execSync(`cosign sign --key ${cosignKey} ${serviceName}:${tag}`);
     
-    console.log(`✅ Signed ${imageInfo.name}`);
+    console.log(`✅ Signed ${serviceName}:${tag}`);
     return true;
-    
   } catch (error) {
-    console.error(`Failed to sign ${imageInfo.name}:`, error);
+    console.log(`❌ Failed to sign ${serviceName}:${tag}:`, error.message);
     return false;
   }
 }
 
-function validateDockerCompose() {
-  try {
-    console.log('🔍 Validating docker-compose.yml...');
-    execSync('docker compose -f deploy/docker-compose.yml config', { stdio: 'inherit' });
-    console.log('✅ Docker Compose configuration is valid');
-    return true;
-  } catch (error) {
-    console.error('❌ Docker Compose configuration is invalid:', error);
-    return false;
-  }
-}
-
-function main() {
-  console.log('🐳 Building container images...');
+function promoteImages(version) {
+  console.log(`🚀 Promoting Docker images to ${version}...`);
   
-  // Validate docker-compose first
-  if (!validateDockerCompose()) {
-    process.exit(1);
-  }
-  
-  const version = getVersion();
-  const gitSha = getGitSha();
-  
-  console.log(`Version: ${version}`);
-  console.log(`Git SHA: ${gitSha.substring(0, 8)}...`);
-  
-  // Define services to build
   const services = [
     'public-directory',
-    'radio-sfu',
-    'docs',
-    'navigator'
+    'radio-sfu', 
+    'navigator',
+    'docs'
   ];
   
   const images = [];
-  let pushedCount = 0;
-  let signedCount = 0;
   
-  // Build each service
   for (const service of services) {
-    const imageInfo = buildImage(service, version);
+    // Build version tag
+    const versionImage = buildDockerImage(service, version, version);
+    if (versionImage) {
+      images.push(versionImage);
+      
+      // Push version tag
+      pushDockerImage(service, version);
+      
+      // Sign version tag
+      signDockerImage(service, version);
+    }
     
-    if (imageInfo) {
-      images.push(imageInfo);
+    // Build latest tag
+    const latestImage = buildDockerImage(service, version, 'latest');
+    if (latestImage) {
+      latestImage.tag = 'latest';
+      images.push(latestImage);
       
-      // Push if registry configured
-      if (pushImage(imageInfo)) {
-        pushedCount++;
-      }
+      // Push latest tag
+      pushDockerImage(service, 'latest');
       
-      // Sign if key configured
-      if (signImage(imageInfo)) {
-        signedCount++;
-      }
+      // Sign latest tag
+      signDockerImage(service, 'latest');
     }
   }
   
-  // Create images.json
-  const imagesData = {
-    version,
-    gitSha,
+  // Write images manifest
+  const manifest = {
+    version: version,
     timestamp: new Date().toISOString(),
-    images: images.map(img => ({
-      name: img.name,
-      digest: img.digest,
-      tags: img.tags
-    })),
-    summary: {
-      total: images.length,
-      pushed: pushedCount,
-      signed: signedCount
-    }
+    buildSha: getBuildSha(),
+    images: images,
+    registry: process.env.DOCKER_REGISTRY || 'local',
+    repo: process.env.DOCKER_REPO || 'mycelia'
   };
   
-  const outputFile = 'release/images.json';
-  writeFileSync(outputFile, JSON.stringify(imagesData, null, 2));
-  
-  console.log(`\n📊 Docker Build Summary:`);
-  console.log(`  Built: ${images.length} images`);
-  console.log(`  Pushed: ${pushedCount} images`);
-  console.log(`  Signed: ${signedCount} images`);
-  console.log(`  Output: ${outputFile}`);
-  
-  // List built images
-  for (const image of images) {
-    console.log(`  - ${image.name}: ${image.digest.substring(0, 12)}...`);
+  const manifestPath = `release/images-${version}.json`;
+  const releaseDir = 'release';
+  if (!existsSync(releaseDir)) {
+    mkdirSync(releaseDir, { recursive: true });
   }
+  
+  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  console.log(`📁 Images manifest written to ${manifestPath}`);
+  
+  console.log(`✅ Promoted ${images.length} Docker images`);
+  return images.length;
 }
 
-main();
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const promoteFlag = args.indexOf('--promote');
+  
+  if (promoteFlag === -1 || promoteFlag === args.length - 1) {
+    console.log('Usage: node docker-build.js --promote <version>');
+    process.exit(1);
+  }
+  
+  const version = args[promoteFlag + 1];
+  const imageCount = promoteImages(version);
+  
+  console.log(`\n📊 Docker Promotion Summary:`);
+  console.log(`   Version: ${version}`);
+  console.log(`   Images: ${imageCount}`);
+  console.log(`   Registry: ${process.env.DOCKER_REGISTRY || 'local'}`);
+  
+  process.exit(imageCount > 0 ? 0 : 1);
+}
+
+module.exports = { promoteImages, buildDockerImage, pushDockerImage, signDockerImage };

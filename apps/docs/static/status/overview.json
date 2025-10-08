@@ -1,0 +1,12 @@
+{
+  "version": "v1.0.0",
+  "sha": "397586c",
+  "docsCid": null,
+  "demoCid": null,
+  "flags": "flags-v1.0.0.json",
+  "porFreshMinutes": 15,
+  "diagPassRate": 0.95,
+  "sloStatus": "ok",
+  "images": 8,
+  "timestamp": "2025-10-08T07:31:07.276Z"
+}
