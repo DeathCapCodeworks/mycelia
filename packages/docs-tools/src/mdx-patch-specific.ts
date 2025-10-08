@@ -53,14 +53,24 @@ class MDXSpecificPatcher {
       writeFileSync(backupPath, originalContent);
 
       // Apply specific patches based on filename
-      if (filePath.includes('mainnet-por.md')) {
-        modified = this.patchMainnetPor(lines, result);
-      } else if (filePath.includes('media-pipeline.md')) {
-        modified = this.patchMediaPipeline(lines, result);
-      } else if (filePath.includes('net-stack.md')) {
-        modified = this.patchNetStack(lines, result);
-      } else if (filePath.includes('webrtc-enhanced.md')) {
-        modified = this.patchWebrtcEnhanced(lines, result);
+      try {
+        if (filePath.includes('mainnet-por.md')) {
+          modified = this.patchMainnetPor(lines, result);
+        } else if (filePath.includes('media-pipeline.md')) {
+          modified = this.patchMediaPipeline(lines, result);
+        } else if (filePath.includes('net-stack.md')) {
+          modified = this.patchNetStack(lines, result);
+        } else if (filePath.includes('webrtc-enhanced.md')) {
+          modified = this.patchWebrtcEnhanced(lines, result);
+        }
+      } catch (patchError) {
+        const errorMsg = patchError instanceof Error ? patchError.message : String(patchError);
+        console.error(`❌ Patch error for ${filePath}:`, errorMsg);
+        result.error = errorMsg;
+        
+        // Write error log
+        const errorLogPath = filePath + '.err.log';
+        writeFileSync(errorLogPath, `Error patching ${filePath}:\n${errorMsg}\n\nStack:\n${patchError instanceof Error ? patchError.stack : 'No stack trace'}`);
       }
 
       if (modified) {
@@ -91,8 +101,11 @@ class MDXSpecificPatcher {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       
-      // Fix missing closing brace in expressions
-      if (line.includes('`{') && !line.includes('}`)) {
+      // Fix missing closing brace in expressions - use string concatenation to avoid backtick issues
+      const backtickOpen = '`' + '{';
+      const backtickClose = '}' + '`';
+      
+      if (line.includes(backtickOpen) && !line.includes(backtickClose)) {
         const openBraces = (line.match(/\{/g) || []).length;
         const closeBraces = (line.match(/\}/g) || []).length;
         
@@ -106,12 +119,14 @@ class MDXSpecificPatcher {
       }
       
       // Normalize inline code backticks if they accidentally wrap JSX
-      const jsxInBackticksRegex = /`(<[^>]+>)`/g;
-      if (jsxInBackticksRegex.test(lines[i])) {
-        const before = lines[i];
-        lines[i] = lines[i].replace(jsxInBackticksRegex, '`$1`');
-        if (lines[i] !== before) {
-          result.edits.push({ line: i + 1, before, after: lines[i] });
+      const jsxPattern = new RegExp('`(<[^>]+>)`', 'g');
+      const match = jsxPattern.exec(line);
+      if (match) {
+        const before = line;
+        const after = line.replace(jsxPattern, '`$1`');
+        if (after !== before) {
+          lines[i] = after;
+          result.edits.push({ line: i + 1, before, after });
           modified = true;
         }
       }
@@ -125,10 +140,11 @@ class MDXSpecificPatcher {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (unclosedTagRegex.test(line)) {
+      const match = unclosedTagRegex.exec(line);
+      if (match) {
         const before = line;
         // Replace with fenced code block
-        lines[i] = `\`\`\`tsx\n${line}\n\`\`\``;
+        lines[i] = '```tsx\n' + line + '\n```';
         result.edits.push({ line: i + 1, before, after: lines[i] });
         modified = true;
       }
@@ -143,15 +159,18 @@ class MDXSpecificPatcher {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      const newLine = line.replace(pseudoTagRegex, (match, tagContent) => {
-        // Convert to inline code
-        return `\`${tagContent}\``;
-      });
+      const match = pseudoTagRegex.exec(line);
+      if (match) {
+        const newLine = line.replace(pseudoTagRegex, (match, tagContent) => {
+          // Convert to inline code
+          return '`' + tagContent + '`';
+        });
 
-      if (newLine !== line) {
-        result.edits.push({ line: i + 1, before: line, after: newLine });
-        lines[i] = newLine;
-        modified = true;
+        if (newLine !== line) {
+          result.edits.push({ line: i + 1, before: line, after: newLine });
+          lines[i] = newLine;
+          modified = true;
+        }
       }
     }
     return modified;
@@ -163,7 +182,8 @@ class MDXSpecificPatcher {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (voidTagRegex.test(line)) {
+      const match = voidTagRegex.exec(line);
+      if (match) {
         const before = line;
         let after = line;
 

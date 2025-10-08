@@ -4,7 +4,10 @@
     "outDir": "dist",
     "rootDir": "src",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "module": "ESNext",
+    "target": "ES2022",
+    "moduleResolution": "Bundler"
   },
   "include": ["src"],
   "exclude": ["src/**/*.test.ts", "dist"]

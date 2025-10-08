@@ -1,325 +1,88 @@
-import { LocalKMS } from '@mycelia/kms-local';
-import { SpvUtxoFeed } from '@mycelia/proof-of-reserve';
+#!/usr/bin/env node
 
-export interface AttestationSnapshot {
-  timestamp: number;
-  lockedSats: bigint;
-  outstandingBloom: bigint;
-  collateralizationRatio: number;
-  headerHash: string;
-  merkleRoot: string;
-  utxoCount: number;
-}
+/**
+ * Mycelia Attestations - Main Entry Point
+ */
 
-export interface Attestation {
-  snapshot: AttestationSnapshot;
-  signature: string;
-  publicKey: string;
-}
+import { createRequire } from 'module';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
-export class AttestationWriter {
-  private kms: LocalKMS;
-  private operatorKeyPair: { publicKey: Uint8Array; privateKey: Uint8Array } | null = null;
+const require = createRequire(import.meta.url);
 
-  constructor() {
-    this.kms = new LocalKMS();
-    this.initializeOperatorKey();
-  }
+// Re-export from existing CJS implementations
+export { mockSign, mockVerify, createSignedPoR, verifyPoR } from './sign-json.cjs';
 
-  private async initializeOperatorKey(): Promise<void> {
-    try {
-      this.operatorKeyPair = await this.kms.generateEd25519KeyPair();
-    } catch (error) {
-      console.warn('Failed to initialize operator key:', error);
-    }
-  }
-
-  /**
-   * Write a signed attestation snapshot
-   */
-  async writeAttestation(snapshot: AttestationSnapshot): Promise<Attestation> {
-    if (!this.operatorKeyPair) {
-      throw new Error('Operator key not initialized');
-    }
-
-    // Serialize snapshot for signing
-    const snapshotData = this.serializeSnapshot(snapshot);
-    const message = new TextEncoder().encode(snapshotData);
-    
-    // Sign the snapshot
-    const signature = await this.kms.sign(message, this.operatorKeyPair.privateKey);
-    const signatureHex = Buffer.from(signature).toString('hex');
-    const publicKeyHex = Buffer.from(this.operatorKeyPair.publicKey).toString('hex');
-
-    return {
-      snapshot,
-      signature: signatureHex,
-      publicKey: publicKeyHex
-    };
-  }
-
-  /**
-   * Serialize snapshot for signing
-   */
-  private serializeSnapshot(snapshot: AttestationSnapshot): string {
-    return JSON.stringify({
-      timestamp: snapshot.timestamp,
-      lockedSats: snapshot.lockedSats.toString(),
-      outstandingBloom: snapshot.outstandingBloom.toString(),
-      collateralizationRatio: snapshot.collateralizationRatio,
-      headerHash: snapshot.headerHash,
-      merkleRoot: snapshot.merkleRoot,
-      utxoCount: snapshot.utxoCount
-    });
-  }
-
-  /**
-   * Get operator public key
-   */
-  getOperatorPublicKey(): string | null {
-    if (!this.operatorKeyPair) {
-      return null;
-    }
-    return Buffer.from(this.operatorKeyPair.publicKey).toString('hex');
-  }
-}
-
-export class AttestationVerifier {
-  private kms: LocalKMS;
-
-  constructor() {
-    this.kms = new LocalKMS();
-  }
-
-  /**
-   * Verify an attestation signature
-   */
-  async verifyAttestation(attestation: Attestation): Promise<boolean> {
-    try {
-      // Deserialize snapshot
-      const snapshotData = this.serializeSnapshot(attestation.snapshot);
-      const message = new TextEncoder().encode(snapshotData);
-      
-      // Verify signature
-      const signatureBytes = Buffer.from(attestation.signature, 'hex');
-      const publicKeyBytes = Buffer.from(attestation.publicKey, 'hex');
-      
-      return this.kms.verify(message, signatureBytes, publicKeyBytes);
-    } catch (error) {
+// TypeScript wrapper for verifyFresh
+export async function verifyFresh(porPath: string, maxMinutes: number = 30): Promise<boolean> {
+  try {
+    if (!existsSync(porPath)) {
+      console.log(`❌ PoR file not found: ${porPath}`);
       return false;
     }
-  }
 
-  /**
-   * Check if attestation is stale
-   */
-  isAttestationStale(attestation: Attestation, maxAgeMs: number = 1800000): boolean {
-    const age = Date.now() - attestation.snapshot.timestamp;
-    return age > maxAgeMs;
-  }
+    const porContent = readFileSync(porPath, 'utf8');
+    const attestation = JSON.parse(porContent);
 
-  /**
-   * Get current locked sats from attestation
-   */
-  currentLockedSats(attestation: Attestation): bigint {
-    return attestation.snapshot.lockedSats;
-  }
+    // Check if it's a signed envelope format
+    if (attestation.payload && attestation.signature && attestation.publicKey && attestation.alg) {
+      // Verify signature
+      const { verifyPoR } = await import('./sign-json.cjs');
+      const isValid = verifyPoR(porPath);
+      
+      if (!isValid) {
+        console.log('❌ PoR signature is invalid');
+        return false;
+      }
 
-  /**
-   * Get collateralization ratio from attestation
-   */
-  getCollateralizationRatio(attestation: Attestation): number {
-    return attestation.snapshot.collateralizationRatio;
-  }
+      // Check staleness
+      const timestamp = new Date(attestation.payload.timestamp);
+      const age = Date.now() - timestamp.getTime();
+      const maxAge = maxMinutes * 60 * 1000;
+      const isStale = age > maxAge;
+      
+      if (isStale) {
+        console.log(`❌ PoR is stale (${Math.round(age / 60000)}m > ${maxMinutes}m)`);
+        return false;
+      }
 
-  /**
-   * Get outstanding BLOOM from attestation
-   */
-  getOutstandingBloom(attestation: Attestation): bigint {
-    return attestation.snapshot.outstandingBloom;
-  }
-
-  /**
-   * Get UTXO count from attestation
-   */
-  getUtxoCount(attestation: Attestation): number {
-    return attestation.snapshot.utxoCount;
-  }
-
-  /**
-   * Get header hash from attestation
-   */
-  getHeaderHash(attestation: Attestation): string {
-    return attestation.snapshot.headerHash;
-  }
-
-  /**
-   * Get Merkle root from attestation
-   */
-  getMerkleRoot(attestation: Attestation): string {
-    return attestation.snapshot.merkleRoot;
-  }
-
-  /**
-   * Serialize snapshot for verification
-   */
-  private serializeSnapshot(snapshot: AttestationSnapshot): string {
-    return JSON.stringify({
-      timestamp: snapshot.timestamp,
-      lockedSats: snapshot.lockedSats.toString(),
-      outstandingBloom: snapshot.outstandingBloom.toString(),
-      collateralizationRatio: snapshot.collateralizationRatio,
-      headerHash: snapshot.headerHash,
-      merkleRoot: snapshot.merkleRoot,
-      utxoCount: snapshot.utxoCount
-    });
-  }
-}
-
-/**
- * Create a snapshot from SPV feed data
- */
-export async function createSnapshotFromSpvFeed(
-  spvFeed: SpvUtxoFeed,
-  outstandingBloom: bigint
-): Promise<AttestationSnapshot> {
-  const utxoResult = await spvFeed.getUtxoResult();
-  const lockedSats = utxoResult.sats;
-  const collateralizationRatio = outstandingBloom > 0n 
-    ? Number(lockedSats) / Number(outstandingBloom * 10_000_000n)
-    : 1.0;
-
-  return {
-    timestamp: Date.now(),
-    lockedSats,
-    outstandingBloom,
-    collateralizationRatio,
-    headerHash: spvFeed.getLastHeaderHash() || 'unknown',
-    merkleRoot: 'mock-merkle-root', // In production, would be actual Merkle root
-    utxoCount: utxoResult.utxoCount
-  };
-}
-
-/**
- * Verify multiple attestations
- */
-export async function verifyAttestations(attestations: Attestation[]): Promise<boolean[]> {
-  const verifier = new AttestationVerifier();
-  return Promise.all(attestations.map(attestation => verifier.verifyAttestation(attestation)));
-}
-
-/**
- * Get the most recent valid attestation
- */
-export async function getMostRecentValidAttestation(
-  attestations: Attestation[],
-  maxAgeMs: number = 1800000
-): Promise<Attestation | null> {
-  const verifier = new AttestationVerifier();
-  
-  // Filter valid and non-stale attestations
-  const validAttestations = [];
-  for (const attestation of attestations) {
-    const isValid = await verifier.verifyAttestation(attestation);
-    const isStale = verifier.isAttestationStale(attestation, maxAgeMs);
-    
-    if (isValid && !isStale) {
-      validAttestations.push(attestation);
+      console.log(`✅ PoR is fresh (${Math.round(age / 60000)}m ≤ ${maxMinutes}m)`);
+      return true;
+    } else {
+      console.log('❌ PoR not in signed envelope format');
+      return false;
     }
-  }
-  
-  if (validAttestations.length === 0) {
-    return null;
-  }
-  
-  // Sort by timestamp (most recent first)
-  validAttestations.sort((a, b) => b.snapshot.timestamp - a.snapshot.timestamp);
-  
-  return validAttestations[0];
-}
-
-/**
- * Freshness guard for PoR attestations
- */
-export interface FreshnessResult {
-  ok: boolean;
-  minutes: number;
-  signedBy: string;
-  error?: string;
-}
-
-/**
- * Verify attestation freshness and signature validity
- */
-export async function verifyFresh(
-  attestationPath: string, 
-  maxMinutes: number = 30
-): Promise<FreshnessResult> {
-  try {
-    const fs = await import('fs/promises');
-    const content = await fs.readFile(attestationPath, 'utf8');
-    const attestation: Attestation = JSON.parse(content);
-
-    // Check age
-    const ageMs = Date.now() - attestation.snapshot.timestamp;
-    const ageMinutes = Math.floor(ageMs / (1000 * 60));
-
-    // Verify signature
-    const verifier = new AttestationVerifier();
-    const isValid = await verifier.verifyAttestation(attestation);
-
-    if (!isValid) {
-      return {
-        ok: false,
-        minutes: ageMinutes,
-        signedBy: attestation.publicKey,
-        error: 'Invalid signature'
-      };
-    }
-
-    if (ageMinutes > maxMinutes) {
-      return {
-        ok: false,
-        minutes: ageMinutes,
-        signedBy: attestation.publicKey,
-        error: `Attestation is ${ageMinutes} minutes old (max: ${maxMinutes})`
-      };
-    }
-
-    return {
-      ok: true,
-      minutes: ageMinutes,
-      signedBy: attestation.publicKey
-    };
   } catch (error) {
-    return {
-      ok: false,
-      minutes: -1,
-      signedBy: 'unknown',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    };
+    console.log(`❌ PoR verification failed: ${error instanceof Error ? error.message : String(error)}`);
+    return false;
   }
 }
 
-/**
- * Get PoR status badge color based on freshness
- */
-export function getPoRBadgeColor(minutes: number): 'green' | 'amber' | 'red' {
-  if (minutes <= 30) return 'green';
-  if (minutes <= 60) return 'amber';
-  return 'red';
+// TypeScript wrapper for signJson
+export async function signJson(payload: any, privateKey: string): Promise<any> {
+  const { mockSign } = await import('./sign-json.cjs');
+  return mockSign(payload, privateKey);
 }
 
-/**
- * Format PoR status for display
- */
-export function formatPoRStatus(result: FreshnessResult): string {
-  if (!result.ok) {
-    return `❌ PoR: ${result.error} (${result.minutes}m old)`;
-  }
+// TypeScript wrapper for verifyJson
+export async function verifyJson(signedEnvelope: any): Promise<any> {
+  const { mockVerify } = await import('./sign-json.cjs');
+  return mockVerify(signedEnvelope);
+}
 
-  const color = getPoRBadgeColor(result.minutes);
-  const emoji = color === 'green' ? '✅' : color === 'amber' ? '⚠️' : '❌';
+// CLI entry point
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const command = process.argv[2];
   
-  return `${emoji} PoR: Fresh (${result.minutes}m old, signed by ${result.signedBy.slice(0, 8)}...)`;
+  if (command === 'sign') {
+    const { createSignedPoR } = await import('./sign-json.cjs');
+    createSignedPoR();
+  } else if (command === 'verify') {
+    const porPath = process.argv[3] || 'release/attestations/mainnet-por.json';
+    const isValid = await verifyFresh(porPath);
+    process.exit(isValid ? 0 : 1);
+  } else {
+    console.log('Usage: node index.js [sign|verify] [por-path]');
+    process.exit(1);
+  }
 }

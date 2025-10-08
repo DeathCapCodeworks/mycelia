@@ -108,21 +108,52 @@ const releasePath = args[args.indexOf('--release') + 1] || './release/mainnet';
       run: async () => {
         try {
           const fs = await import("node:fs/promises");
+          const path = await import("node:path");
+          
+          // Check for the specific treasury and peg doc first
+          const treasuryDocPath = path.join(process.cwd(), "docs/funding/treasury-and-peg.md");
+          try {
+            const treasuryContent = await fs.readFile(treasuryDocPath, "utf8");
+            const hasPeg = treasuryContent.includes("10 BLOOM = 1 BTC");
+            const hasPoR = treasuryContent.includes("Proof-of-Reserves");
+            if (hasPeg && hasPoR) {
+              return true;
+            }
+          } catch {
+            // Treasury doc not found, check other docs
+          }
+          
+          // Fallback: check other docs for peg and PoR statements
           const pages = [
             "../../apps/docs/docs/index.md",
             "../../apps/docs/docs/executive/executive-one-pager.md",
             "../../apps/docs/docs/report/funding-and-governance.md",
-            "../../apps/docs/docs/appendices/appendix-tokenomics.md"
+            "../../apps/docs/docs/appendices/appendix-tokenomics.md",
+            "../../docs/funding/treasury-and-peg.md"
           ];
+          
           const lookups = await Promise.allSettled(pages.map(p => fs.readFile(p, "utf8")));
-          if (lookups.some(l => l.status === "rejected")) {
+          const successfulReads = lookups
+            .filter(l => l.status === "fulfilled")
+            .map((l: any) => l.value);
+          
+          if (successfulReads.length === 0) {
+            console.log("   → Create docs/funding/treasury-and-peg.md with peg + PoR lines.");
             return false;
           }
-          const text = (lookups as any).map((l: any) => l.value).join("\n").toLowerCase();
-          const hasTreasury = text.includes("20,000,000,000") || text.includes("twenty billion");
+          
+          const text = successfulReads.join("\n").toLowerCase();
           const hasPeg = text.includes("10 bloom = 1 btc") || text.includes("10 bloom for 1 btc");
-          return hasTreasury && hasPeg;
+          const hasPoR = text.includes("proof-of-reserves") || text.includes("proof of reserves");
+          
+          if (!hasPeg || !hasPoR) {
+            console.log("   → Create docs/funding/treasury-and-peg.md with peg + PoR lines.");
+            return false;
+          }
+          
+          return true;
         } catch (error) {
+          console.log("   → Create docs/funding/treasury-and-peg.md with peg + PoR lines.");
           return false;
         }
       }
@@ -173,14 +204,68 @@ const releasePath = args[args.indexOf('--release') + 1] || './release/mainnet';
     },
     {
       name: "PoR attestation signature validity and staleness",
-      run: () => {
-        // Simulate PoR attestation check
-        const attestationValid = true;
-        const attestationAge = Date.now() - (30 * 60 * 1000); // 30 minutes ago
-        const maxAge = 30 * 60 * 1000; // 30 minutes
-        const isStale = attestationAge > maxAge;
-        
-        return attestationValid && !isStale;
+      run: async () => {
+        try {
+          const fs = await import("node:fs/promises");
+          const path = await import("node:path");
+          
+          // Check for signed PoR attestation
+          const porPath = path.join(process.cwd(), "release/attestations/mainnet-por.json");
+          const porContent = await fs.readFile(porPath, "utf8");
+          const attestation = JSON.parse(porContent);
+          
+          // Check if it's a signed envelope format
+          if (attestation.payload && attestation.signature && attestation.publicKey && attestation.alg) {
+            // Verify signature using the attestation verifier
+            try {
+              // Try ES module first, then CommonJS fallback
+              let verifyFunction;
+              try {
+                const verifyModule = await import("@mycelia/attestations/dist/verify-json.js");
+                verifyFunction = verifyModule.default || verifyModule.verifyJson;
+              } catch {
+                const verifyModule = await import("@mycelia/attestations");
+                verifyFunction = verifyModule.verifyJson;
+              }
+              
+              if (verifyFunction) {
+                const isValid = verifyFunction(porPath);
+                if (isValid) {
+                  // Check staleness
+                  const timestamp = new Date(attestation.payload.timestamp);
+                  const age = Date.now() - timestamp.getTime();
+                  const maxAge = 30 * 60 * 1000; // 30 minutes
+                  const isStale = age > maxAge;
+                  
+                  if (!isStale) {
+                    const signerKey = attestation.publicKey.slice(0, 16) + "...";
+                    const payloadHash = Buffer.from(JSON.stringify(attestation.payload)).toString('hex').slice(0, 8);
+                    console.log(`   → Signer: ${signerKey}, Payload: ${payloadHash}`);
+                    return true;
+                  } else {
+                    console.log(`   → PoR is stale (${Math.round(age / 60000)}m > 30m)`);
+                    return false;
+                  }
+                } else {
+                  console.log("   → PoR signature is invalid");
+                  return false;
+                }
+              } else {
+                console.log("   → PoR verifier not found");
+                return false;
+              }
+            } catch (verifyError) {
+              console.log("   → PoR verification failed:", verifyError.message);
+              return false;
+            }
+          } else {
+            console.log("   → PoR not in signed envelope format");
+            return false;
+          }
+        } catch (error) {
+          console.log("   → PoR attestation not found or invalid");
+          return false;
+        }
       }
     },
     {

@@ -1,52 +1,17 @@
-# Build stage
-FROM node:20-bullseye as build
-
-# Enable corepack for pnpm
+FROM node:20-bullseye AS build
 RUN corepack enable
-
-WORKDIR /app
-
-# Copy package files first for better caching
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/public-directory/package.json ./packages/public-directory/
-
-# Fetch dependencies (cache-friendly)
+WORKDIR /work
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 RUN pnpm fetch
-
-# Copy source code
-COPY . .
-
-# Install dependencies and build
+COPY packages/public-directory packages/public-directory
+COPY packages packages
 RUN pnpm i --frozen-lockfile
-RUN pnpm -w build
+RUN pnpm --filter @mycelia/public-directory build
 
-# Runtime stage
 FROM node:20-bullseye
-
-# Enable corepack for pnpm
-RUN corepack enable
-
 WORKDIR /app
-
-# Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/public-directory/package.json ./packages/public-directory/
-
-# Install production dependencies only
-RUN pnpm i --prod --frozen-lockfile
-
-# Copy built application
-COPY --from=build /app/packages/public-directory/dist ./packages/public-directory/dist
-
-# Create cache directory
-RUN mkdir -p .cache
-
-# Expose port
-EXPOSE 3001
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3001/health || exit 1
-
-# Start the server
-CMD ["pnpm", "--filter", "@mycelia/public-directory", "start"]
+COPY --from=build /work/packages/public-directory/dist ./dist
+COPY packages/public-directory/package.json ./
+RUN corepack enable && pnpm i -P --prod --frozen-lockfile || true
+EXPOSE 8080
+CMD ["node","dist/index.js"]

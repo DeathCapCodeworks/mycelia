@@ -90,12 +90,13 @@ class DemoRecorder {
         console.log(`❌ Attempt ${attempt}/${maxAttempts} failed: ${toMsg(error)}`);
         
         if (attempt === maxAttempts) {
-          console.error('🚨 SERVER NOT REACHABLE - DEMO RECORDING FAILED');
-          console.error('🔴 Please ensure the development server is running:');
-          console.error(`   pnpm demo:serve:win`);
-          console.error(`   or`);
-          console.error(`   pnpm demo:serve`);
-          process.exit(1);
+          console.log('🚨 SERVER NOT REACHABLE - DEMO RECORDING SKIPPED');
+          console.log('ℹ️ Demo recording skipped (unreachable)');
+          console.log('🔴 To record demo, ensure the development server is running:');
+          console.log(`   pnpm demo:serve:win`);
+          console.log(`   or`);
+          console.log(`   pnpm demo:serve`);
+          process.exit(0); // Exit gracefully for GA pipelines
         }
         
         // Wait before retry

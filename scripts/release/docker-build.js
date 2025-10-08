@@ -16,10 +16,29 @@ function getBuildSha() {
   }
 }
 
-function buildDockerImage(serviceName, version, tag) {
+function buildDockerImage(serviceName, version, tag, localMode = false) {
   console.log(`🐳 Building ${serviceName}:${tag}...`);
   
-  const dockerfile = `packages/${serviceName}/Dockerfile`;
+  let dockerfile;
+  let context;
+  
+  if (localMode) {
+    // For local builds, use repo root context
+    if (serviceName === 'docs') {
+      dockerfile = 'apps/docs/Dockerfile';
+      context = '.'; // repo root
+    } else if (serviceName === 'public-directory') {
+      dockerfile = 'packages/public-directory/Dockerfile';
+      context = '.'; // repo root
+    } else {
+      console.log(`⚠️ Service ${serviceName} not supported in local mode, skipping`);
+      return null;
+    }
+  } else {
+    dockerfile = `packages/${serviceName}/Dockerfile`;
+    context = '.'; // repo root
+  }
+  
   if (!existsSync(dockerfile)) {
     console.log(`⚠️ Dockerfile not found for ${serviceName}, skipping`);
     return null;
@@ -32,7 +51,7 @@ function buildDockerImage(serviceName, version, tag) {
       '-f', dockerfile,
       '--build-arg', `VERSION=${version}`,
       '--build-arg', `COMMIT_SHA=${getBuildSha()}`,
-      'packages'
+      context
     ];
     
     const result = spawnSync(buildCmd[0], buildCmd.slice(1), { 
@@ -130,10 +149,13 @@ function signDockerImage(serviceName, tag) {
   }
 }
 
-function promoteImages(version) {
-  console.log(`🚀 Promoting Docker images to ${version}...`);
+function promoteImages(version, localMode = false) {
+  console.log(`🚀 Promoting Docker images to ${version}${localMode ? ' (local mode)' : ''}...`);
   
-  const services = [
+  const services = localMode ? [
+    'docs',
+    'public-directory'
+  ] : [
     'public-directory',
     'radio-sfu', 
     'navigator',
@@ -144,28 +166,32 @@ function promoteImages(version) {
   
   for (const service of services) {
     // Build version tag
-    const versionImage = buildDockerImage(service, version, version);
+    const versionImage = buildDockerImage(service, version, version, localMode);
     if (versionImage) {
       images.push(versionImage);
       
-      // Push version tag
-      pushDockerImage(service, version);
-      
-      // Sign version tag
-      signDockerImage(service, version);
+      if (!localMode) {
+        // Push version tag
+        pushDockerImage(service, version);
+        
+        // Sign version tag
+        signDockerImage(service, version);
+      }
     }
     
     // Build latest tag
-    const latestImage = buildDockerImage(service, version, 'latest');
+    const latestImage = buildDockerImage(service, version, 'latest', localMode);
     if (latestImage) {
       latestImage.tag = 'latest';
       images.push(latestImage);
       
-      // Push latest tag
-      pushDockerImage(service, 'latest');
-      
-      // Sign latest tag
-      signDockerImage(service, 'latest');
+      if (!localMode) {
+        // Push latest tag
+        pushDockerImage(service, 'latest');
+        
+        // Sign latest tag
+        signDockerImage(service, 'latest');
+      }
     }
   }
   
@@ -195,21 +221,40 @@ function promoteImages(version) {
 if (require.main === module) {
   const args = process.argv.slice(2);
   const promoteFlag = args.indexOf('--promote');
+  const localFlag = args.indexOf('--local');
   
-  if (promoteFlag === -1 || promoteFlag === args.length - 1) {
-    console.log('Usage: node docker-build.js --promote <version>');
+  if (promoteFlag !== -1) {
+    const version = args[promoteFlag + 1];
+    if (!version) {
+      console.log('Usage: node docker-build.js --promote <version>');
+      process.exit(1);
+    }
+    const imageCount = promoteImages(version, false);
+    
+    console.log(`\n📊 Docker Promotion Summary:`);
+    console.log(`   Version: ${version}`);
+    console.log(`   Images: ${imageCount}`);
+    console.log(`   Registry: ${process.env.DOCKER_REGISTRY || 'local'}`);
+    
+    process.exit(imageCount > 0 ? 0 : 1);
+  } else if (localFlag !== -1) {
+    const version = args[localFlag + 1];
+    if (!version) {
+      console.log('Usage: node docker-build.js --local <version>');
+      process.exit(1);
+    }
+    const imageCount = promoteImages(version, true);
+    
+    console.log(`\n📊 Docker Local Build Summary:`);
+    console.log(`   Version: ${version}`);
+    console.log(`   Images: ${imageCount}`);
+    console.log(`   Mode: local`);
+    
+    process.exit(imageCount > 0 ? 0 : 1);
+  } else {
+    console.log('Usage: node docker-build.js --promote <version> | --local <version>');
     process.exit(1);
   }
-  
-  const version = args[promoteFlag + 1];
-  const imageCount = promoteImages(version);
-  
-  console.log(`\n📊 Docker Promotion Summary:`);
-  console.log(`   Version: ${version}`);
-  console.log(`   Images: ${imageCount}`);
-  console.log(`   Registry: ${process.env.DOCKER_REGISTRY || 'local'}`);
-  
-  process.exit(imageCount > 0 ? 0 : 1);
 }
 
 module.exports = { promoteImages, buildDockerImage, pushDockerImage, signDockerImage };

@@ -5,12 +5,10 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": {
-    "mycelia-attest": "dist/cli.js",
-    "attest-rotate": "dist/rotate.js"
-  },
+  "files": ["dist", "src", "README.md"],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -b",
+    "prepack": "pnpm run build",
     "test": "vitest",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"

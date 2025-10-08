@@ -1,7 +1,5 @@
 @mycelia/docs
-@mycelia/navigator
-@mycelia/compat-modern
-@mycelia/applets-gallery
+@mycelia/navigator-sandbox
 @mycelia/demo-recorder
 @mycelia/attestations
 @mycelia/bloom-contracts
