@@ -237,3 +237,89 @@ export async function getMostRecentValidAttestation(
   
   return validAttestations[0];
 }
+
+/**
+ * Freshness guard for PoR attestations
+ */
+export interface FreshnessResult {
+  ok: boolean;
+  minutes: number;
+  signedBy: string;
+  error?: string;
+}
+
+/**
+ * Verify attestation freshness and signature validity
+ */
+export async function verifyFresh(
+  attestationPath: string, 
+  maxMinutes: number = 30
+): Promise<FreshnessResult> {
+  try {
+    const fs = await import('fs/promises');
+    const content = await fs.readFile(attestationPath, 'utf8');
+    const attestation: Attestation = JSON.parse(content);
+
+    // Check age
+    const ageMs = Date.now() - attestation.snapshot.timestamp;
+    const ageMinutes = Math.floor(ageMs / (1000 * 60));
+
+    // Verify signature
+    const verifier = new AttestationVerifier();
+    const isValid = await verifier.verifyAttestation(attestation);
+
+    if (!isValid) {
+      return {
+        ok: false,
+        minutes: ageMinutes,
+        signedBy: attestation.publicKey,
+        error: 'Invalid signature'
+      };
+    }
+
+    if (ageMinutes > maxMinutes) {
+      return {
+        ok: false,
+        minutes: ageMinutes,
+        signedBy: attestation.publicKey,
+        error: `Attestation is ${ageMinutes} minutes old (max: ${maxMinutes})`
+      };
+    }
+
+    return {
+      ok: true,
+      minutes: ageMinutes,
+      signedBy: attestation.publicKey
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      minutes: -1,
+      signedBy: 'unknown',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
+/**
+ * Get PoR status badge color based on freshness
+ */
+export function getPoRBadgeColor(minutes: number): 'green' | 'amber' | 'red' {
+  if (minutes <= 30) return 'green';
+  if (minutes <= 60) return 'amber';
+  return 'red';
+}
+
+/**
+ * Format PoR status for display
+ */
+export function formatPoRStatus(result: FreshnessResult): string {
+  if (!result.ok) {
+    return `❌ PoR: ${result.error} (${result.minutes}m old)`;
+  }
+
+  const color = getPoRBadgeColor(result.minutes);
+  const emoji = color === 'green' ? '✅' : color === 'amber' ? '⚠️' : '❌';
+  
+  return `${emoji} PoR: Fresh (${result.minutes}m old, signed by ${result.signedBy.slice(0, 8)}...)`;
+}

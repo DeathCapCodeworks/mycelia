@@ -1,0 +1,36 @@
+{
+  "name": "@mycelia/navigator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "start": "tsx src/index.ts",
+    "dev": "tsx --watch src/index.ts"
+  },
+  "dependencies": {
+    "@mycelia/nft-envelope": "workspace:^",
+    "@mycelia/public-directory": "workspace:^",
+    "@mycelia/radio-ux": "workspace:^",
+    "@mycelia/presence": "workspace:^",
+    "@mycelia/databox": "workspace:^",
+    "@mycelia/evm-provider": "workspace:^",
+    "@mycelia/observability": "workspace:^",
+    "@mycelia/web4-feature-flags": "workspace:^",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/compression": "^1.7.5",
+    "@types/node": "^20.12.12",
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.1"
+  }
+}

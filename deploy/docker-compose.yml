@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # IPFS Node (Kubo)
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: mycelia-ipfs
+    ports:
+      - "4001:4001"   # IPFS swarm
+      - "4001:4001/udp"
+      - "5001:5001"   # IPFS API
+      - "8080:8080"   # IPFS Gateway
+    volumes:
+      - ipfs_data:/data
+      - ipfs_staging:/export
+    environment:
+      - IPFS_PROFILE=server
+    command: daemon --migrate=true --agent-version-suffix=docker
+    healthcheck:
+      test: ["CMD", "ipfs", "version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Public Directory Service
+  directory:
+    build:
+      context: .
+      dockerfile: packages/public-directory/Dockerfile
+    container_name: mycelia-directory
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - PUBLIC_DIRECTORY_ENABLED=true
+      - IPFS_URL=http://ipfs:5001
+    depends_on:
+      ipfs:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Radio SFU Server
+  radio-sfu:
+    build:
+      context: .
+      dockerfile: packages/radio-sfu/Dockerfile
+    container_name: mycelia-radio-sfu
+    ports:
+      - "3002:3002"   # Express API
+      - "3003:3003"   # WebSocket
+    environment:
+      - NODE_ENV=production
+      - EXPRESS_PORT=3002
+      - WS_PORT=3003
+      - RADIO_V0_ENABLED=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Navigator (Main UI)
+  navigator:
+    build:
+      context: .
+      dockerfile: packages/navigator/Dockerfile
+    container_name: mycelia-navigator
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - PUBLIC_DIRECTORY_URL=http://directory:3001
+      - RADIO_SFU_URL=http://radio-sfu:3002
+      - IPFS_URL=http://ipfs:5001
+    depends_on:
+      directory:
+        condition: service_healthy
+      radio-sfu:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/status.json"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  # Documentation Site
+  docs:
+    build:
+      context: .
+      dockerfile: apps/docs/Dockerfile
+    container_name: mycelia-docs
+    ports:
+      - "3005:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: mycelia-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      navigator:
+        condition: service_healthy
+      docs:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  ipfs_data:
+    driver: local
+  ipfs_staging:
+    driver: local
+
+networks:
+  default:
+    name: mycelia-network
+    driver: bridge

@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "mycelia-attest": "dist/cli.js"
+    "mycelia-attest": "dist/cli.js",
+    "attest-rotate": "dist/rotate.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

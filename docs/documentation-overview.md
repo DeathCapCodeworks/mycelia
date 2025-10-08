@@ -21,6 +21,25 @@ The Mycelia developer documentation is now complete and provides comprehensive g
 - **Best Practices**: Security, performance, code organization
 - **Troubleshooting**: Common issues and solutions
 
+### 2. **Storage & Content** (`docs/storage/`)
+- **NFT Envelopes** (`docs/storage/nft-envelopes.md`): Privacy-first digital asset packaging with encryption and indexing controls
+- **Public Directory** (`docs/storage/public-directory.md`): Searchable index of public NFT envelopes with moderation policies
+
+### 3. **Radio & Streaming** (`docs/radio/`)
+- **Radio Overview** (`docs/radio/overview.md`): WebRTC SFU streaming platform with rights management
+- **Radio Payouts** (`docs/radio/payouts.md`): Proof-of-distribution system for provisional BLOOM rewards
+
+### 4. **Privacy & Data** (`docs/privacy/`)
+- **Presence v0** (`docs/privacy/presence.md`): Opt-in ephemeral presence sharing with privacy controls
+- **Databox v0** (`docs/privacy/databox.md`): Encrypted personal ledger with key-shred deletion
+
+### 5. **EVM Integration** (`docs/evm/`)
+- **EVM Rails** (`docs/evm/overview.md`): Ethereum-compatible blockchain integration with Account Abstraction
+
+### 6. **Deployment** (`docs/deploy/`)
+- **Docker Deployment** (`docs/deploy/docker.md`): Containerized deployment with Docker Compose
+- **IPFS Deployment** (`docs/deploy/ipfs.md`): Decentralized storage configuration and management
+
 ### 2. **API Reference** (`docs/api-reference.md`)
 - **Core SDK**: MyceliaSDK class and IMyceliaWallet interface
 - **Tokenomics**: Peg functions, collateralization, mint guard
@@ -71,6 +90,41 @@ The Mycelia developer documentation is now complete and provides comprehensive g
 - **Bandwidth Rewards**: 0.1 BLOOM per GB served
 - **Content Rewards**: 0.01 BLOOM per content piece
 - **Tier Multipliers**: 1.0x, 1.1x, 1.25x based on contribution score
+
+### **NFT Envelopes & Public Directory**
+- **Privacy-First Design**: Client-side encryption with key management
+- **Honest UX**: Clear licensing and regional restrictions
+- **IPFS Integration**: Decentralized storage with pinning support
+- **Moderation System**: DMCA compliance and content moderation
+- **Search & Discovery**: Full-text search with filtering capabilities
+
+### **Radio v0 Streaming**
+- **WebRTC SFU**: Low-latency streaming with sub-200ms latency
+- **Rights Management**: Per-track licensing (Original, CC, Licensed)
+- **Moderated Queue**: Content approval before going live
+- **Proof of Distribution**: Tracking for provisional BLOOM payouts
+- **Bandwidth Sharing**: Users can contribute bandwidth via libp2p
+
+### **Presence v0**
+- **Opt-in by Default**: Presence is off by default, requires explicit opt-in
+- **Ephemeral DIDs**: Short-lived, rotating identifiers for privacy
+- **Origin Scoping**: Presence scoped to specific websites
+- **Ghost Mode**: Hard off switch for complete privacy
+- **Aggregate Counts**: Only "N users present" rather than individual lists
+
+### **Databox v0**
+- **Encrypted Ledger**: AES-256-GCM encryption for all sensitive data
+- **Data Portability**: Export and import personal data
+- **Key-Shred Deletion**: Cryptographically destroy encryption keys
+- **Truthful Deletion**: Honest model of what deletion means
+- **Multiple Backends**: Local, remote pin, and trusted host storage
+
+### **EVM Rails**
+- **EIP-1193 Provider**: Standard Ethereum provider interface
+- **Account Abstraction**: ERC-4337 smart account functionality
+- **Paymasters**: Gas sponsorship and cross-experience fees
+- **Transaction Simulation**: Preflight analysis and safety clamps
+- **Multi-Chain Support**: Multiple Ethereum-compatible networks
 
 ### **Wallet Integration**
 - **MetaMask**: Full EVM wallet integration
@@ -141,6 +195,26 @@ await solanaManager.connectPhantom();
 - **@mycelia/tokenomics**: BLOOM token peg and tokenomics
 - **@mycelia/shared-kernel**: Core utilities and shared functionality
 
+### **Storage & Content**
+- **@mycelia/nft-envelope**: Privacy-first digital asset packaging
+- **@mycelia/public-directory**: Searchable index of public NFT envelopes
+
+### **Radio & Streaming**
+- **@mycelia/radio-sfu**: WebRTC SFU streaming server
+- **@mycelia/radio-ux**: Radio user interface components
+- **@mycelia/radio-payouts**: Proof-of-distribution payout calculator
+
+### **Privacy & Data**
+- **@mycelia/presence**: Opt-in ephemeral presence sharing
+- **@mycelia/databox**: Encrypted personal ledger with key-shred deletion
+
+### **EVM Integration**
+- **@mycelia/evm-provider**: EIP-1193 Ethereum provider
+- **@mycelia/evm-wallet**: EVM wallet management
+- **@mycelia/aa**: ERC-4337 Account Abstraction
+- **@mycelia/evm-paymaster**: Gas sponsorship and cross-experience fees
+- **@mycelia/tx-sim**: Transaction simulation and safety clamps
+
 ### **Compatibility Layers**
 - **@mycelia/evm-compat**: EVM compatibility layer
 - **@mycelia/solana-compat**: Solana compatibility layer
@@ -150,12 +224,15 @@ await solanaManager.connectPhantom();
 - **@mycelia/mining-app**: IPFS mining application
 - **@mycelia/bloom-contracts**: Smart contracts and programs
 - **@mycelia/wallet-integration**: Wallet integration system
+- **@mycelia/navigator**: Main UI and API gateway
 
 ### **Supporting Packages**
 - **@mycelia/proof-of-reserve**: Proof of reserves system
 - **@mycelia/redemption**: BLOOM redemption system
 - **@mycelia/bloom-rewards**: Rewards engine
 - **@mycelia/ui-components**: React UI components
+- **@mycelia/web4-feature-flags**: Feature flags and safety controls
+- **@mycelia/observability**: Logging and monitoring
 
 ## 🧪 Testing Coverage
 

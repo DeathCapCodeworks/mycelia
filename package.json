@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": { "node": ">=20 <21", "npm": ">=9" },
+  "packageManager": "pnpm@9.0.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -18,13 +19,14 @@
     "serve:docs": "pnpm --filter @mycelia/docs serve -- --host 127.0.0.1 --port 3000",
     "dev:sandbox": "pnpm --filter @mycelia/navigator-sandbox dev -- --host 127.0.0.1 --port 5173",
     "dev": "concurrently -n DOCS,SANDBOX -c magenta,cyan \"pnpm run dev:docs\" \"pnpm run dev:sandbox\"",
-    "diagnose": "pnpm --filter @mycelia/diagnostics build && pnpm --filter @mycelia/diagnostics start",
-    "diagnose:dev": "pnpm --filter @mycelia/diagnostics dev",
+    "diagnose": "node packages/diagnostics/dist/index.js",
+    "diagnose:dev": "tsx packages/diagnostics/src/index.ts",
     "ops:tail": "pnpm --filter @mycelia/observability start",
-    "ops:lint": "node -e \"const obs = require('./packages/observability/dist/index.js'); const slo = obs.getSLOManager(); const status = slo.getSLOStatus(); if (status.critical > 0) { console.error('Critical SLO violations:', status.critical); process.exit(1); } else { console.log('All SLOs healthy'); }\"",
+    "ops:lint": "node packages/observability/dist/ops-lint.js --slo release/mainnet/slo.json",
+    "perf:budgets": "node packages/perf-budget/dist/cli.js --config release/mainnet/perf-budgets.json",
     "sec:scan": "pnpm -r lint -- --rule 'security/*'",
     "release:build": "pnpm --filter @mycelia/genesis build && pnpm --filter @mycelia/attestations build",
-    "release:verify": "pnpm run diagnose -- --release ./release/mainnet",
+    "attest:rotate": "node packages/attestations/dist/rotate.js",
     "release:publish": "pnpm -r build && pnpm --filter @mycelia/docs build",
     "test:accessibility": "npx @axe-core/cli http://localhost:3000 --exit && npx @axe-core/cli http://localhost:5173 --exit",
     "native:build": "node scripts/native build",
@@ -33,7 +35,7 @@
     "bench:webrtc": "pnpm --filter @mycelia/webrtc-enhanced run bench:webrtc",
     "bench:av1": "pnpm --filter @mycelia/standards-test run bench:av1",
     "bench:all": "pnpm run bench:media && pnpm run bench:webrtc && pnpm run bench:av1",
-    "flags": "pnpm --filter @mycelia/web4-feature-flags run cli",
+    "flags": "node packages/web4-feature-flags/dist/cli.js",
     "pilot:create": "pnpm --filter @mycelia/pilot-kit run start",
     "dev:webrtc": "pnpm --filter @mycelia/webrtc-enhanced dev",
     "dev:net": "pnpm --filter @mycelia/net-stack dev",
@@ -44,7 +46,18 @@
     "demo:serve": "pnpm -r build && pnpm --filter @mycelia/docs serve -- --host 127.0.0.1 --port 3000 & pnpm --filter @mycelia/navigator-sandbox preview -- --host 127.0.0.1 --port 5173",
     "demo:serve:win": "concurrently -n DOCS,SANDBOX -c magenta,cyan \"pnpm --filter @mycelia/docs serve -- --host 127.0.0.1 --port 3000\" \"pnpm --filter @mycelia/navigator-sandbox preview -- --host 127.0.0.1 --port 5173\"",
     "demo:record": "pnpm --filter @mycelia/demo-recorder tsx src/record.ts --base http://127.0.0.1:5173 --maxSec 60",
-    "demo:record:narrated": "pnpm --filter @mycelia/demo-recorder tsx src/record.ts --base http://127.0.0.1:5173 --maxSec 60 --narrate"
+    "demo:record:narrated": "pnpm --filter @mycelia/demo-recorder tsx src/record.ts --base http://127.0.0.1:5173 --maxSec 60 --narrate",
+    "assets:dev": "pnpm --filter @mycelia/nft-envelope dev",
+    "assets:explore": "pnpm --filter @mycelia/public-directory start",
+    "radio:dev": "pnpm --filter @mycelia/radio-sfu start",
+    "presence:dev": "pnpm --filter @mycelia/presence dev",
+    "databox:dev": "pnpm --filter @mycelia/databox dev",
+    "eth:dev": "pnpm --filter @mycelia/evm-provider dev",
+    "demo:publish:ipfs": "node scripts/ipfs-publish.js",
+    "deploy:compose": "docker compose -f deploy/docker-compose.yml up --build",
+    "report:state": "node scripts/tmp/extract-state.js",
+    "setup:pm": "node -e \"require('child_process').spawnSync('corepack', ['enable'], {stdio: 'inherit'})\"",
+    "setup:env": "node -e \"console.log('Node',process.version)\""
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
@@ -54,7 +67,9 @@
     "typescript": "^5.6.3",
     "vitest": "^2.1.1",
     "@types/node": "^20.12.12",
-    "@axe-core/cli": "^4.10.0"
+    "@axe-core/cli": "^4.10.0",
+    "tsx": "^4.0.0",
+    "zod": "^3.0.0"
   }
 }
 

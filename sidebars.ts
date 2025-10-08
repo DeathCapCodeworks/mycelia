@@ -62,6 +62,31 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Ethereum Integration',
+      items: [
+        'evm/overview',
+        'evm/provider',
+        'evm/aa-paymaster'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Deployment',
+      items: [
+        'deploy/docker',
+        'deploy/ipfs'
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Feature Flags',
+      items: [
+        'feature-flags/registry',
+        'feature-flags/cli'
+      ]
+    },
+    {
+      type: 'category',
       label: 'Launch',
       items: [
         'launch/announcement',

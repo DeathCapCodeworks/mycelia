@@ -1,0 +1,2737 @@
+{
+  "repo": {
+    "branch": "main",
+    "sha": "6f0d640",
+    "date": "2025-10-07T23:59:58.330Z"
+  },
+  "node": {
+    "engine": "v20.16.0",
+    "pnpm": "not installed"
+  },
+  "workspaces": [
+    {
+      "name": "@mycelia/aa",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "evm"
+      ],
+      "dependencies": [
+        {
+          "name": "ethers",
+          "version": "^6.8.1"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/applets-gallery",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "react",
+          "version": "^18.2.0"
+        },
+        {
+          "name": "react-dom",
+          "version": "^18.2.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/attestations",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "lint",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/proof-of-reserve",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/kms-local",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/bloom-contracts",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck",
+        "compile:evm",
+        "compile:solana",
+        "deploy:evm",
+        "deploy:solana"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/evm-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/solana-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@openzeppelin/contracts",
+          "version": "^5.0.2"
+        },
+        {
+          "name": "hardhat",
+          "version": "^2.22.0"
+        },
+        {
+          "name": "@nomicfoundation/hardhat-toolbox",
+          "version": "^4.0.0"
+        },
+        {
+          "name": "@coral-xyz/anchor",
+          "version": "^0.30.1"
+        },
+        {
+          "name": "@solana/web3.js",
+          "version": "^1.95.2"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/bloom-rewards",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/proof-of-reserve",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/bridge-infrastructure",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/evm-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/solana-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/bloom-contracts",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/developer-sdk",
+          "version": "workspace:*"
+        },
+        {
+          "name": "ethers",
+          "version": "^6.13.2"
+        },
+        {
+          "name": "@solana/web3.js",
+          "version": "^1.95.2"
+        },
+        {
+          "name": "@coral-xyz/anchor",
+          "version": "^0.30.1"
+        },
+        {
+          "name": "axios",
+          "version": "^1.7.2"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/btc-bridge",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "test:watch"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "bitcoinjs-lib",
+          "version": "^6.1.5"
+        },
+        {
+          "name": "libsodium-wrappers",
+          "version": "^0.7.11"
+        },
+        {
+          "name": "node-fetch",
+          "version": "^3.3.2"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/compat-matrix",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/compat-modern",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/databox",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "storage"
+      ],
+      "dependencies": [
+        {
+          "name": "crypto-js",
+          "version": "^4.2.0"
+        },
+        {
+          "name": "sqlite3",
+          "version": "^5.1.6"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/demo-recorder",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "demo"
+      ],
+      "dependencies": [
+        {
+          "name": "@playwright/test",
+          "version": "^1.40.0"
+        },
+        {
+          "name": "start-server-and-test",
+          "version": "^1.15.0"
+        },
+        {
+          "name": "ffmpeg-static",
+          "version": "^5.2.0"
+        },
+        {
+          "name": "execa",
+          "version": "^8.0.1"
+        },
+        {
+          "name": "date-fns",
+          "version": "^3.0.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/developer-sdk",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/evm-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/solana-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "react",
+          "version": "^18.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/diagnostics",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "start",
+        "dev"
+      ],
+      "domainTags": [
+        "observability"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/disclosure",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "lint",
+        "typecheck"
+      ],
+      "domainTags": [
+        "security"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/kms-local",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/engine-bridge",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "dev",
+        "typecheck"
+      ],
+      "domainTags": [
+        "engine"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/media-pipeline",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/webrtc-enhanced",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/net-stack",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/evm-compat",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "evm"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "ethers",
+          "version": "^6.13.4"
+        },
+        {
+          "name": "web3",
+          "version": "^4.16.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/evm-paymaster",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "evm"
+      ],
+      "dependencies": [
+        {
+          "name": "ethers",
+          "version": "^6.8.1"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/evm-provider",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "evm"
+      ],
+      "dependencies": [
+        {
+          "name": "ethers",
+          "version": "^6.8.1"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/evm-wallet",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "evm"
+      ],
+      "dependencies": [
+        {
+          "name": "ethers",
+          "version": "^6.8.1"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/feature-flags",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "lint",
+        "typecheck"
+      ],
+      "domainTags": [
+        "observability"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/genesis",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "lint",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/governance-ui",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "governance"
+      ],
+      "dependencies": [
+        {
+          "name": "react",
+          "version": "^18.3.1"
+        },
+        {
+          "name": "react-dom",
+          "version": "^18.3.1"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/intent-bar",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "test"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/oracle-agent",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/social-graph",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/workspaces-engine",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/kms-local",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "lint",
+        "typecheck"
+      ],
+      "domainTags": [
+        "security"
+      ],
+      "dependencies": [
+        {
+          "name": "libsodium-wrappers",
+          "version": "^0.7.13"
+        },
+        {
+          "name": "bip32",
+          "version": "^4.0.0"
+        },
+        {
+          "name": "bip39",
+          "version": "^3.1.0"
+        },
+        {
+          "name": "ed25519-hd-key",
+          "version": "^1.3.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/launchctl",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "lint",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/media-pipeline",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "start",
+        "bench",
+        "bench:media",
+        "typecheck"
+      ],
+      "domainTags": [
+        "engine"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/mining-app",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/bloom-rewards",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/redemption",
+          "version": "workspace:*"
+        },
+        {
+          "name": "ipfs-core",
+          "version": "^0.18.1"
+        },
+        {
+          "name": "ipfs-http-client",
+          "version": "^60.0.1"
+        },
+        {
+          "name": "node-fetch",
+          "version": "^3.3.2"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/navigator",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start",
+        "dev"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/nft-envelope",
+          "version": "workspace:^"
+        },
+        {
+          "name": "@mycelia/public-directory",
+          "version": "workspace:^"
+        },
+        {
+          "name": "@mycelia/radio-ux",
+          "version": "workspace:^"
+        },
+        {
+          "name": "@mycelia/presence",
+          "version": "workspace:^"
+        },
+        {
+          "name": "@mycelia/databox",
+          "version": "workspace:^"
+        },
+        {
+          "name": "@mycelia/evm-provider",
+          "version": "workspace:^"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:^"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:^"
+        },
+        {
+          "name": "express",
+          "version": "^4.19.2"
+        },
+        {
+          "name": "cors",
+          "version": "^2.8.5"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/net-stack",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/nft-envelope",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "storage"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        },
+        {
+          "name": "ipfs-core",
+          "version": "^0.18.0"
+        },
+        {
+          "name": "multiformats",
+          "version": "^12.0.0"
+        },
+        {
+          "name": "crypto-js",
+          "version": "^4.2.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/observability",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "start",
+        "test",
+        "test:watch"
+      ],
+      "domainTags": [
+        "observability"
+      ],
+      "dependencies": [
+        {
+          "name": "node-fetch",
+          "version": "^3.3.2"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/oracle-agent",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/perf-budget",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start",
+        "cli"
+      ],
+      "domainTags": [
+        "observability"
+      ],
+      "dependencies": [
+        {
+          "name": "commander",
+          "version": "^12.1.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/pilot-kit",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/presence",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "presence"
+      ],
+      "dependencies": [
+        {
+          "name": "libp2p",
+          "version": "^0.46.0"
+        },
+        {
+          "name": "@libp2p/websockets",
+          "version": "^0.0.0"
+        },
+        {
+          "name": "@libp2p/pubsub",
+          "version": "^0.0.0"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/proof-of-reserve",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/public-directory",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start",
+        "cli"
+      ],
+      "domainTags": [
+        "directory"
+      ],
+      "dependencies": [
+        {
+          "name": "express",
+          "version": "^4.18.2"
+        },
+        {
+          "name": "cors",
+          "version": "^2.8.5"
+        },
+        {
+          "name": "helmet",
+          "version": "^7.1.0"
+        },
+        {
+          "name": "ipfs-core",
+          "version": "^0.18.0"
+        },
+        {
+          "name": "sqlite3",
+          "version": "^5.1.6"
+        },
+        {
+          "name": "commander",
+          "version": "^12.1.0"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/publisher-onboard",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "react",
+          "version": "^18.2.0"
+        },
+        {
+          "name": "react-dom",
+          "version": "^18.2.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/radio-payouts",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "radio"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/radio-sfu",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "radio"
+      ],
+      "dependencies": [
+        {
+          "name": "express",
+          "version": "^4.18.2"
+        },
+        {
+          "name": "socket.io",
+          "version": "^4.7.4"
+        },
+        {
+          "name": "cors",
+          "version": "^2.8.5"
+        },
+        {
+          "name": "helmet",
+          "version": "^7.1.0"
+        },
+        {
+          "name": "ipfs-core",
+          "version": "^0.18.0"
+        },
+        {
+          "name": "sqlite3",
+          "version": "^5.1.6"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/radio-ux",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "radio"
+      ],
+      "dependencies": [
+        {
+          "name": "react",
+          "version": "^18.3.1"
+        },
+        {
+          "name": "react-dom",
+          "version": "^18.3.1"
+        },
+        {
+          "name": "socket.io-client",
+          "version": "^4.7.4"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/redemption",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/btc-bridge",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/kms-local",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/shared-kernel",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "libsodium-wrappers-sumo",
+          "version": "^0.7.14"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/social-graph",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test"
+      ],
+      "domainTags": [
+        "presence"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/solana-compat",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@solana/web3.js",
+          "version": "^1.95.2"
+        },
+        {
+          "name": "@solana/spl-token",
+          "version": "^0.4.8"
+        },
+        {
+          "name": "@coral-xyz/anchor",
+          "version": "^0.30.1"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/staking",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "test",
+        "test:watch"
+      ],
+      "domainTags": [
+        "governance"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/standards-test",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start",
+        "bench:av1"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/threat-model",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "start",
+        "test",
+        "test:watch"
+      ],
+      "domainTags": [
+        "security"
+      ],
+      "dependencies": [
+        {
+          "name": "commander",
+          "version": "^12.0.0"
+        },
+        {
+          "name": "marked",
+          "version": "^12.0.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/tokenomics",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "governance"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/tx-sim",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "start"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "ethers",
+          "version": "^6.8.1"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/ui-components",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/vault-adapter-local",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test"
+      ],
+      "domainTags": [
+        "storage"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/wallet",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "evm"
+      ],
+      "dependencies": [
+        {
+          "name": "react",
+          "version": "^18.2.0"
+        },
+        {
+          "name": "react-dom",
+          "version": "^18.2.0"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/wallet-integration",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test",
+        "typecheck"
+      ],
+      "domainTags": [
+        "evm"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/tokenomics",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/evm-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/solana-compat",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/developer-sdk",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/bridge-infrastructure",
+          "version": "workspace:*"
+        },
+        {
+          "name": "ethers",
+          "version": "^6.13.2"
+        },
+        {
+          "name": "@solana/wallet-adapter-base",
+          "version": "^0.9.23"
+        },
+        {
+          "name": "@solana/wallet-adapter-react",
+          "version": "^0.15.35"
+        },
+        {
+          "name": "@solana/wallet-adapter-react-ui",
+          "version": "^0.9.35"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/web4-feature-flags",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start",
+        "cli"
+      ],
+      "domainTags": [
+        "observability"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/webgpu-sr",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "engine"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/webnn-offload",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "start"
+      ],
+      "domainTags": [
+        "engine"
+      ],
+      "dependencies": [
+        {
+          "name": "@mycelia/web4-feature-flags",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/observability",
+          "version": "workspace:*"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/webrtc-enhanced",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "build",
+        "typecheck",
+        "dev",
+        "bench:webrtc"
+      ],
+      "domainTags": [
+        "engine"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/workspaces-engine",
+      "version": "0.1.0",
+      "private": false,
+      "scripts": [
+        "build",
+        "test"
+      ],
+      "domainTags": [
+        "engine"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "@mycelia/docs",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "start",
+        "build",
+        "serve",
+        "fmt"
+      ],
+      "domainTags": [
+        "docs"
+      ],
+      "dependencies": [
+        {
+          "name": "@docusaurus/core",
+          "version": "3.9.1"
+        },
+        {
+          "name": "@docusaurus/preset-classic",
+          "version": "3.9.1"
+        },
+        {
+          "name": "@docusaurus/theme-mermaid",
+          "version": "3.9.1"
+        },
+        {
+          "name": "@mermaid-js/layout-elk",
+          "version": "^0.1.4"
+        },
+        {
+          "name": "@mycelia/ui-components",
+          "version": "workspace:*"
+        },
+        {
+          "name": "react",
+          "version": "^18.3.1"
+        },
+        {
+          "name": "react-dom",
+          "version": "^18.3.1"
+        }
+      ]
+    },
+    {
+      "name": "@mycelia/navigator-sandbox",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": [
+        "dev",
+        "build",
+        "preview",
+        "test"
+      ],
+      "domainTags": [
+        "other"
+      ],
+      "dependencies": [
+        {
+          "name": "react",
+          "version": "^18.3.1"
+        },
+        {
+          "name": "react-dom",
+          "version": "^18.3.1"
+        },
+        {
+          "name": "react-router-dom",
+          "version": "^6.26.1"
+        },
+        {
+          "name": "@mycelia/shared-kernel",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/vault-adapter-local",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/oracle-agent",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/workspaces-engine",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/bloom-rewards",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/social-graph",
+          "version": "workspace:*"
+        },
+        {
+          "name": "@mycelia/ui-components",
+          "version": "workspace:*"
+        }
+      ]
+    }
+  ],
+  "apps": [
+    {
+      "name": "@mycelia/navigator-sandbox",
+      "routes": [
+        "/media",
+        "/privacy",
+        "/time-machine",
+        "/radio",
+        "/assets",
+        "/explore",
+        "/eth",
+        "/publisher/start",
+        "/gallery",
+        "/governance",
+        "/pilot/*"
+      ]
+    },
+    {
+      "name": "@mycelia/docs",
+      "routes": [
+        "/docs",
+        "/api-reference",
+        "/tutorials",
+        "/status"
+      ]
+    }
+  ],
+  "flags": [
+    {
+      "key": "engine_av1_encode",
+      "default": "on",
+      "rollout": 100,
+      "scope": "ops",
+      "category": "engine",
+      "riskLevel": "low"
+    },
+    {
+      "key": "av1_decode_rollout",
+      "default": "on",
+      "rollout": 100,
+      "scope": "ops",
+      "category": "engine",
+      "riskLevel": "medium"
+    },
+    {
+      "key": "engine_quic_transport",
+      "default": "on",
+      "rollout": 0,
+      "scope": "ops",
+      "category": "ux",
+      "riskLevel": "low"
+    },
+    {
+      "key": "applets_v1_rollout",
+      "default": "on",
+      "rollout": 0,
+      "scope": "ops",
+      "category": "ux",
+      "riskLevel": "low"
+    },
+    {
+      "key": "live_captions_rollout",
+      "default": "on",
+      "rollout": 0,
+      "scope": "ops",
+      "category": "privacy",
+      "riskLevel": "medium"
+    }
+  ],
+  "diagnostics": {
+    "supported": false,
+    "lastRun": null,
+    "passRate": 0,
+    "checks": []
+  },
+  "slo": {
+    "targets": {
+      "redemption_quote_latency_p95": {
+        "target": 0.99,
+        "threshold": 0.95,
+        "description": "95% of redemption quotes under 100ms",
+        "unit": "ratio"
+      },
+      "por_attestation_age": {
+        "target": 0.99,
+        "threshold": 0.95,
+        "description": "99% of PoR attestations under 30 minutes",
+        "unit": "ratio"
+      },
+      "diagnostics_pass_rate": {
+        "target": 0.99,
+        "threshold": 0.95,
+        "description": "99% diagnostics pass rate",
+        "unit": "ratio"
+      },
+      "sandbox_route_tti": {
+        "target": 0.99,
+        "threshold": 0.95,
+        "description": "99% of sandbox routes under 2s TTI",
+        "unit": "ratio"
+      },
+      "redemption_queue_length": {
+        "target": 100,
+        "threshold": 500,
+        "description": "Redemption queue length under 100",
+        "unit": "count"
+      },
+      "redemptions_per_hour": {
+        "target": 1000,
+        "threshold": 500,
+        "description": "Redemptions per hour under 1000",
+        "unit": "count"
+      },
+      "attestation_age_minutes": {
+        "target": 30,
+        "threshold": 60,
+        "description": "PoR attestation age under 30 minutes",
+        "unit": "minutes"
+      }
+    },
+    "metadata": {
+      "version": "1.0.0",
+      "lastUpdated": "2024-01-01T00:00:00Z",
+      "chainId": "mycelia-mainnet-1"
+    }
+  },
+  "perfBudgets": {
+    "sandbox_bundle_kb_max": 350,
+    "docs_bundle_kb_max": 250,
+    "tti_p95_ms_max": 1500,
+    "battery_cost_per_minute_max": 0.5,
+    "cpu_usage_percent_max": 75,
+    "memory_usage_mb_max": 100
+  },
+  "security": {
+    "kms": {
+      "available": true,
+      "rotation": "implemented"
+    },
+    "threatModel": {
+      "available": true,
+      "coverage": "partial"
+    },
+    "disclosure": {
+      "available": true,
+      "receipts": []
+    }
+  },
+  "governance": {
+    "flags": [],
+    "proposals": [
+      "P-0001-enable-btc-mainnet-redemption",
+      "P-0002-min-gas-price"
+    ],
+    "simulator": {
+      "available": true,
+      "enactment": true
+    }
+  },
+  "por": {
+    "attestations": [
+      "attestations package available"
+    ],
+    "freshness": null,
+    "spv": true
+  },
+  "zkpor": {
+    "scaffold": true,
+    "mock": true,
+    "implementation": "placeholder"
+  },
+  "tokenomics": {
+    "peg": "10 BLOOM = 1 BTC",
+    "enforcement": [
+      "tokenomics",
+      "mint-guard",
+      "redemption"
+    ]
+  },
+  "engine": {
+    "av1": {
+      "available": true,
+      "svt": true,
+      "hardware": true
+    },
+    "webrtc": {
+      "available": true,
+      "svc": true
+    },
+    "webgpu": {
+      "available": true,
+      "sr": true
+    },
+    "webnn": {
+      "available": true,
+      "offload": true
+    }
+  },
+  "storage": {
+    "envelopes": {
+      "schema": "available",
+      "encryption": "implemented",
+      "keyWraps": "available",
+      "indexable": true
+    },
+    "directory": {
+      "api": "available",
+      "moderation": "implemented",
+      "docker": true
+    }
+  },
+  "radio": {
+    "sfu": true,
+    "room": true,
+    "queue": true,
+    "rights": true,
+    "payouts": true,
+    "demo": true
+  },
+  "presence": {
+    "originScoping": true,
+    "ephemeralDid": true,
+    "ghostMode": true,
+    "siteExposure": "controlled"
+  },
+  "databox": {
+    "api": {
+      "export": true,
+      "import": true,
+      "shredKeys": true,
+      "tombstone": true
+    },
+    "deleteFlow": "implemented"
+  },
+  "deploy": {
+    "dockerCompose": true,
+    "services": [
+      "version",
+      "services",
+      "ipfs",
+      "image",
+      "container_name",
+      "ports",
+      "volumes",
+      "environment",
+      "command",
+      "healthcheck",
+      "test",
+      "interval",
+      "timeout",
+      "retries",
+      "build",
+      "context",
+      "dockerfile",
+      "container_name",
+      "ports",
+      "environment",
+      "depends_on",
+      "healthcheck",
+      "test",
+      "interval",
+      "timeout",
+      "retries",
+      "restart",
+      "build",
+      "context",
+      "dockerfile",
+      "container_name",
+      "ports",
+      "environment",
+      "healthcheck",
+      "test",
+      "interval",
+      "timeout",
+      "retries",
+      "restart",
+      "image",
+      "container_name",
+      "ports",
+      "environment",
+      "volumes",
+      "working_dir",
+      "command",
+      "depends_on",
+      "healthcheck",
+      "test",
+      "interval",
+      "timeout",
+      "retries",
+      "restart",
+      "navigator",
+      "build",
+      "context",
+      "dockerfile",
+      "container_name",
+      "ports",
+      "environment",
+      "depends_on",
+      "healthcheck",
+      "test",
+      "interval",
+      "timeout",
+      "retries",
+      "restart",
+      "nginx",
+      "image",
+      "container_name",
+      "ports",
+      "volumes",
+      "depends_on",
+      "restart",
+      "volumes",
+      "ipfs_data",
+      "driver",
+      "ipfs_staging",
+      "driver",
+      "networks",
+      "default",
+      "name",
+      "driver"
+    ],
+    "helm": {},
+    "ipfsPublish": {
+      "available": true
+    }
+  },
+  "ci": [
+    {
+      "file": "attestation-rotate.yml",
+      "triggers": [
+        "schedule:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "schedule",
+        "workflow_dispatch",
+        "jobs",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "run",
+        "run"
+      ]
+    },
+    {
+      "file": "ci.yml",
+      "triggers": [
+        "push:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "push",
+        "branches",
+        "pull_request",
+        "branches",
+        "jobs",
+        "build",
+        "steps",
+        "with",
+        "cache",
+        "with",
+        "version",
+        "run_install"
+      ]
+    },
+    {
+      "file": "diagnostics.yml",
+      "triggers": [
+        "[push, pull_request]"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "jobs",
+        "diag",
+        "strategy",
+        "matrix",
+        "os",
+        "steps",
+        "with",
+        "cache",
+        "with",
+        "version",
+        "if",
+        "steps",
+        "with",
+        "cache",
+        "with",
+        "version"
+      ]
+    },
+    {
+      "file": "docker-build.yml",
+      "triggers": [
+        "push:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "push",
+        "branches",
+        "pull_request",
+        "branches",
+        "env",
+        "REGISTRY",
+        "IMAGE_NAME",
+        "jobs",
+        "permissions",
+        "contents",
+        "packages",
+        "steps",
+        "uses",
+        "uses",
+        "uses",
+        "with",
+        "registry",
+        "username",
+        "password",
+        "id",
+        "uses",
+        "with",
+        "images",
+        "tags",
+        "uses",
+        "with",
+        "context",
+        "file",
+        "push",
+        "tags",
+        "labels",
+        "uses",
+        "with",
+        "context",
+        "file",
+        "push",
+        "tags",
+        "labels",
+        "uses",
+        "with",
+        "context",
+        "file",
+        "push",
+        "tags",
+        "labels",
+        "needs",
+        "if",
+        "steps",
+        "uses",
+        "uses",
+        "run",
+        "run",
+        "if",
+        "run",
+        "needs",
+        "if",
+        "steps",
+        "uses",
+        "run",
+        "needs",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "format",
+        "output",
+        "uses",
+        "with",
+        "sarif_file"
+      ]
+    },
+    {
+      "file": "engine-ci.yml",
+      "triggers": [
+        "push:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "push",
+        "branches",
+        "pull_request",
+        "branches",
+        "workflow_dispatch",
+        "jobs",
+        "name",
+        "strategy",
+        "matrix",
+        "os",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "run",
+        "run"
+      ]
+    },
+    {
+      "file": "feature-tests.yml",
+      "triggers": [
+        "push:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "push",
+        "branches",
+        "pull_request",
+        "branches",
+        "jobs",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "run",
+        "run",
+        "run",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "run",
+        "type",
+        "roomId",
+        "did",
+        "run",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "id",
+        "type",
+        "timestamp",
+        "data",
+        "encrypted",
+        "contentKeyId",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "from",
+        "to",
+        "value",
+        "data",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "origin",
+        "origin",
+        "needs",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "run",
+        "if",
+        "run"
+      ]
+    },
+    {
+      "file": "golden-path.yml",
+      "triggers": [
+        "push:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "push",
+        "branches",
+        "workflow_dispatch",
+        "jobs",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "run",
+        "run",
+        "env",
+        "CI",
+        "run",
+        "run",
+        "uses",
+        "with",
+        "name",
+        "path",
+        "if",
+        "uses",
+        "with",
+        "script",
+        "issue_number",
+        "owner",
+        "repo",
+        "body"
+      ]
+    },
+    {
+      "file": "perf-budgets.yml",
+      "triggers": [
+        "push:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "push",
+        "branches",
+        "pull_request",
+        "branches",
+        "jobs",
+        "strategy",
+        "matrix",
+        "os",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "run",
+        "run",
+        "run",
+        "run",
+        "id",
+        "run",
+        "id",
+        "run",
+        "shell",
+        "if",
+        "run",
+        "shell",
+        "uses",
+        "with",
+        "name",
+        "path"
+      ]
+    },
+    {
+      "file": "perf-gates.yml",
+      "triggers": [
+        "push:"
+      ],
+      "jobs": [
+        "name",
+        "on",
+        "push",
+        "branches",
+        "pull_request",
+        "branches",
+        "workflow_dispatch",
+        "jobs",
+        "strategy",
+        "matrix",
+        "os",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "cache",
+        "uses",
+        "with",
+        "version",
+        "run",
+        "run",
+        "id",
+        "run",
+        "id",
+        "run",
+        "id",
+        "run",
+        "uses",
+        "if",
+        "with",
+        "name",
+        "path",
+        "id",
+        "run",
+        "env",
+        "GITHUB_TOKEN",
+        "id",
+        "run",
+        "if",
+        "uses",
+        "with",
+        "script",
+        "issue_number",
+        "owner",
+        "repo",
+        "body",
+        "if",
+        "run",
+        "needs",
+        "if",
+        "steps",
+        "uses",
+        "uses",
+        "with",
+        "path",
+        "run",
+        "uses",
+        "with",
+        "name",
+        "path"
+      ]
+    }
+  ],
+  "docs": [
+    {
+      "path": "api-reference.md",
+      "title": "Api reference"
+    },
+    {
+      "path": "appendices/appendix-hiring-plan.md",
+      "title": "Appendix hiring plan"
+    },
+    {
+      "path": "appendices/appendix-risk-register.md",
+      "title": "Appendix risk register"
+    },
+    {
+      "path": "appendices/appendix-security-threat-model.md",
+      "title": "Appendix security threat model"
+    },
+    {
+      "path": "appendices/appendix-tokenomics.md",
+      "title": "Appendix tokenomics"
+    },
+    {
+      "path": "appendices/glossary.md",
+      "title": "Glossary"
+    },
+    {
+      "path": "deploy/docker.md",
+      "title": "Docker"
+    },
+    {
+      "path": "deploy/ipfs.md",
+      "title": "Ipfs"
+    },
+    {
+      "path": "developer-guide.md",
+      "title": "Developer guide"
+    },
+    {
+      "path": "diagrams/data-flows.md",
+      "title": "Data flows"
+    },
+    {
+      "path": "diagrams/l1-architecture.md",
+      "title": "L1 architecture"
+    },
+    {
+      "path": "diagrams/mining-flow.md",
+      "title": "Mining flow"
+    },
+    {
+      "path": "diagrams/navigator-layers.md",
+      "title": "Navigator layers"
+    },
+    {
+      "path": "diagrams/peg-flow.md",
+      "title": "Peg flow"
+    },
+    {
+      "path": "diagrams/proof-of-reserves.md",
+      "title": "Proof of reserves"
+    },
+    {
+      "path": "diagrams/roadmap-gantt.md",
+      "title": "Roadmap gantt"
+    },
+    {
+      "path": "documentation-overview.md",
+      "title": "Documentation overview"
+    },
+    {
+      "path": "engine/compat-matrix.md",
+      "title": "Compat matrix"
+    },
+    {
+      "path": "engine/perf-budgets.md",
+      "title": "Perf budgets"
+    },
+    {
+      "path": "engine/perf-slos.md",
+      "title": "Perf slos"
+    },
+    {
+      "path": "engine/webgpu-sr.md",
+      "title": "Webgpu sr"
+    },
+    {
+      "path": "engine/webnn-offload.md",
+      "title": "Webnn offload"
+    },
+    {
+      "path": "evm/overview.md",
+      "title": "Overview"
+    },
+    {
+      "path": "executive/executive-one-pager.md",
+      "title": "Executive one pager"
+    },
+    {
+      "path": "governance/proposals/P-0001-enable-btc-mainnet-redemption.md",
+      "title": "P 0001 enable btc mainnet redemption"
+    },
+    {
+      "path": "governance/proposals/P-0002-min-gas-price.md",
+      "title": "P 0002 min gas price"
+    },
+    {
+      "path": "governance/simulator.md",
+      "title": "Simulator"
+    },
+    {
+      "path": "governance-v0.md",
+      "title": "Governance v0"
+    },
+    {
+      "path": "index.md",
+      "title": "Index"
+    },
+    {
+      "path": "launch/announcement.md",
+      "title": "Announcement"
+    },
+    {
+      "path": "launch/faq.md",
+      "title": "Faq"
+    },
+    {
+      "path": "launch/press-kit.md",
+      "title": "Press kit"
+    },
+    {
+      "path": "legal/privacy.md",
+      "title": "Privacy"
+    },
+    {
+      "path": "legal/terms.md",
+      "title": "Terms"
+    },
+    {
+      "path": "pilots/org.md",
+      "title": "Org"
+    },
+    {
+      "path": "pilots/publisher.md",
+      "title": "Publisher"
+    },
+    {
+      "path": "privacy/databox.md",
+      "title": "Databox"
+    },
+    {
+      "path": "privacy/presence.md",
+      "title": "Presence"
+    },
+    {
+      "path": "publishers/onboarding.md",
+      "title": "Onboarding"
+    },
+    {
+      "path": "radio/overview.md",
+      "title": "Overview"
+    },
+    {
+      "path": "radio/payouts.md",
+      "title": "Payouts"
+    },
+    {
+      "path": "references/references.md",
+      "title": "References"
+    },
+    {
+      "path": "report/conclusion-next-steps.md",
+      "title": "Conclusion next steps"
+    },
+    {
+      "path": "report/mycelia-comprehensive-report.md",
+      "title": "Mycelia comprehensive report"
+    },
+    {
+      "path": "report/part-1-blockchain-and-bloom.md",
+      "title": "Part 1 blockchain and bloom"
+    },
+    {
+      "path": "report/part-2-core-applications.md",
+      "title": "Part 2 core applications"
+    },
+    {
+      "path": "report/part-3-mycelia-navigator.md",
+      "title": "Part 3 mycelia navigator"
+    },
+    {
+      "path": "report/part-4-roadmap.md",
+      "title": "Part 4 roadmap"
+    },
+    {
+      "path": "runbooks/chaos-week1.md",
+      "title": "Chaos week1"
+    },
+    {
+      "path": "runbooks/emergency-controls.md",
+      "title": "Emergency controls"
+    },
+    {
+      "path": "runbooks/incident-playbook.md",
+      "title": "Incident playbook"
+    },
+    {
+      "path": "runbooks/key-ceremony.md",
+      "title": "Key ceremony"
+    },
+    {
+      "path": "runbooks/launch-day-checklist.md",
+      "title": "Launch day checklist"
+    },
+    {
+      "path": "runbooks/rollback.md",
+      "title": "Rollback"
+    },
+    {
+      "path": "runbooks/rollout-playbook.md",
+      "title": "Rollout playbook"
+    },
+    {
+      "path": "runbooks/upgrade-playbook.md",
+      "title": "Upgrade playbook"
+    },
+    {
+      "path": "security/bug-bounty.md",
+      "title": "Bug bounty"
+    },
+    {
+      "path": "security-overview.md",
+      "title": "Security overview"
+    },
+    {
+      "path": "status/overview.md",
+      "title": "Overview"
+    },
+    {
+      "path": "storage/nft-envelopes.md",
+      "title": "Nft envelopes"
+    },
+    {
+      "path": "storage/public-directory.md",
+      "title": "Public directory"
+    },
+    {
+      "path": "testing-guide.md",
+      "title": "Testing guide"
+    },
+    {
+      "path": "tutorials.md",
+      "title": "Tutorials"
+    }
+  ],
+  "demos": {
+    "goldenPath": {
+      "exists": true,
+      "watermark": true,
+      "paths": [
+        "packages/demo-recorder/assets"
+      ]
+    }
+  },
+  "warnings": [
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\consent-cards-drawer\\package.json",
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\data-dividend-meter\\package.json",
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\offline-first-bundles\\package.json",
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\page-provenance\\package.json",
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\portable-applets\\package.json",
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\social-overlay\\package.json",
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\transport-profiles\\package.json",
+    "Could not read file: C:\\Repos\\mycelia\\mycelia\\packages\\universal-live-captions\\package.json",
+    "Diagnostics command failed"
+  ]
+}

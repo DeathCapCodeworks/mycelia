@@ -5,7 +5,8 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "mycelia-diagnose": "dist/index.js"
+    "mycelia-diagnose": "dist/index.js",
+    "diagnose": "dist/index.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

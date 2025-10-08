@@ -1,0 +1,387 @@
+name: Feature Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  directory-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Start Public Directory service
+        run: |
+          pnpm --filter @mycelia/public-directory start &
+          sleep 10
+
+      - name: Run directory tests
+        run: |
+          # Test adding an envelope
+          pnpm --filter @mycelia/public-directory cli add \
+            --envelopeCid bafybeih123456789 \
+            --ownerDid did:mycelia:user123 \
+            --title "Test Envelope" \
+            --description "Test description" \
+            --mediaTypes "image/jpeg" \
+            --license "Original"
+
+      - name: Test directory listing
+        run: |
+          # Test listing envelopes
+          pnpm --filter @mycelia/public-directory cli list \
+            --limit 10
+
+      - name: Test moderation
+        run: |
+          # Test moderation actions
+          pnpm --filter @mycelia/public-directory cli moderate \
+            --envelopeCid bafybeih123456789 \
+            --action "flag" \
+            --moderatorDid did:mycelia:moderator123
+
+  radio-loopback:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Start Radio SFU service
+        run: |
+          pnpm --filter @mycelia/radio-sfu start &
+          sleep 10
+
+      - name: Test Radio SFU loopback
+        run: |
+          # Test WebSocket connection
+          node -e "
+            const WebSocket = require('ws');
+            const ws = new WebSocket('ws://localhost:3003');
+            
+            ws.on('open', () => {
+              console.log('WebSocket connected');
+              
+              // Test room creation
+              ws.send(JSON.stringify({
+                type: 'joinRoom',
+                roomId: 'test-room',
+                did: 'did:mycelia:user123'
+              }));
+              
+              setTimeout(() => {
+                ws.close();
+                process.exit(0);
+              }, 2000);
+            });
+            
+            ws.on('error', (error) => {
+              console.error('WebSocket error:', error);
+              process.exit(1);
+            });
+          "
+
+      - name: Test Radio API
+        run: |
+          # Test HTTP API
+          curl -X POST http://localhost:3002/room/create \
+            -H "Content-Type: application/json" \
+            -d '{"name":"Test Room","rights":"Original","ownerDid":"did:mycelia:user123"}'
+
+  databox-shred-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Test Databox key shredding
+        run: |
+          node -e "
+            const { databox } = require('./packages/databox/dist/index.js');
+            
+            async function testKeyShredding() {
+              try {
+                // Add test entry
+                await databox.addEntry({
+                  id: 'test-entry',
+                  type: 'interaction',
+                  timestamp: Date.now(),
+                  data: 'test data',
+                  encrypted: true,
+                  contentKeyId: 'test-key'
+                });
+                
+                console.log('Test entry added');
+                
+                // Test key shredding
+                await databox.shredKeys();
+                console.log('Keys shredded successfully');
+                
+                // Verify content is unreadable
+                try {
+                  await databox.getEntry('test-entry');
+                  console.error('ERROR: Content should be unreadable after key shredding');
+                  process.exit(1);
+                } catch (error) {
+                  console.log('SUCCESS: Content is unreadable after key shredding');
+                }
+                
+              } catch (error) {
+                console.error('Test failed:', error);
+                process.exit(1);
+              }
+            }
+            
+            testKeyShredding();
+          "
+
+  evm-provider-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Test EVM Provider
+        run: |
+          node -e "
+            const { EvmProvider } = require('./packages/evm-provider/dist/index.js');
+            
+            async function testEvmProvider() {
+              try {
+                const provider = new EvmProvider();
+                
+                // Test provider initialization
+                console.log('EVM Provider initialized');
+                
+                // Test chain switching
+                await provider.switchChain('0x1'); // Ethereum mainnet
+                console.log('Chain switched to Ethereum mainnet');
+                
+                // Test transaction simulation
+                const simulation = await provider.simulateTransaction({
+                  from: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+                  to: '0x8ba1f109551bD432803012645Hac136c',
+                  value: '1000000000000000000',
+                  data: '0x'
+                });
+                
+                console.log('Transaction simulation result:', simulation);
+                
+              } catch (error) {
+                console.error('EVM Provider test failed:', error);
+                process.exit(1);
+              }
+            }
+            
+            testEvmProvider();
+          "
+
+  presence-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Test Presence functionality
+        run: |
+          node -e "
+            const { presence } = require('./packages/presence/dist/index.js');
+            
+            async function testPresence() {
+              try {
+                // Test Ghost Mode
+                presence.toggleGhostMode(true);
+                console.log('Ghost Mode enabled');
+                
+                // Test presence joining (should be blocked by Ghost Mode)
+                await presence.joinPresence({
+                  origin: 'https://example.com'
+                });
+                
+                const count = presence.listCount();
+                console.log('Presence count:', count);
+                
+                // Disable Ghost Mode
+                presence.toggleGhostMode(false);
+                console.log('Ghost Mode disabled');
+                
+                // Test presence joining
+                await presence.joinPresence({
+                  origin: 'https://example.com'
+                });
+                
+                const countAfterJoin = presence.listCount();
+                console.log('Presence count after join:', countAfterJoin);
+                
+                // Test leaving presence
+                presence.leavePresence();
+                console.log('Left presence');
+                
+              } catch (error) {
+                console.error('Presence test failed:', error);
+                process.exit(1);
+              }
+            }
+            
+            testPresence();
+          "
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: [directory-tests, radio-loopback, databox-shred-test, evm-provider-test, presence-test]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Start all services
+        run: |
+          docker compose -f deploy/docker-compose.yml up -d --build
+          sleep 30
+
+      - name: Run integration tests
+        run: |
+          # Test Navigator status endpoint
+          curl -f http://localhost:3000/status.json
+          
+          # Test all service endpoints
+          curl -f http://localhost:3001/health
+          curl -f http://localhost:3002/health
+          curl -f http://localhost:5001/api/v0/version
+          
+          # Test feature flag integration
+          node -e "
+            const { featureFlags } = require('./packages/web4-feature-flags/dist/index.js');
+            
+            // Test new feature flags
+            const flags = [
+              'nft_envelopes',
+              'public_directory', 
+              'radio_v0',
+              'radio_payouts_demo',
+              'presence_v0',
+              'databox_v0',
+              'evm_provider',
+              'evm_aa',
+              'evm_paymaster'
+            ];
+            
+            flags.forEach(flag => {
+              const enabled = featureFlags.isFlagEnabled(flag);
+              console.log(\`Flag \${flag}: \${enabled ? 'enabled' : 'disabled'}\`);
+            });
+          "
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker compose -f deploy/docker-compose.yml down -v
