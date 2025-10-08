@@ -1,9 +1,9 @@
 import { execa } from 'execa';
 import * as fs from 'fs';
 import * as path from 'path';
-import { DemoStep } from './captions.js';
+import type { TStepsDoc } from '../steps.schema';
 
-export async function generateTTS(steps: DemoStep[]): Promise<string> {
+export async function generateTTS(steps: TStepsDoc['steps']): Promise<string> {
   const platform = process.platform;
   
   // Gracefully skip TTS on Linux

@@ -3,18 +3,22 @@ import { execa } from 'execa';
 import * as fs from 'fs';
 import * as path from 'path';
 import { format } from 'date-fns';
-import steps from './steps.json';
+import stepsDoc from './steps.json';
+import { StepsDoc, type TStepsDoc } from './steps.schema';
 import { generateCaptions } from './util/captions.js';
 import { processVideo } from './util/ff.js';
 import { generateTTS } from './util/os-tts.js';
 
-interface DemoStep {
-  route: string;
-  waitFor: string;
-  click?: string;
-  type?: string;
-  pauseMs: number;
-  caption: string;
+// Validate steps.json
+const parsed = StepsDoc.safeParse(stepsDoc);
+if (!parsed.success) {
+  console.error('[demo] Invalid steps.json:', parsed.error.format());
+  process.exit(1);
+}
+const steps: TStepsDoc = parsed.data;
+
+function toMsg(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
 }
 
 interface DemoConfig {
@@ -83,7 +87,7 @@ class DemoRecorder {
         
         console.log(`⚠️ Server responded with ${response.status}, retrying...`);
       } catch (error) {
-        console.log(`❌ Attempt ${attempt}/${maxAttempts} failed: ${error.message}`);
+        console.log(`❌ Attempt ${attempt}/${maxAttempts} failed: ${toMsg(error)}`);
         
         if (attempt === maxAttempts) {
           console.error('🚨 SERVER NOT REACHABLE - DEMO RECORDING FAILED');
@@ -103,9 +107,9 @@ class DemoRecorder {
   async recordSteps(): Promise<void> {
     if (!this.page) throw new Error('Page not initialized');
 
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i] as DemoStep;
-      console.log(`📍 Step ${i + 1}/${steps.length}: ${step.route}`);
+    for (let i = 0; i < steps.steps.length; i++) {
+      const step = steps.steps[i];
+      console.log(`📍 Step ${i + 1}/${steps.steps.length}: ${step.route}`);
       
       try {
         // Navigate to route
@@ -113,22 +117,16 @@ class DemoRecorder {
           waitUntil: 'networkidle'
         });
 
-        // Wait for specific element
-        await this.page.waitForSelector(step.waitFor, { timeout: 10000 });
-
-        // Perform interaction if specified
-        if (step.click) {
-          await this.page.click(step.click);
-          await this.page.waitForTimeout(500);
+        // Perform actions
+        for (const action of step.actions) {
+          if (action.type === 'click') {
+            await this.page.waitForSelector(action.selector, { timeout: 10000 });
+            await this.page.click(action.selector);
+            await this.page.waitForTimeout(500);
+          } else if (action.type === 'waitFor') {
+            await this.page.waitForTimeout(action.ms);
+          }
         }
-
-        if (step.type) {
-          await this.page.type(step.type, 'test input');
-          await this.page.waitForTimeout(500);
-        }
-
-        // Pause for specified duration
-        await this.page.waitForTimeout(step.pauseMs);
 
         // Capture screenshot for debugging
         await this.page.screenshot({
@@ -136,7 +134,7 @@ class DemoRecorder {
           fullPage: true
         });
 
-        console.log(`✅ Step ${i + 1} completed`);
+        console.log(`✅ Step ${i + 1} completed: ${step.caption}`);
       } catch (error) {
         console.error(`❌ Step ${i + 1} failed:`, error);
         // Continue with next step
@@ -165,7 +163,7 @@ class DemoRecorder {
     console.log('🎞️ Processing video...');
 
     // Generate captions
-    const captions = generateCaptions(steps as DemoStep[], this.startTime);
+    const captions = generateCaptions(steps.steps, this.startTime);
     const srtPath = 'release/public/golden-path.srt';
     const assPath = '.cache/demo/golden-path.ass';
 
@@ -181,7 +179,7 @@ class DemoRecorder {
     let audioPath: string | null = null;
     if (this.config.narrate) {
       try {
-        audioPath = await generateTTS(steps as DemoStep[]);
+        audioPath = await generateTTS(steps.steps);
         console.log(`🎤 TTS narration generated: ${audioPath}`);
       } catch (error) {
         console.warn('⚠️ TTS generation failed:', error);

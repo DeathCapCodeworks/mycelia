@@ -6,7 +6,10 @@
     "declaration": true,
     "declarationMap": true,
     "composite": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "skipLibCheck": false,
+    "isolatedModules": true,
+    "moduleResolution": "Bundler"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"]

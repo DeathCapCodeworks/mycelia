@@ -63,7 +63,7 @@ jobs:
         run: pnpm run release:changelog
       
       - name: Build documentation
-        run: pnpm run release:docs
+        run: pnpm run docs:build
         continue-on-error: true
       
       - name: Record demo

@@ -1,30 +1,39 @@
-[
-  {
-    "route": "/publisher/start",
-    "waitFor": ".publisher-onboarding-container",
-    "click": ".wizard-content button",
-    "pauseMs": 2000,
-    "caption": "Onboard a publisher: verify domain, enable Rewards."
-  },
-  {
-    "route": "/gallery",
-    "waitFor": ".applets-gallery-container",
-    "click": ".applet-card button",
-    "pauseMs": 1500,
-    "caption": "Browse installable, offline-ready applets."
-  },
-  {
-    "route": "/media",
-    "waitFor": ".media-page-container",
-    "click": ".tab-button[data-tab='vod']",
-    "pauseMs": 1000,
-    "caption": "AV1 end-to-end: VOD encode, WebRTC with SVC."
-  },
-  {
-    "route": "/governance",
-    "waitFor": ".governance-container",
-    "click": ".simulate-button",
-    "pauseMs": 3000,
-    "caption": "Simulate Proposal P-0001 safely before voting."
-  }
-]
+{
+  "version": 1,
+  "steps": [
+    {
+      "route": "/publisher/start",
+      "caption": "Onboard a publisher: verify domain, enable Rewards.",
+      "actions": [
+        {"type":"click","selector":"[data-test=verify-domain]"},
+        {"type":"waitFor","ms":800},
+        {"type":"click","selector":"[data-test=enable-rewards]"}
+      ]
+    },
+    {
+      "route": "/gallery",
+      "caption": "Browse installable, offline-ready applets.",
+      "actions": [
+        {"type":"click","selector":"[data-test=filter-offline]"},
+        {"type":"click","selector":"[data-test=install-applet]"}
+      ]
+    },
+    {
+      "route": "/media",
+      "caption": "AV1 end-to-end: VOD encode, WebRTC with SVC.",
+      "actions": [
+        {"type":"click","selector":"[data-test=load-sample-video]"},
+        {"type":"waitFor","ms":1200},
+        {"type":"click","selector":"[data-test=start-encode]"}
+      ]
+    },
+    {
+      "route": "/governance",
+      "caption": "Simulate Proposal P-0001 safely before voting.",
+      "actions": [
+        {"type":"click","selector":"[data-test=open-p0001]"},
+        {"type":"click","selector":"[data-test=simulate]"}
+      ]
+    }
+  ]
+}

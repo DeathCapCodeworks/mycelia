@@ -1,20 +1,12 @@
 import { format } from 'date-fns';
-
-export interface DemoStep {
-  route: string;
-  waitFor: string;
-  click?: string;
-  type?: string;
-  pauseMs: number;
-  caption: string;
-}
+import type { TStepsDoc } from '../steps.schema';
 
 export interface CaptionResult {
   srt: string;
   ass: string;
 }
 
-export function generateCaptions(steps: DemoStep[], startTime: number): CaptionResult {
+export function generateCaptions(steps: TStepsDoc['steps'], startTime: number): CaptionResult {
   let currentTime = startTime;
   const srtEntries: string[] = [];
   const assEntries: string[] = [];
@@ -33,7 +25,11 @@ export function generateCaptions(steps: DemoStep[], startTime: number): CaptionR
 
   steps.forEach((step, index) => {
     const startMs = currentTime;
-    const endMs = currentTime + step.pauseMs;
+    // Calculate duration based on actions
+    const totalDuration = step.actions.reduce((total: number, action) => {
+      return total + (action.type === 'waitFor' ? action.ms : 1000);
+    }, 0);
+    const endMs = currentTime + totalDuration;
     
     // Convert to SRT format (HH:MM:SS,mmm)
     const startSRT = formatTimeSRT(startMs);
