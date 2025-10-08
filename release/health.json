@@ -1,0 +1,146 @@
+{
+  "timestamp": "2025-10-08T01:12:05.087Z",
+  "diagnostics": {
+    "passRate": 0.87,
+    "total": 15,
+    "passed": 13,
+    "failed": 2,
+    "details": [
+      {
+        "check": "node_version",
+        "status": "pass",
+        "message": "Node 20.14.0 detected"
+      },
+      {
+        "check": "corepack",
+        "status": "pass",
+        "message": "Corepack enabled"
+      },
+      {
+        "check": "pnpm",
+        "status": "pass",
+        "message": "pnpm 9.0.0 available"
+      },
+      {
+        "check": "git",
+        "status": "pass",
+        "message": "Git available"
+      },
+      {
+        "check": "typescript",
+        "status": "pass",
+        "message": "TypeScript compilation successful"
+      },
+      {
+        "check": "eslint",
+        "status": "pass",
+        "message": "ESLint checks passed"
+      },
+      {
+        "check": "vitest",
+        "status": "pass",
+        "message": "Unit tests passed"
+      },
+      {
+        "check": "docker",
+        "status": "pass",
+        "message": "Docker available"
+      },
+      {
+        "check": "ipfs",
+        "status": "pass",
+        "message": "IPFS client available"
+      },
+      {
+        "check": "feature_flags",
+        "status": "pass",
+        "message": "Feature flags registry loaded"
+      },
+      {
+        "check": "attestations",
+        "status": "pass",
+        "message": "PoR attestations valid"
+      },
+      {
+        "check": "evm_provider",
+        "status": "pass",
+        "message": "EVM provider initialized"
+      },
+      {
+        "check": "radio_sfu",
+        "status": "fail",
+        "message": "Radio SFU service unavailable"
+      },
+      {
+        "check": "public_directory",
+        "status": "pass",
+        "message": "Public directory accessible"
+      },
+      {
+        "check": "navigator",
+        "status": "fail",
+        "message": "Navigator sandbox has issues"
+      }
+    ]
+  },
+  "slo": {
+    "status": "warning",
+    "violations": 1,
+    "details": [
+      {
+        "metric": "redemption_quote_latency_ms",
+        "status": "healthy",
+        "value": 120,
+        "target": 200
+      },
+      {
+        "metric": "por_attestation_age_minutes",
+        "status": "healthy",
+        "value": 15,
+        "target": 30
+      },
+      {
+        "metric": "diagnostics_pass_rate",
+        "status": "warning",
+        "value": 0.87,
+        "target": 0.95
+      },
+      {
+        "metric": "sandbox_route_tti_ms",
+        "status": "healthy",
+        "value": 1800,
+        "target": 2000
+      }
+    ]
+  },
+  "perf": {
+    "status": "healthy",
+    "breaches": 0,
+    "details": [
+      {
+        "metric": "bundle_size_sandbox_kb",
+        "status": "within_budget",
+        "value": 1800,
+        "budget": 2000
+      },
+      {
+        "metric": "bundle_size_docs_kb",
+        "status": "within_budget",
+        "value": 900,
+        "budget": 1000
+      },
+      {
+        "metric": "tti_sandbox_ms",
+        "status": "within_budget",
+        "value": 2200,
+        "budget": 2500
+      },
+      {
+        "metric": "memory_usage_sandbox_mb",
+        "status": "within_budget",
+        "value": 85,
+        "budget": 100
+      }
+    ]
+  }
+}

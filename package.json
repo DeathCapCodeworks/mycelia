@@ -1,8 +1,11 @@
 {
   "name": "mycelia",
   "private": true,
-  "version": "0.1.0",
-  "engines": { "node": ">=20 <21", "npm": ">=9" },
+  "version": "0.9.0-rc.1",
+  "engines": {
+    "node": ">=20 <21",
+    "npm": ">=9"
+  },
   "packageManager": "pnpm@9.0.0",
   "workspaces": [
     "apps/*",
@@ -57,7 +60,16 @@
     "deploy:compose": "docker compose -f deploy/docker-compose.yml up --build",
     "report:state": "node scripts/tmp/extract-state.js",
     "setup:pm": "node -e \"require('child_process').spawnSync('corepack', ['enable'], {stdio: 'inherit'})\"",
-    "setup:env": "node -e \"console.log('Node',process.version)\""
+    "setup:env": "node -e \"console.log('Node',process.version)\"",
+    "release:version": "node scripts/release/version-bump.js",
+    "release:changelog": "node scripts/release/changelog.js",
+    "release:docs": "pnpm --filter @mycelia/docs build",
+    "release:demo": "pnpm demo:record && pnpm demo:publish:ipfs",
+    "release:ipfs": "node scripts/ipfs-publish.js",
+    "release:docker": "node scripts/release/docker-build.js",
+    "release:govpack": "node scripts/release/govpack.js",
+    "sbom:apps": "node scripts/release/sbom.js apps",
+    "sbom:pkgs": "node scripts/release/sbom.js packages"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
@@ -69,7 +81,8 @@
     "@types/node": "^20.12.12",
     "@axe-core/cli": "^4.10.0",
     "tsx": "^4.0.0",
-    "zod": "^3.0.0"
+    "zod": "^3.0.0",
+    "cyclonedx-bom": "^0.0.9",
+    "@cyclonedx/cyclonedx-npm": "^1.0.0"
   }
 }
-

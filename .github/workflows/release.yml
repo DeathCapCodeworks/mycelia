@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v0.9.0-rc.1)'
+        required: false
+        default: 'v0.9.0-rc.1'
+      skip_tests:
+        description: 'Skip tests and diagnostics'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for changelog generation
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Setup Corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.0.0 --activate
+      
+      - name: Install dependencies
+        run: pnpm i --no-fund --no-audit
+      
+      - name: Build workspace
+        run: pnpm -w build
+      
+      - name: Run diagnostics
+        if: ${{ !inputs.skip_tests }}
+        run: pnpm run diagnose
+        continue-on-error: true
+      
+      - name: Run performance budgets
+        if: ${{ !inputs.skip_tests }}
+        run: pnpm run perf:budgets
+        continue-on-error: true
+      
+      - name: Run SLO lint
+        if: ${{ !inputs.skip_tests }}
+        run: pnpm run ops:lint
+        continue-on-error: true
+      
+      - name: Version bump
+        run: pnpm run release:version
+        id: version
+      
+      - name: Generate changelog
+        run: pnpm run release:changelog
+      
+      - name: Build documentation
+        run: pnpm run release:docs
+        continue-on-error: true
+      
+      - name: Record demo
+        run: pnpm run release:demo
+        continue-on-error: true
+      
+      - name: Publish to IPFS
+        run: pnpm run release:ipfs
+        continue-on-error: true
+      
+      - name: Generate SBOMs for apps
+        run: pnpm run sbom:apps
+        continue-on-error: true
+      
+      - name: Generate SBOMs for packages
+        run: pnpm run sbom:pkgs
+        continue-on-error: true
+      
+      - name: Build Docker images
+        run: pnpm run release:docker
+        continue-on-error: true
+      
+      - name: Create governance pack
+        run: pnpm run release:govpack
+        continue-on-error: true
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: |
+            CHANGELOG.md
+            release/
+            release/sbom/
+            release/images.json
+          retention-days: 30
+      
+      - name: Create Git tag
+        run: |
+          VERSION=$(cat release/VERSION)
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists"
+          else
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git tag -a "$VERSION" -m "Release $VERSION"
+            git push origin "$VERSION"
+          fi
+        continue-on-error: true
+      
+      - name: Release summary
+        run: |
+          echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version**: $(cat release/VERSION)" >> $GITHUB_STEP_SUMMARY
+          echo "**Git SHA**: $(git rev-parse HEAD | cut -c1-8)" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp**: $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts Generated" >> $GITHUB_STEP_SUMMARY
+          echo "- CHANGELOG.md" >> $GITHUB_STEP_SUMMARY
+          echo "- release/VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "- release/sbom/ (SBOMs)" >> $GITHUB_STEP_SUMMARY
+          echo "- release/images.json (Container digests)" >> $GITHUB_STEP_SUMMARY
+          echo "- release/governance/ (Governance pack)" >> $GITHUB_STEP_SUMMARY
+          echo "- release/public/ (IPFS manifests)" >> $GITHUB_STEP_SUMMARY

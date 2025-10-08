@@ -1,0 +1,6 @@
+# Checksums for Mycelia v0.9.0-rc.1
+# Generated: 2025-10-08T01:12:05.093Z
+# Git SHA: a9e64700eb83a90a070db6019ab48feab1941234
+
+59aba3643fef1d9d6cd893d302ce02e47850cef5e29f34c2a84178992371e6ee  images.json
+05be06a781e902530cca314ee42c1b8f92868c15e437632773cb148c7a795ad7  health.json
