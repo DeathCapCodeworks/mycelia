@@ -56,9 +56,9 @@ interface SessionSnapshot {
   id: string;                    // Unique snapshot ID
   name: string;                  // User-defined name
   timestamp: number;            // Creation timestamp
-  tabs: TabState[];             // Open tabs and their state
-  scrollPositions: Map<string, number>; // Scroll positions by tab ID
-  formStates: Map<string, any>; // Form states (sanitized)
+  tabs: TabStat\1\[];             // Open tabs and their state
+  scrollPositions: Map&lt;string, number&gt;; // Scroll positions by tab ID
+  formStates: Map&lt;string, any&gt;; // Form states (sanitized)
   walletContext: WalletState;   // Wallet connection state
   uiState: UIState;             // UI panel positions and preferences
 }

@@ -1,3 +1,7 @@
+---
+title: Docker
+---
+
 # Docker Deployment
 
 Mycelia supports containerized deployment using Docker Compose for local development and production environments. The deployment includes all core services with health checks, monitoring, and observability.
@@ -163,7 +167,7 @@ networks:
   default:
     name: mycelia-network
     driver: bridge
-```
+```text
 
 ## Deployment Commands
 
@@ -183,7 +187,7 @@ docker compose -f deploy/docker-compose.yml logs -f
 
 # Stop services
 docker compose -f deploy/docker-compose.yml down
-```
+```text
 
 ### Production Deployment
 ```bash
@@ -196,7 +200,7 @@ docker compose -f deploy/docker-compose.yml up -d --scale navigator=3
 # Update services
 docker compose -f deploy/docker-compose.yml pull
 docker compose -f deploy/docker-compose.yml up -d --build
-```
+```text
 
 ## Environment Configuration
 
@@ -210,7 +214,7 @@ PORT=3000
 PUBLIC_DIRECTORY_URL=http://public-directory:3001
 RADIO_SFU_URL=http://radio-sfu:3002
 IPFS_URL=http://ipfs:5001
-```
+```text
 
 #### Public Directory
 ```bash
@@ -218,7 +222,7 @@ NODE_ENV=production
 PORT=3001
 PUBLIC_DIRECTORY_ENABLED=true
 DATABASE_URL=postgresql://user:pass@db:5432/public_directory
-```
+```text
 
 #### Radio SFU
 ```bash
@@ -227,7 +231,7 @@ EXPRESS_PORT=3002
 WS_PORT=3003
 RADIO_V0_ENABLED=true
 MEDIASOUP_WORKERS=4
-```
+```text
 
 #### IPFS
 ```bash
@@ -236,7 +240,7 @@ IPFS_PATH=/data/ipfs
 IPFS_SWARM_ADDRS=/ip4/0.0.0.0/tcp/4001
 IPFS_API_ADDRS=/ip4/0.0.0.0/tcp/5001
 IPFS_GATEWAY_ADDRS=/ip4/0.0.0.0/tcp/8080
-```
+```text
 
 ### Environment Files
 Create `.env` files for different environments:
@@ -246,14 +250,14 @@ Create `.env` files for different environments:
 NODE_ENV=development
 LOG_LEVEL=debug
 ENABLE_DEBUG=true
-```
+```text
 
 #### `.env.production`
 ```bash
 NODE_ENV=production
 LOG_LEVEL=info
 ENABLE_DEBUG=false
-```
+```text
 
 ## Health Checks
 
@@ -263,22 +267,22 @@ Each service includes health check endpoints:
 #### Navigator
 ```bash
 curl http://localhost:3000/status.json
-```
+```text
 
 #### Public Directory
 ```bash
 curl http://localhost:3001/health
-```
+```text
 
 #### Radio SFU
 ```bash
 curl http://localhost:3002/health
-```
+```text
 
 #### IPFS
 ```bash
 curl http://localhost:5001/api/v0/version
-```
+```text
 
 ### Health Check Configuration
 ```yaml
@@ -288,7 +292,7 @@ healthcheck:
   timeout: 10s
   retries: 3
   start_period: 40s
-```
+```text
 
 ## Volume Management
 
@@ -303,7 +307,7 @@ volumes:
     driver: local
   public_directory_data:
     driver: local
-```
+```text
 
 ### Volume Mounts
 ```yaml
@@ -312,7 +316,7 @@ volumes:
   - ipfs_staging:/export
   - ./config:/app/config
   - ./logs:/app/logs
-```
+```text
 
 ## Networking
 
@@ -324,7 +328,7 @@ environment:
   - PUBLIC_DIRECTORY_URL=http://public-directory:3001
   - RADIO_SFU_URL=http://radio-sfu:3002
   - IPFS_URL=http://ipfs:5001
-```
+```text
 
 ### Custom Networks
 ```yaml
@@ -334,7 +338,7 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/16
-```
+```text
 
 ## Monitoring and Logging
 
@@ -345,7 +349,7 @@ logging:
   options:
     max-size: "10m"
     max-file: "3"
-```
+```text
 
 ### Log Aggregation
 ```yaml
@@ -356,7 +360,7 @@ services:
       - ./fluentd.conf:/fluentd/etc/fluent.conf
     ports:
       - "24224:24224"
-```
+```text
 
 ### Metrics Collection
 ```yaml
@@ -367,7 +371,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-```
+```text
 
 ## Security Considerations
 
@@ -396,7 +400,7 @@ services:
     secrets:
       - db_password
       - api_key
-```
+```text
 
 ## Scaling
 
@@ -407,7 +411,7 @@ docker compose -f deploy/docker-compose.yml up -d --scale navigator=3
 
 # Scale Public Directory service
 docker compose -f deploy/docker-compose.yml up -d --scale public-directory=2
-```
+```text
 
 ### Load Balancing
 ```yaml
@@ -420,7 +424,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - navigator
-```
+```text
 
 ## Troubleshooting
 
@@ -457,7 +461,7 @@ docker compose -f deploy/docker-compose.yml exec <service-name> sh
 
 # Check resource usage
 docker stats
-```
+```text
 
 ## Best Practices
 

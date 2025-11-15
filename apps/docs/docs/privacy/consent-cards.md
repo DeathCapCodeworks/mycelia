@@ -30,7 +30,7 @@ interface ConsentCard {
   id: string;                    // Unique identifier
   issuedAt: number;             // Timestamp when issued
   requester: string;            // Who requested the capabilities
-  scopes: string[];            // What capabilities were granted
+  scopes: strin\1\[];            // What capabilities were granted
   durationMs: number;           // How long the grant is valid
   purpose: string;              // Why the capabilities are needed
   signature: string;            // Cryptographic signature

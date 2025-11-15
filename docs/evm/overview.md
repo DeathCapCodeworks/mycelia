@@ -1,3 +1,7 @@
+---
+title: Overview
+---
+
 # Ethereum Integration Overview
 
 Project Mycelia provides comprehensive Ethereum-compatible blockchain integration through a suite of packages that enable seamless interaction with EVM chains while maintaining the unique BLOOM token economics and privacy features.
@@ -37,7 +41,7 @@ const status = await paymaster.getSponsorshipStatus();
 // Set up account abstraction
 const aa = getAccountAbstraction();
 const smartAccount = await aa.createSmartAccount('0x...');
-```
+```text
 
 ## Features
 
@@ -53,7 +57,7 @@ const balance = await window.ethereum.request({
   method: 'eth_getBalance', 
   params: [account, 'latest'] 
 });
-```
+```text
 
 ### BLOOM Token Integration
 
@@ -69,7 +73,7 @@ await signer.sendBloom('0x...', BigInt('1000000000000000000')); // 1 BLOOM
 
 // Get BLOOM balance in BTC equivalent
 const btcValue = await myceliaProvider.getBloomBalanceInBtc('0x...');
-```
+```text
 
 ### Gas Sponsorship
 
@@ -94,7 +98,7 @@ if (canSponsor) {
   const sponsorship = await paymaster.sponsorUserOperation(request);
   // Use sponsorship.paymasterAndData in user operation
 }
-```
+```text
 
 ### Account Abstraction
 
@@ -119,7 +123,7 @@ const userOpHash = await aa.sendUserOperation(signedUserOp);
 
 // Wait for confirmation
 const receipt = await aa.waitForUserOperation(userOpHash);
-```
+```text
 
 ## Configuration
 
@@ -138,7 +142,7 @@ import { flags } from '@mycelia/web4-feature-flags';
 if (flags.isEnabled('evm_aa')) {
   // Initialize account abstraction
 }
-```
+```text
 
 ### Network Configuration
 
@@ -157,7 +161,7 @@ await provider.addChain({
     decimals: 18
   }
 });
-```
+```text
 
 ## Security Considerations
 
@@ -179,7 +183,7 @@ await paymaster.updatePolicy({
   dailyLimit: '0x16345785d8a0000', // 0.1 ETH
   perUserLimit: '0x38d7ea4c68000'  // 0.01 ETH
 });
-```
+```text
 
 ### Session Key Security
 
@@ -192,7 +196,7 @@ const sessionKey = await aa.createSessionKey({
   spendingCap: '1000000000000000000', // 1 BLOOM
   expiresAt: Date.now() + 86400000    // 24 hours
 });
-```
+```text
 
 ## Error Handling
 
@@ -211,7 +215,7 @@ try {
     console.error('Unexpected error:', error);
   }
 }
-```
+```text
 
 ## Monitoring and Observability
 
@@ -225,7 +229,7 @@ import { observability } from '@mycelia/observability';
 // - evm_transaction_sent
 // - aa_user_operation_sent
 // - evm_paymaster_sponsorship_granted
-```
+```text
 
 ## Best Practices
 
@@ -246,7 +250,7 @@ import { observability } from '@mycelia/observability';
 if (!provider.isInitialized) {
   await provider.initialize();
 }
-```
+```text
 
 **Feature flag disabled**
 ```typescript
@@ -254,7 +258,7 @@ if (!provider.isInitialized) {
 if (!flags.isEnabled('evm_provider')) {
   console.log('EVM provider is disabled');
 }
-```
+```text
 
 **Gas estimation failed**
 ```typescript
@@ -263,7 +267,7 @@ const gasEstimate = await provider.estimateGas({
   ...tx,
   gasLimit: '0x186a0' // 100000 gas
 });
-```
+```text
 
 ### Debug Mode
 
@@ -275,7 +279,7 @@ process.env.DEBUG = 'mycelia:evm:*';
 
 // Or enable specific modules
 process.env.DEBUG = 'mycelia:evm:provider,mycelia:evm:paymaster';
-```
+```text
 
 ## API Reference
 

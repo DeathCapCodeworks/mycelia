@@ -1,3 +1,7 @@
+---
+title: Onboarding
+---
+
 # Publisher Onboarding Guide
 
 This guide walks publishers through integrating Mycelia into their websites using our onboarding wizard.
@@ -30,7 +34,7 @@ The Publisher Onboarding Wizard provides a step-by-step process to integrate Myc
 ```html
 <script src="https://cdn.mycelia.xyz/mycelia-embed.js" async></script>
 <meta name="mycelia-domain-owner" content="your-did-here">
-```
+```text
 
 ### Step 3: Run Live Check
 

@@ -1,3 +1,7 @@
+---
+title: Rollback
+---
+
 # Rollback Procedures
 
 ## Overview
@@ -49,19 +53,19 @@ mycelia-launchctl pause redemption
 
 # Verify pause
 mycelia-launchctl status
-```
+```text
 
 **Steps:**
 1. **Execute pause command**
    ```bash
    mycelia-launchctl pause redemption
-   ```
+   ```text
 
 2. **Verify flag status**
    ```bash
    # Check feature flag status
    curl -f http://localhost:3000/api/feature-flags/btc_mainnet_redemption
-   ```
+   ```text
 
 3. **Update status page**
    - Update status page to reflect pause
@@ -80,7 +84,7 @@ mycelia-launchctl resume redemption
 
 # Verify resume
 mycelia-launchctl status
-```
+```text
 
 ### 2. Configuration Rollback
 
@@ -94,32 +98,32 @@ cp -r ./release/mainnet-previous ./release/mainnet
 
 # Verify configuration
 pnpm run release:verify
-```
+```text
 
 **Steps:**
 1. **Backup current state**
    ```bash
    # Create backup of current state
    cp -r ./release/mainnet ./release/mainnet-backup-$(date +%Y%m%d-%H%M%S)
-   ```
+   ```text
 
 2. **Restore previous configuration**
    ```bash
    # Restore from backup
    cp -r ./release/mainnet-previous ./release/mainnet
-   ```
+   ```text
 
 3. **Verify configuration**
    ```bash
    # Run verification
    pnpm run release:verify
-   ```
+   ```text
 
 4. **Deploy configuration**
    ```bash
    # Deploy new configuration
    pnpm run release:publish
-   ```
+   ```text
 
 ### 3. Full System Rollback
 
@@ -136,32 +140,32 @@ systemctl start mycelia-*
 
 # Verify system
 pnpm run diagnose
-```
+```text
 
 **Steps:**
 1. **Stop all services**
    ```bash
    # Stop all Mycelia services
    systemctl stop mycelia-*
-   ```
+   ```text
 
 2. **Restore from backup**
    ```bash
    # Restore system from backup
    tar -xzf ./backups/system-backup-$(date +%Y%m%d).tar.gz -C /
-   ```
+   ```text
 
 3. **Restart services**
    ```bash
    # Start all services
    systemctl start mycelia-*
-   ```
+   ```text
 
 4. **Verify system**
    ```bash
    # Run diagnostics
    pnpm run diagnose
-   ```
+   ```text
 
 ## Rollback Verification
 
@@ -175,7 +179,7 @@ pnpm run ops:lint
 
 # Verify system status
 curl -f http://localhost:3000/ops/status.json
-```
+```text
 
 ### 2. Feature Verification
 ```bash
@@ -187,7 +191,7 @@ mycelia-attest verify ./release/mainnet/por.json
 
 # Test critical paths
 pnpm --filter @mycelia/redemption start -- --test-flow
-```
+```text
 
 ### 3. User Impact Assessment
 - **Check user feedback**
@@ -211,7 +215,7 @@ pnpm --filter @mycelia/redemption start -- --test-flow
 ### 3. Communication Templates
 
 #### Rollback Announcement
-```
+```text
 Subject: [URGENT] System Rollback - [Reason]
 
 We are implementing an emergency rollback due to [reason].
@@ -221,10 +225,10 @@ Duration: [Estimated duration]
 Next Update: [Time]
 
 We apologize for any inconvenience and will provide updates as they become available.
-```
+```text
 
 #### Rollback Resolution
-```
+```text
 Subject: Rollback Complete - System Restored
 
 The system rollback has been completed successfully.
@@ -234,7 +238,7 @@ Impact: [Description of impact]
 Next Steps: [Description of next steps]
 
 Thank you for your patience during this incident.
-```
+```text
 
 ## Rollback Recovery
 

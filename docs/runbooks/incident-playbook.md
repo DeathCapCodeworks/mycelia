@@ -1,3 +1,7 @@
+---
+title: Incident Playbook
+---
+
 # Incident Playbook
 
 ## Overview
@@ -52,19 +56,19 @@ This playbook provides step-by-step procedures for responding to critical incide
    ```bash
    # Disable minting via feature flags
    pnpm --filter @mycelia/feature-flags start -- --disable rewards_mainnet
-   ```
+   ```text
 
 2. **Check collateralization**
    ```bash
    # Run diagnostics
    pnpm run diagnose
-   ```
+   ```text
 
 3. **Verify reserves**
    ```bash
    # Check PoR attestations
    pnpm --filter @mycelia/attestations start -- --verify-latest
-   ```
+   ```text
 
 **Investigation Steps:**
 1. Check recent transactions for anomalies
@@ -89,19 +93,19 @@ This playbook provides step-by-step procedures for responding to critical incide
    ```bash
    # Check redemption service
    curl -f http://localhost:3000/ops/status.json
-   ```
+   ```text
 
 2. **Review error logs**
    ```bash
    # Tail logs
    pnpm run ops:tail
-   ```
+   ```text
 
 3. **Check Bitcoin bridge**
    ```bash
    # Test bridge connectivity
    pnpm --filter @mycelia/btc-bridge start -- --test-connectivity
-   ```
+   ```text
 
 **Investigation Steps:**
 1. Check Bitcoin network status
@@ -127,19 +131,19 @@ This playbook provides step-by-step procedures for responding to critical incide
    ```bash
    # Run PoR diagnostics
    pnpm --filter @mycelia/proof-of-reserve start -- --check-status
-   ```
+   ```text
 
 2. **Verify SPV feed**
    ```bash
    # Check SPV connectivity
    pnpm --filter @mycelia/proof-of-reserve start -- --check-spv
-   ```
+   ```text
 
 3. **Fallback to static feed**
    ```bash
    # Enable static fallback
    export RESERVE_SATS=100000000000
-   ```
+   ```text
 
 **Investigation Steps:**
 1. Check Bitcoin node connectivity
@@ -165,19 +169,19 @@ This playbook provides step-by-step procedures for responding to critical incide
    ```bash
    # Disable all external access
    pnpm --filter @mycelia/feature-flags start -- --disable-all
-   ```
+   ```text
 
 2. **Rotate all keys**
    ```bash
    # Emergency key rotation
    pnpm --filter @mycelia/kms-local start -- --rotate-emergency
-   ```
+   ```text
 
 3. **Preserve evidence**
    ```bash
    # Export logs
    pnpm run ops:tail > incident-logs-$(date +%Y%m%d-%H%M%S).json
-   ```
+   ```text
 
 **Investigation Steps:**
 1. Analyze access logs
@@ -203,19 +207,19 @@ This playbook provides step-by-step procedures for responding to critical incide
    ```bash
    # Check SLO violations
    pnpm run ops:lint
-   ```
+   ```text
 
 2. **Monitor resource usage**
    ```bash
    # Check system metrics
    pnpm --filter @mycelia/observability start -- --metrics
-   ```
+   ```text
 
 3. **Scale resources**
    ```bash
    # Increase resource limits
    # (Implementation depends on deployment)
-   ```
+   ```text
 
 **Investigation Steps:**
 1. Analyze performance metrics
@@ -261,7 +265,7 @@ This playbook provides step-by-step procedures for responding to critical incide
 ### Communication Templates
 
 #### Initial Incident Notification
-```
+```text
 Subject: [P0/P1/P2/P3] Incident: [Brief Description]
 
 Incident Details:
@@ -272,27 +276,27 @@ Incident Details:
 - Status: [Investigating/Mitigating/Resolved]
 
 Next Update: [Time]
-```
+```text
 
 #### Status Update
-```
+```text
 Subject: [P0/P1/P2/P3] Incident Update: [Brief Description]
 
 Current Status: [Investigating/Mitigating/Resolved]
 Progress: [Description of actions taken]
 ETA: [Estimated resolution time]
 Next Update: [Time]
-```
+```text
 
 #### Resolution Notification
-```
+```text
 Subject: [P0/P1/P2/P3] Incident Resolved: [Brief Description]
 
 Resolution: [Description of fix]
 Root Cause: [Brief description]
 Prevention: [Steps to prevent recurrence]
 Post-Incident Review: [Scheduled time]
-```
+```text
 
 ## Recovery Procedures
 
@@ -301,38 +305,38 @@ Post-Incident Review: [Scheduled time]
    ```bash
    # Run full diagnostics
    pnpm run diagnose
-   ```
+   ```text
 
 2. **Check all services**
    ```bash
    # Verify service health
    curl -f http://localhost:3000/health
-   ```
+   ```text
 
 3. **Test critical paths**
    ```bash
    # Test redemption flow
    pnpm --filter @mycelia/redemption start -- --test-flow
-   ```
+   ```text
 
 ### Data Recovery
 1. **Verify data integrity**
    ```bash
    # Check database consistency
    pnpm --filter @mycelia/shared-kernel start -- --verify-data
-   ```
+   ```text
 
 2. **Restore from backup if needed**
    ```bash
    # Restore from latest backup
    # (Implementation depends on backup system)
-   ```
+   ```text
 
 3. **Verify transaction history**
    ```bash
    # Check transaction logs
    pnpm --filter @mycelia/observability start -- --verify-transactions
-   ```
+   ```text
 
 ## Post-Incident Procedures
 

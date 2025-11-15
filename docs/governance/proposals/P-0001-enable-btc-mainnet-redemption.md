@@ -1,3 +1,7 @@
+---
+title: P 0001 Enable Btc Mainnet Redemption
+---
+
 # Governance Proposal P-0001: Enable Bitcoin Mainnet Redemption
 
 ## Proposal Summary
@@ -30,7 +34,7 @@ Enable Bitcoin mainnet redemption functionality to allow BLOOM token holders to 
     "requires_governance": true
   }
 }
-```
+```text
 
 ### Technical Implementation
 1. **HTLC Deployment**: Deploy Hash Time Locked Contracts to Bitcoin mainnet
@@ -65,7 +69,7 @@ If critical issues are detected:
 ```bash
 # Emergency rollback command
 mycelia-launchctl pause redemption
-```
+```text
 
 ## Implementation Timeline
 

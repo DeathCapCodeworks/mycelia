@@ -78,7 +78,7 @@ interface NetworkConfig {
 ```typescript
 interface DNSConfig {
   type: DNSType;                       // DNS protocol type
-  servers: string[];                   // DNS server addresses
+  servers: strin\1\[];                   // DNS server addresses
   timeout: number;                     // DNS timeout (ms)
   retries: number;                     // Number of retries
   enableCache: boolean;                // Enable DNS caching
@@ -113,25 +113,25 @@ Enables or disables 0-RTT connections.
 **createConnection(url: string): Promise<string>**
 Creates a new network connection.
 
-**closeConnection(connectionId: string): Promise<void>**
+**closeConnection(connectionId: string): Promise&lt;void&gt;**
 Closes a network connection.
 
-**sendData(connectionId: string, data: ArrayBuffer): Promise<number>**
+**sendData(connectionId: string, data: ArrayBuffer): Promise&lt;number&gt;**
 Sends data over a connection.
 
-**receiveData(connectionId: string, size: number): Promise<ArrayBuffer>**
+**receiveData(connectionId: string, size: number): Promise&lt;ArrayBuffer&gt;**
 Receives data from a connection.
 
-**resolveDNS(hostname: string): Promise<string[]>**
+**resolveDNS(hostname: string): Promise&lt;string\\[]&gt;**
 Resolves a hostname to IP addresses.
 
 **getConnectionStats(connectionId: string): ConnectionStats | undefined**
 Gets statistics for a specific connection.
 
-**getAllConnectionStats(): ConnectionStats[]**
+**getAllConnectionStats(): ConnectionStat\1\[]**
 Gets statistics for all connections.
 
-**getHistoricalStats(): ConnectionStats[]**
+**getHistoricalStats(): ConnectionStat\1\[]**
 Gets historical connection statistics.
 
 **getAverageStats(): NetworkStats**
@@ -561,7 +561,7 @@ console.log('Average Network Stats:', {
 ```typescript
 class NetworkMonitor {
   private network: NetworkStack;
-  private metrics: NetworkStats[] = [];
+  private metrics: NetworkStat\1\[] = [];
 
   constructor(network: NetworkStack) {
     this.network = network;
@@ -729,7 +729,7 @@ class DNSPerformanceTest {
     await this.testDNSType('doq', testDomains);
   }
 
-  private async testDNSType(type: string, domains: string[]) {
+  private async testDNSType(type: string, domains: strin\1\[]) {
     const results = [];
 
     for (const domain of domains) {

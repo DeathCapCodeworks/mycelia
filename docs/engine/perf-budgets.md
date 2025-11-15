@@ -1,3 +1,7 @@
+---
+title: Perf Budgets
+---
+
 # Performance Budgets
 
 This document describes Mycelia's performance budget system and how to enforce performance constraints in CI/CD pipelines.
@@ -16,7 +20,7 @@ Performance budgets are defined in `release/mainnet/perf-budgets.json`:
   "docs_bundle_kb_max": 250,
   "tti_p95_ms_max": 1500
 }
-```
+```text
 
 ### Budget Targets
 
@@ -45,7 +49,7 @@ npx @mycelia/perf-budget check --tti-stats lighthouse-results.json
 
 # Allow failures in quarantine mode
 npx @mycelia/perf-budget check --quarantine
-```
+```text
 
 ### CI Integration
 
@@ -79,7 +83,7 @@ jobs:
       
       - name: Check performance budgets
         run: npx @mycelia/perf-budget check --bundle-stats dist/stats.json --tti-stats lighthouse-results.json
-```
+```text
 
 ## Bundle Analysis
 
@@ -96,7 +100,7 @@ module.exports = {
     })
   ]
 };
-```
+```text
 
 ### Vite Integration
 
@@ -116,7 +120,7 @@ export default defineConfig({
     }
   }
 });
-```
+```text
 
 ## TTI Measurement
 
@@ -135,14 +139,14 @@ module.exports = {
     }
   }
 };
-```
+```text
 
 ### Automated Testing
 
 ```bash
 # Run Lighthouse with custom config
 lighthouse http://localhost:3000 --config-path=lighthouse.config.js --output=json --output-path=lighthouse-results.json
-```
+```text
 
 ## Budget Enforcement
 
@@ -194,7 +198,7 @@ Set up continuous performance monitoring:
 
 # Weekly budget reviews
 0 9 * * 1 cd /path/to/mycelia && npm run perf-report
-```
+```text
 
 ### Alerting
 
@@ -210,7 +214,7 @@ alerts:
   - name: TTI Budget Exceeded
     condition: tti_p95 > tti_limit
     severity: critical
-```
+```text
 
 ## Best Practices
 
@@ -246,7 +250,7 @@ npx @mycelia/perf-budget check --verbose
 
 # Help
 npx @mycelia/perf-budget --help
-```
+```text
 
 ### Common Errors
 
@@ -274,7 +278,7 @@ Create custom budget configurations:
   "custom_tti_p95_ms_max": 2000,
   "custom_custom_metric_max": 100
 }
-```
+```text
 
 ### Threshold Adjustments
 
@@ -286,7 +290,7 @@ Adjust budgets based on application requirements:
   "docs_bundle_kb_max": 300,
   "tti_p95_ms_max": 1800
 }
-```
+```text
 
 ## Support
 

@@ -1,3 +1,7 @@
+---
+title: Webgpu Sr
+---
+
 # WebGPU Super-Resolution
 
 This document describes Mycelia's WebGPU super-resolution implementation for enhancing video quality using on-device AI acceleration.
@@ -39,7 +43,7 @@ const result = await sr.upscale(videoElement, {
 
 console.log('Processing method:', result.method);
 console.log('Processing time:', result.processingTimeMs);
-```
+```text
 
 ### Configuration Options
 
@@ -49,7 +53,7 @@ interface SuperResolutionOptions {
   quality: 'fast' | 'high';   // Quality vs speed tradeoff
   fallbackToWasm?: boolean;   // Enable WASM fallback
 }
-```
+```text
 
 ### Result Object
 
@@ -62,7 +66,7 @@ interface SuperResolutionResult {
   outputHeight: number;        // Enhanced video height
   error?: string;             // Error message if failed
 }
-```
+```text
 
 ## Capability Detection
 
@@ -82,7 +86,7 @@ console.log('WASM available:', wasmAvailable);
 // Get detailed capabilities
 const capabilities = sr.getCapabilities();
 console.log('Adapter info:', capabilities.adapterInfo);
-```
+```text
 
 ### Capability Object
 
@@ -93,7 +97,7 @@ interface WebGPUCapabilities {
   storageTextureSupport: boolean;       // Storage texture support
   adapterInfo?: GPUAdapterInfo;        // GPU adapter details
 }
-```
+```text
 
 ## Implementation Details
 
@@ -121,7 +125,7 @@ fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
     
     textureStore(outputTexture, coord, enhanced);
 }
-```
+```text
 
 ### WASM Implementation
 
@@ -147,7 +151,7 @@ extern "C" {
         return outputData;
     }
 }
-```
+```text
 
 ## Performance Considerations
 
@@ -219,7 +223,7 @@ const VideoEnhancer: React.FC = () => {
     </div>
   );
 };
-```
+```text
 
 ### Media Pipeline Integration
 
@@ -255,7 +259,7 @@ class EnhancedMediaPipeline extends MediaPipeline {
     this.srEnabled = enabled && sr.isWebGPUAvailable();
   }
 }
-```
+```text
 
 ## Feature Flags
 
@@ -269,7 +273,7 @@ const srEnabled = featureFlags.isFlagEnabled('engine_webgpu_sr');
 
 // Enable SR for specific users
 featureFlags.setFlag('engine_webgpu_sr', true, { userId: 'user123' });
-```
+```text
 
 ## Error Handling
 
@@ -282,7 +286,7 @@ if (!result.success && result.method === 'none') {
   console.error('No processing method available');
   // Fallback to standard video playback
 }
-```
+```text
 
 **WASM Fallback Failed:**
 ```typescript
@@ -291,7 +295,7 @@ if (!result.success) {
   console.error('WebGPU processing failed:', result.error);
   // Retry with WASM fallback
 }
-```
+```text
 
 ### Error Recovery
 
@@ -309,7 +313,7 @@ async function safeUpscale(videoElement: HTMLVideoElement, options: SuperResolut
     return { success: false, method: 'none', processingTimeMs: 0, outputWidth: 0, outputHeight: 0 };
   }
 }
-```
+```text
 
 ## Testing
 
@@ -333,7 +337,7 @@ describe('Super-Resolution', () => {
     expect(result.processingTimeMs).toBeGreaterThan(0);
   });
 });
-```
+```text
 
 ### Performance Tests
 
@@ -348,7 +352,7 @@ test('should meet performance targets', async () => {
   expect(processingTime).toBeLessThan(1000); // < 1 second
   expect(result.success).toBe(true);
 });
-```
+```text
 
 ## Browser Compatibility
 

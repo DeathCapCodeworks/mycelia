@@ -1,3 +1,7 @@
+---
+title: Org
+---
+
 # Organization Pilot Program
 
 This document outlines the Organization Pilot Program for testing Web4 features in organizational workflow environments.
@@ -70,13 +74,13 @@ const pilot = pilotKit.createOrgPilot({
   maxParticipants: 5,
   duration: 7 // 1 week for demo
 });
-```
+```text
 
 ### 2. Join Pilot
 ```javascript
 const participantId = `org_${Date.now()}`;
 const success = pilotKit.joinPilot(pilot.pilotId, participantId);
-```
+```text
 
 ### 3. Enable Features
 ```javascript
@@ -87,7 +91,7 @@ featureFlags.set('intent_bar_v1', true);
 
 // Enable Portable Applets
 featureFlags.set('applets_v1', true);
-```
+```text
 
 ## Testing Workflows
 
@@ -142,7 +146,7 @@ pilotKit.recordMetric({
     timestamp: Date.now()
   }
 });
-```
+```text
 
 ## Pilot Management
 
@@ -208,7 +212,7 @@ const report = pilotKit.generatePilotReport(pilot.pilotId);
 
 // Export CSV data
 console.log(report.csvExport);
-```
+```text
 
 ## Risk Management
 

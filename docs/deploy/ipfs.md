@@ -1,3 +1,7 @@
+---
+title: Ipfs
+---
+
 # IPFS Deployment
 
 Mycelia uses IPFS (InterPlanetary File System) for decentralized storage and content distribution. This document covers IPFS deployment, configuration, and integration with the Mycelia platform.
@@ -65,7 +69,7 @@ services:
     environment:
       - IPFS_PROFILE=server
     command: daemon --migrate=true --agent-version-suffix=docker
-```
+```text
 
 ### Kubernetes Deployment
 ```yaml
@@ -96,7 +100,7 @@ spec:
         env:
         - name: IPFS_PROFILE
           value: "server"
-```
+```text
 
 ### Bare Metal Deployment
 ```bash
@@ -115,7 +119,7 @@ ipfs config Addresses.Swarm /ip4/0.0.0.0/tcp/4001
 
 # Start IPFS daemon
 ipfs daemon
-```
+```text
 
 ## Configuration
 
@@ -154,7 +158,7 @@ ipfs daemon
     }
   }
 }
-```
+```text
 
 ### Environment Variables
 ```bash
@@ -174,7 +178,7 @@ IPFS_GC_PERIOD=1h
 IPFS_BOOTSTRAP_NODES=/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN
 IPFS_MDNS_ENABLED=true
 IPFS_MDNS_INTERVAL=10
-```
+```text
 
 ## Content Management
 
@@ -188,7 +192,7 @@ ipfs add -r directory/
 
 # Add with specific options
 ipfs add --pin=false --progress file.txt
-```
+```text
 
 ### Pinning Content
 ```bash
@@ -203,7 +207,7 @@ ipfs pin ls
 
 # Remove pin
 ipfs pin rm <cid>
-```
+```text
 
 ### Remote Pinning
 ```bash
@@ -215,7 +219,7 @@ ipfs pin remote add --service=myservice <cid>
 
 # List remote pins
 ipfs pin remote ls --service=myservice
-```
+```text
 
 ## API Integration
 
@@ -225,22 +229,22 @@ The IPFS API provides REST endpoints:
 #### Add Content
 ```bash
 curl -X POST -F file=@file.txt http://localhost:5001/api/v0/add
-```
+```text
 
 #### Get Content
 ```bash
 curl http://localhost:5001/api/v0/cat?arg=<cid>
-```
+```text
 
 #### Pin Content
 ```bash
 curl -X POST http://localhost:5001/api/v0/pin/add?arg=<cid>
-```
+```text
 
 #### List Pins
 ```bash
 curl http://localhost:5001/api/v0/pin/ls
-```
+```text
 
 ### JavaScript API
 ```javascript
@@ -262,7 +266,7 @@ console.log('Content:', content);
 
 // Pin content
 await ipfs.pin.add(result.cid);
-```
+```text
 
 ## Gateway Configuration
 
@@ -275,7 +279,7 @@ curl http://localhost:8080/ipfs/<cid>
 
 # Access with custom headers
 curl -H "Accept: application/json" http://localhost:8080/ipfs/<cid>
-```
+```text
 
 ### Gateway Configuration
 ```json
@@ -291,7 +295,7 @@ curl -H "Accept: application/json" http://localhost:8080/ipfs/<cid>
     "PathPrefixes": ["/ipfs", "/ipns"]
   }
 }
-```
+```text
 
 ## Monitoring and Maintenance
 
@@ -308,7 +312,7 @@ ipfs swarm peers
 
 # Check repository stats
 ipfs repo stat
-```
+```text
 
 ### Garbage Collection
 ```bash
@@ -320,7 +324,7 @@ ipfs repo gc --verbose
 
 # Check garbage collection status
 ipfs repo stat
-```
+```text
 
 ### Performance Monitoring
 ```bash
@@ -332,7 +336,7 @@ ipfs repo stat
 
 # Monitor connected peers
 ipfs swarm peers
-```
+```text
 
 ## Security Considerations
 
@@ -369,7 +373,7 @@ const privateEnvelope = await envelope.createPrivateEnvelope(files, meta);
 
 // Publish envelope to IPFS
 const result = await envelope.publish(privateEnvelope);
-```
+```text
 
 ### Public Directory
 IPFS integration with public directory:
@@ -381,7 +385,7 @@ const directory = new PublicDirectory();
 
 // Index envelope from IPFS
 await directory.indexEnvelope(envelopeCid, envelopeMeta, ownerDid);
-```
+```text
 
 ### Content Publishing
 IPFS content publishing script:
@@ -425,7 +429,7 @@ async function publishToIPFS() {
   
   console.log('Manifest CID:', manifestResult.cid.toString());
 }
-```
+```text
 
 ## Troubleshooting
 
@@ -462,7 +466,7 @@ ipfs repo stat
 
 # Check swarm status
 ipfs swarm peers
-```
+```text
 
 ## Best Practices
 

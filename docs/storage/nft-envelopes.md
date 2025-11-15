@@ -1,3 +1,7 @@
+---
+title: Nft Envelopes
+---
+
 # NFT Envelopes
 
 NFT Envelopes are a privacy-first system for packaging digital assets with metadata, encryption, and indexing controls. They provide a foundation for creating, managing, and sharing digital content while maintaining user privacy and control.
@@ -42,7 +46,7 @@ interface EnvelopeMeta {
   versionCid?: string | null; // CID of previous version, if any
   indexable: boolean; // Can be listed in public directory
 }
-```
+```text
 
 #### Envelope
 ```typescript
@@ -53,7 +57,7 @@ interface Envelope {
   keyWraps?: KeyWrap[]; // Only present if encrypted
   envelopeCid?: string; // CID of the envelope itself
 }
-```
+```text
 
 #### IndexingPermit
 ```typescript
@@ -62,7 +66,7 @@ interface IndexingPermit {
   indexable: boolean;
   signature: string; // Signed by the owner's DID
 }
-```
+```text
 
 ### Encryption Model
 
@@ -104,27 +108,27 @@ const meta = {
 };
 
 const privateEnvelope = await envelope.createPrivateEnvelope(files, meta);
-```
+```text
 
 ### Creating a Public Envelope
 
 ```typescript
 const publicEnvelope = await envelope.createPublicEnvelope(files, meta);
-```
+```text
 
 ### Publishing an Envelope
 
 ```typescript
 const result = await envelope.publish(privateEnvelope);
 // Returns: { contentCids: string[], indexingPermit?: IndexingPermit }
-```
+```text
 
 ### Making an Envelope Private
 
 ```typescript
 const disclaimer = await envelope.makePrivate(envelopeCid);
 // Returns a disclaimer about persistence of copies
-```
+```text
 
 ## Public Directory Integration
 
@@ -200,7 +204,7 @@ import { observability } from '@mycelia/observability';
 
 // Enable debug logging
 observability.setLogLevel('debug');
-```
+```text
 
 ## Future Enhancements
 
