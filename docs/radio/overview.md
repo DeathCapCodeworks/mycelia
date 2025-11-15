@@ -1,3 +1,7 @@
+---
+title: Overview
+---
+
 # Radio v0
 
 Radio v0 is a WebRTC-based streaming platform that enables real-time audio and video distribution with rights management and provisional payouts. It provides low-latency streaming capabilities while respecting content licensing and implementing a proof-of-distribution system.
@@ -54,7 +58,7 @@ interface RadioRoom {
   listeners: WebSocket[];
   createdAt: number;
 }
-```
+```text
 
 #### DistributionReceipt
 ```typescript
@@ -67,7 +71,7 @@ interface DistributionReceipt {
   }[];
   timestamp: number;
 }
-```
+```text
 
 ## WebRTC SFU Implementation
 
@@ -174,7 +178,7 @@ Create a new radio room.
   "rights": "Original",
   "ownerDid": "did:mycelia:user123"
 }
-```
+```text
 
 **Response:**
 ```json
@@ -183,7 +187,7 @@ Create a new radio room.
   "name": "My Radio Room",
   "rights": "Original"
 }
-```
+```text
 
 #### GET /room/:roomId
 Get room information.
@@ -206,7 +210,7 @@ Get room information.
   ],
   "createdAt": 1640995200000
 }
-```
+```text
 
 ### WebSocket Events
 
@@ -217,7 +221,7 @@ Get room information.
   "roomId": "room-abc123",
   "did": "did:mycelia:user123"
 }
-```
+```text
 
 #### Add Track to Queue
 ```json
@@ -227,7 +231,7 @@ Get room information.
   "cid": "bafybeih...",
   "did": "did:mycelia:user123"
 }
-```
+```text
 
 #### WebRTC Signaling
 ```json
@@ -236,7 +240,7 @@ Get room information.
   "kind": "audio",
   "rtpParameters": { ... }
 }
-```
+```text
 
 ## Performance Optimization
 
@@ -288,7 +292,7 @@ services:
       - NODE_ENV=production
       - EXPRESS_PORT=3002
       - WS_PORT=3003
-```
+```text
 
 ### Environment Variables
 - `EXPRESS_PORT`: HTTP API port (default: 3002)
@@ -368,7 +372,7 @@ Enable debug logging for troubleshooting:
 
 ```bash
 DEBUG=radio-sfu:* npm start
-```
+```text
 
 ## Future Enhancements
 

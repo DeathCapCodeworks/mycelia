@@ -1,3 +1,7 @@
+---
+title: P 0002 Min Gas Price
+---
+
 # Governance Proposal P-0002: Adjust Minimum Gas Price
 
 ## Proposal Summary
@@ -31,7 +35,7 @@ Adjust the minimum gas price parameter to optimize network performance and preve
     "adjustable_via_governance": true
   }
 }
-```
+```text
 
 ### Technical Implementation
 1. **Genesis Update**: Update genesis configuration with new min gas price
@@ -80,7 +84,7 @@ If negative impact is detected:
 ```bash
 # Emergency parameter adjustment
 mycelia-governance adjust-parameter minGasPrice 0
-```
+```text
 
 ## Implementation Timeline
 

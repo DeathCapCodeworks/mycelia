@@ -1,3 +1,7 @@
+---
+title: Emergency Controls
+---
+
 # Emergency Controls
 
 ## Overview
@@ -34,7 +38,7 @@ mycelia-launchctl pause redemption
 
 # Resume redemption (requires governance token)
 mycelia-launchctl resume redemption
-```
+```text
 
 #### Verification
 ```bash
@@ -43,13 +47,13 @@ mycelia-flags status
 
 # Verify system response
 curl -f http://localhost:3000/api/feature-flags/btc_mainnet_redemption
-```
+```text
 
 #### Rollback
 ```bash
 # Resume redemption
 mycelia-launchctl resume redemption
-```
+```text
 
 #### Who Can Use
 - **Primary**: Operations team
@@ -68,7 +72,7 @@ mycelia-launchctl slow rewards
 
 # Disable slow mode
 mycelia-flags disable rewards_slow_mode
-```
+```text
 
 #### Verification
 ```bash
@@ -77,13 +81,13 @@ mycelia-flags status
 
 # Monitor rewards processing
 pnpm run ops:tail | grep "rewards"
-```
+```text
 
 #### Rollback
 ```bash
 # Disable slow mode
 mycelia-flags disable rewards_slow_mode
-```
+```text
 
 #### Who Can Use
 - **Primary**: Operations team
@@ -102,7 +106,7 @@ mycelia-launchctl cap oracle 0
 
 # Set specific limit
 mycelia-launchctl cap oracle 100
-```
+```text
 
 #### Verification
 ```bash
@@ -111,13 +115,13 @@ mycelia-flags status
 
 # Monitor Oracle usage
 pnpm run ops:tail | grep "oracle"
-```
+```text
 
 #### Rollback
 ```bash
 # Remove cap
 mycelia-launchctl cap oracle 1000
-```
+```text
 
 #### Who Can Use
 - **Primary**: Operations team
@@ -144,7 +148,7 @@ mycelia-launchctl cap oracle 1000
    
    # Cap Oracle if resource-related
    mycelia-launchctl cap oracle 0
-   ```
+   ```text
 
 3. **Notify Stakeholders**
    - Alert incident response team
@@ -174,7 +178,7 @@ mycelia-launchctl cap oracle 1000
    mycelia-launchctl resume redemption
    mycelia-flags disable rewards_slow_mode
    mycelia-launchctl cap oracle 1000
-   ```
+   ```text
 
 ### 2. Performance Incident Response
 
@@ -182,18 +186,18 @@ mycelia-launchctl cap oracle 1000
 1. **Enable Slow Mode**
    ```bash
    mycelia-launchctl slow rewards
-   ```
+   ```text
 
 2. **Cap Resource Usage**
    ```bash
    mycelia-launchctl cap oracle 100
-   ```
+   ```text
 
 3. **Monitor System**
    ```bash
    pnpm run ops:tail
    pnpm run ops:lint
-   ```
+   ```text
 
 #### Investigation Phase
 1. **Analyze Performance Metrics**
@@ -215,7 +219,7 @@ mycelia-launchctl cap oracle 1000
    
    # Disable slow mode
    mycelia-flags disable rewards_slow_mode
-   ```
+   ```text
 
 ### 3. Governance Emergency
 
@@ -223,7 +227,7 @@ mycelia-launchctl cap oracle 1000
 1. **Pause Critical Operations**
    ```bash
    mycelia-launchctl pause redemption
-   ```
+   ```text
 
 2. **Notify Governance**
    - Alert governance committee
@@ -259,7 +263,7 @@ pnpm run ops:lint
 
 # Verify feature flags
 mycelia-flags status
-```
+```text
 
 ### 2. Alert Conditions
 - **SLO Violations**: Critical SLO breaches

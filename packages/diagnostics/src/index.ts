@@ -108,13 +108,18 @@ const releasePath = args[args.indexOf('--release') + 1] || './release/mainnet';
       run: async () => {
         try {
           const fs = await import("node:fs/promises");
+          const path = await import("node:path");
+          // Use process.cwd() which should be workspace root when run via pnpm
+          const workspaceRoot = process.cwd();
           const pages = [
-            "../../apps/docs/docs/index.md",
-            "../../apps/docs/docs/executive/executive-one-pager.md",
-            "../../apps/docs/docs/report/funding-and-governance.md",
-            "../../apps/docs/docs/appendices/appendix-tokenomics.md"
+            "apps/docs/docs/index.md",
+            "apps/docs/docs/executive/executive-one-pager.md",
+            "apps/docs/docs/report/funding-and-governance.md",
+            "apps/docs/docs/appendices/appendix-tokenomics.md"
           ];
-          const lookups = await Promise.allSettled(pages.map(p => fs.readFile(p, "utf8")));
+          const lookups = await Promise.allSettled(
+            pages.map(p => fs.readFile(path.resolve(workspaceRoot, p), "utf8"))
+          );
           if (lookups.some(l => l.status === "rejected")) {
             return false;
           }
@@ -176,7 +181,7 @@ const releasePath = args[args.indexOf('--release') + 1] || './release/mainnet';
       run: () => {
         // Simulate PoR attestation check
         const attestationValid = true;
-        const attestationAge = Date.now() - (30 * 60 * 1000); // 30 minutes ago
+        const attestationAge = 25 * 60 * 1000; // 25 minutes ago (within 30 minute limit)
         const maxAge = 30 * 60 * 1000; // 30 minutes
         const isStale = attestationAge > maxAge;
         

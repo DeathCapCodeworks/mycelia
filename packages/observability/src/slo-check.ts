@@ -205,7 +205,7 @@ export class SLOEvaluator {
       case 'software_decode_fallback':
         return metrics.hardware_decode_available === false;
       case 'mid_tier_cpu':
-        return metrics.cpu_tier === 'mid';
+        return typeof metrics.cpu_tier === 'string' && metrics.cpu_tier === 'mid';
       case 'hw_encode_available':
         return metrics.hardware_encode_available === true;
       default:

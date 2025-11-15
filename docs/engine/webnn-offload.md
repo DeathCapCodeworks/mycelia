@@ -1,3 +1,7 @@
+---
+title: Webnn Offload
+---
+
 # WebNN Model Offload
 
 This document describes Mycelia's WebNN model offload implementation for running AI models locally on user devices.
@@ -42,7 +46,7 @@ const result = await offload.embed(texts, {
 console.log('Method used:', result.method);
 console.log('Processing time:', result.processingTimeMs);
 console.log('Embeddings:', result.embeddings);
-```
+```text
 
 ### Configuration Options
 
@@ -53,7 +57,7 @@ interface EmbeddingOptions {
   batchSize?: number;        // Batch processing size
   cpuOnly?: boolean;         // Force CPU processing
 }
-```
+```text
 
 ### Result Object
 
@@ -65,7 +69,7 @@ interface EmbeddingResult {
   modelUsed: string;          // Model name used
   error?: string;             // Error message if failed
 }
-```
+```text
 
 ## Capability Detection
 
@@ -87,7 +91,7 @@ console.log('Supported ops:', capabilities.supportedOps);
 const modelInfo = offload.getModelInfo();
 console.log('Model name:', modelInfo?.name);
 console.log('Model size:', modelInfo?.size);
-```
+```text
 
 ### Capability Object
 
@@ -99,7 +103,7 @@ interface WebNNCapabilities {
   vendor: string;                        // Hardware vendor
   architecture: string;                  // Hardware architecture
 }
-```
+```text
 
 ### Model Information
 
@@ -111,7 +115,7 @@ interface ModelInfo {
   outputShape: number[];                 // Output tensor shape
   quantization: 'fp32' | 'fp16' | 'int8' | 'int4';  // Quantization type
 }
-```
+```text
 
 ## Implementation Details
 
@@ -130,7 +134,7 @@ async function runWebNNInference(inputIds: MLTensor): Promise<MLTensor> {
   
   return outputs['embeddings'];
 }
-```
+```text
 
 ### Text Tokenization
 
@@ -145,7 +149,7 @@ function tokenizeText(text: string): number[] {
     return getTokenId(word);
   });
 }
-```
+```text
 
 ### Embedding Normalization
 
@@ -159,7 +163,7 @@ function normalizeEmbedding(embedding: Float32Array): Float32Array {
   // Normalize to unit vector
   return embedding.map(val => val / norm);
 }
-```
+```text
 
 ## Privacy Features
 
@@ -179,7 +183,7 @@ console.log('CPU-only mode:', isCpuOnly);
 
 // Process with CPU-only constraint
 const result = await offload.embed(texts, { cpuOnly: true });
-```
+```text
 
 ### Local Processing Benefits
 
@@ -266,7 +270,7 @@ const EmbeddingGenerator: React.FC = () => {
     </div>
   );
 };
-```
+```text
 
 ### Oracle Integration
 
@@ -321,7 +325,7 @@ class OracleService {
     return dotProduct; // Assuming normalized embeddings
   }
 }
-```
+```text
 
 ## Feature Flags
 
@@ -335,7 +339,7 @@ const offloadEnabled = featureFlags.isFlagEnabled('oracle_webnn_offload');
 
 // Enable offload for specific users
 featureFlags.setFlag('oracle_webnn_offload', true, { userId: 'user123' });
-```
+```text
 
 ## Error Handling
 
@@ -347,7 +351,7 @@ const result = await offload.embed(texts, options);
 if (result.method === 'fallback') {
   console.warn('WebNN not available, using remote API');
 }
-```
+```text
 
 **Model Loading Failed:**
 ```typescript
@@ -356,7 +360,7 @@ if (!modelInfo) {
   console.error('Model failed to load');
   // Fallback to remote API
 }
-```
+```text
 
 ### Error Recovery
 
@@ -374,7 +378,7 @@ async function safeEmbed(texts: string[], options: EmbeddingOptions) {
     return { embeddings: [], method: 'fallback', processingTimeMs: 0, modelUsed: 'none' };
   }
 }
-```
+```text
 
 ## Testing
 
@@ -405,7 +409,7 @@ describe('WebNN Offload', () => {
     expect(capabilities.deviceType).toBe('cpu');
   });
 });
-```
+```text
 
 ### Performance Tests
 
@@ -420,7 +424,7 @@ test('should meet performance targets', async () => {
   expect(processingTime).toBeLessThan(5000); // < 5 seconds
   expect(result.success).toBe(true);
 });
-```
+```text
 
 ## Browser Compatibility
 

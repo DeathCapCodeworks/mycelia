@@ -1,3 +1,7 @@
+---
+title: Presence
+---
+
 # Presence v0
 
 Presence v0 is an opt-in, ephemeral presence sharing system that allows users to see how many people are currently active on a website or application. It prioritizes privacy by using ephemeral DIDs, origin-scoped presence, and providing only aggregate counts rather than individual user lists.
@@ -25,7 +29,7 @@ class PresenceManager {
   toggleGhostMode(enable: boolean): void
   isGhostModeEnabled(): boolean
 }
-```
+```text
 
 #### libp2p Integration
 Uses libp2p pubsub for decentralized presence communication:
@@ -50,7 +54,7 @@ interface PresenceOptions {
   ephemeralDidDurationMs?: number; // How often to rotate DID, default 5 min
   ghostMode?: boolean; // Hard off switch for presence
 }
-```
+```text
 
 #### PresenceUser
 ```typescript
@@ -59,7 +63,7 @@ interface PresenceUser {
   joinedAt: number;
   lastSeen: number;
 }
-```
+```text
 
 ## Privacy Design
 
@@ -109,7 +113,7 @@ presence.toggleGhostMode(true);
 if (presence.isGhostModeEnabled()) {
   console.log('Ghost Mode is active - all presence disabled');
 }
-```
+```text
 
 ## Technical Implementation
 
@@ -119,7 +123,7 @@ The system uses libp2p pubsub for decentralized communication:
 #### Topic Derivation
 ```typescript
 const pubsubTopic = `mycelia-presence-${btoa(origin)}`;
-```
+```text
 
 #### Heartbeat System
 ```typescript
@@ -133,7 +137,7 @@ setInterval(() => {
     mockLibp2p.pubsub.publish(this.pubsubTopic, new TextEncoder().encode(message));
   }
 }, 10000);
-```
+```text
 
 #### Message Processing
 ```typescript
@@ -154,7 +158,7 @@ private handlePubsubMessage = (message: { topic: string; data: Uint8Array }) => 
     }
   }
 };
-```
+```text
 
 ### DID Rotation
 Ephemeral DIDs are rotated regularly:
@@ -168,7 +172,7 @@ private rotateDid(): void {
     origin: this.currentOrigin 
   });
 }
-```
+```text
 
 ### Stale Presence Cleanup
 The system automatically cleans up stale presence:
@@ -183,7 +187,7 @@ private cleanupStalePresence(): void {
     }
   }
 }
-```
+```text
 
 ## API Usage
 
@@ -199,20 +203,20 @@ await presence.joinPresence({
   ephemeralDidDurationMs: 5 * 60 * 1000, // 5 minutes
   ghostMode: false
 });
-```
+```text
 
 #### Leave Presence
 ```typescript
 // Leave current presence
 presence.leavePresence();
-```
+```text
 
 #### Get Presence Count
 ```typescript
 // Get count of users present
 const count = presence.listCount();
 console.log(`${count} users present`);
-```
+```text
 
 #### Ghost Mode Control
 ```typescript
@@ -224,7 +228,7 @@ presence.toggleGhostMode(false);
 
 // Check Ghost Mode status
 const isGhostMode = presence.isGhostModeEnabled();
-```
+```text
 
 ### Event Handling
 The system emits events for presence changes:
@@ -242,7 +246,7 @@ presence.on('presenceLeft', (origin, did) => {
 presence.on('presenceCountChanged', (count) => {
   console.log(`Presence count changed: ${count}`);
 });
-```
+```text
 
 ## UI Integration
 
@@ -257,7 +261,7 @@ The Navigator displays a presence indicator in the header:
     <span className="presence-hint">Click to manage</span>
   </div>
 )}
-```
+```text
 
 ### Room Picker
 Clicking the presence indicator opens a room picker:
@@ -272,7 +276,7 @@ const handlePresenceClick = () => {
     setShowOptInPrompt(true);
   }
 };
-```
+```text
 
 ### Privacy Controls
 Users can manage their privacy settings:
@@ -296,7 +300,7 @@ const PrivacyControls = () => (
     </div>
   </div>
 );
-```
+```text
 
 ## Security Considerations
 
@@ -333,7 +337,7 @@ if (featureFlags.isFlagEnabled('presence_v0')) {
 if (featureFlags.isFlagEnabled('presence_ghost_mode_hard_off')) {
   // Ghost Mode is active
 }
-```
+```text
 
 ### Environment Configuration
 ```typescript
@@ -343,7 +347,7 @@ const config = {
   staleTimeout: process.env.PRESENCE_STALE_TIMEOUT || 30000,
   ghostModeDefault: process.env.PRESENCE_GHOST_MODE_DEFAULT || false
 };
-```
+```text
 
 ## Monitoring and Observability
 
@@ -373,7 +377,7 @@ observability.logEvent('presence_did_rotated', {
   newDid: this.currentDid, 
   origin: this.currentOrigin 
 });
-```
+```text
 
 ### Health Checks
 The system includes health checks:
@@ -430,7 +434,7 @@ Enable debug logging for troubleshooting:
 
 ```bash
 DEBUG=presence:* npm start
-```
+```text
 
 ## Future Enhancements
 

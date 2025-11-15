@@ -1,3 +1,7 @@
+---
+title: Provider
+---
+
 # EVM Provider
 
 The EVM Provider package provides a comprehensive Ethereum-compatible blockchain provider that implements the EIP-1193 standard while adding Mycelia-specific features.
@@ -31,7 +35,7 @@ console.log('Current block:', blockNumber);
 // Get account balance
 const balance = await provider.getBalance('0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6');
 console.log('Balance:', balance);
-```
+```text
 
 ## EIP-1193 Compatibility
 
@@ -56,7 +60,7 @@ const txHash = await window.ethereum.request({
     data: '0x...'
   }]
 });
-```
+```text
 
 ## Network Management
 
@@ -75,7 +79,7 @@ console.log('Network details:', {
   blockExplorerUrl: networkInfo.blockExplorerUrl,
   isTestnet: networkInfo.isTestnet
 });
-```
+```text
 
 ### Adding Custom Networks
 
@@ -97,7 +101,7 @@ await provider.addChain({
 
 // Switch to the new network
 await provider.switchChain('0x89');
-```
+```text
 
 ### Network Switching
 
@@ -110,7 +114,7 @@ await provider.switchChain('0xaa36a7');
 
 // Switch to Polygon
 await provider.switchChain('0x89');
-```
+```text
 
 ## Account Management
 
@@ -124,7 +128,7 @@ console.log('Connected accounts:', accounts);
 // Request account access
 const newAccounts = await provider.requestAccounts();
 console.log('New accounts:', newAccounts);
-```
+```text
 
 ### Account Information
 
@@ -138,7 +142,7 @@ const historicalBalance = await provider.getBalance(
   '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
   '0x123456' // Block number
 );
-```
+```text
 
 ## Transaction Management
 
@@ -154,7 +158,7 @@ const txHash = await provider.sendTransaction({
 });
 
 console.log('Transaction hash:', txHash);
-```
+```text
 
 ### Transaction Receipts
 
@@ -170,7 +174,7 @@ if (receipt) {
     logs: receipt.logs
   });
 }
-```
+```text
 
 ### Gas Estimation
 
@@ -183,7 +187,7 @@ const gasEstimate = await provider.estimateGas({
 });
 
 console.log('Estimated gas:', gasEstimate);
-```
+```text
 
 ## Smart Contract Interactions
 
@@ -197,7 +201,7 @@ const result = await provider.call({
 });
 
 console.log('Call result:', result);
-```
+```text
 
 ### Contract Events
 
@@ -210,7 +214,7 @@ provider.on('Transfer', (event) => {
     value: event.args.value
   });
 });
-```
+```text
 
 ## BLOOM Token Integration
 
@@ -233,7 +237,7 @@ console.log('BLOOM balance:', bloomBalance.toString());
 // Get BLOOM balance in BTC equivalent
 const btcValue = await myceliaProvider.getBloomBalanceInBtc('0x...');
 console.log('BTC equivalent:', btcValue);
-```
+```text
 
 ### Gas Price in BLOOM
 
@@ -241,7 +245,7 @@ console.log('BTC equivalent:', btcValue);
 // Get current gas price in BLOOM tokens
 const gasPriceInBloom = await myceliaProvider.getGasPriceInBloom();
 console.log('Gas price in BLOOM:', gasPriceInBloom.toString());
-```
+```text
 
 ## Error Handling
 
@@ -261,7 +265,7 @@ try {
     console.error('Unexpected error:', error);
   }
 }
-```
+```text
 
 ### Retry Logic
 
@@ -279,7 +283,7 @@ async function getBalanceWithRetry(address: string, maxRetries = 3): Promise<str
   }
   throw new Error('Max retries exceeded');
 }
-```
+```text
 
 ## Configuration
 
@@ -300,7 +304,7 @@ const customProvider = new EVMProvider({
   },
   blockExplorerUrl: 'https://etherscan.io'
 });
-```
+```text
 
 ### Feature Flags
 
@@ -316,7 +320,7 @@ if (flags.isEnabled('evm_provider')) {
 } else {
   console.log('EVM provider is disabled');
 }
-```
+```text
 
 ## Monitoring and Observability
 
@@ -331,7 +335,7 @@ All provider operations are automatically logged:
 // - evm_transaction_sent
 // - evm_transaction_confirmed
 // - evm_call_executed
-```
+```text
 
 ### Custom Monitoring
 
@@ -345,7 +349,7 @@ observability.logEvent('custom_provider_operation', {
   balance: balance.toString(),
   network: networkInfo.name
 });
-```
+```text
 
 ## Performance Optimization
 
@@ -359,7 +363,7 @@ The provider automatically manages connection pooling for optimal performance:
 // - Request batching
 // - Rate limiting
 // - Error recovery
-```
+```text
 
 ### Caching
 
@@ -369,7 +373,7 @@ const cachedBalance = await provider.getBalance('0x...', 'latest', {
   cache: true,
   ttl: 30000 // 30 seconds
 });
-```
+```text
 
 ## Security Considerations
 
@@ -387,7 +391,7 @@ const isValidNetwork = await provider.validateNetwork(chainId);
 if (!isValidNetwork) {
   throw new Error('Invalid or unsupported network');
 }
-```
+```text
 
 ### Transaction Security
 
@@ -402,7 +406,7 @@ const isValidTx = await provider.validateTransaction({
 if (!isValidTx) {
   throw new Error('Invalid transaction parameters');
 }
-```
+```text
 
 ## Troubleshooting
 
@@ -414,7 +418,7 @@ if (!isValidTx) {
 if (!provider.isInitialized) {
   await provider.initialize();
 }
-```
+```text
 
 **Network connection failed**
 ```typescript
@@ -423,7 +427,7 @@ const isConnected = await provider.isConnected();
 if (!isConnected) {
   console.log('Network connection lost');
 }
-```
+```text
 
 **Transaction stuck**
 ```typescript
@@ -434,7 +438,7 @@ if (tx && tx.blockNumber) {
 } else {
   console.log('Transaction still pending');
 }
-```
+```text
 
 ### Debug Mode
 
@@ -446,7 +450,7 @@ process.env.DEBUG = 'mycelia:evm:provider';
 
 // Or enable specific modules
 process.env.DEBUG = 'mycelia:evm:provider:network,mycelia:evm:provider:transaction';
-```
+```text
 
 ## API Reference
 

@@ -1,3 +1,7 @@
+---
+title: Tutorials
+---
+
 # Mycelia Tutorials
 
 This document provides step-by-step tutorials for common Mycelia development tasks.
@@ -30,7 +34,7 @@ pnpm add @mycelia/developer-sdk @mycelia/tokenomics
 pnpm add @mycelia/evm-compat @mycelia/solana-compat
 pnpm add @mycelia/bridge-infrastructure @mycelia/wallet-integration
 pnpm add @mycelia/mining-app @mycelia/bloom-contracts
-```
+```text
 
 ### Basic Setup
 
@@ -63,7 +67,7 @@ console.log(`BLOOM Balance: ${balance}`);
 const sats = bloomToSats(balance);
 const btc = Number(sats) / 100_000_000;
 console.log(`BTC Equivalent: ${btc} BTC`);
-```
+```text
 
 ## BLOOM Token Operations
 
@@ -86,7 +90,7 @@ console.log(`BTC Equivalent: ${btcEquivalent} BTC`);
 // Send BLOOM tokens
 const txHash = await wallet.sendBloom(recipientAddress, amount);
 console.log(`Transaction: ${txHash}`);
-```
+```text
 
 ### Peg Enforcement
 
@@ -105,7 +109,7 @@ if (canMintTokens) {
 } else {
   throw new Error('Minting would break peg');
 }
-```
+```text
 
 ### Supply Management
 
@@ -123,7 +127,7 @@ supplyLedger.recordBurn(500000000000000000n); // 0.5 BLOOM
 // Get current supply
 const currentSupply = supplyLedger.currentSupply();
 console.log(`Current Supply: ${currentSupply} BLOOM`);
-```
+```text
 
 ## Cross-Chain Bridge
 
@@ -155,7 +159,7 @@ const bridge = BridgeFactory.createBridge({
     apiKey: 'your-api-key'
   }
 });
-```
+```text
 
 ### Cross-Chain Transfer
 
@@ -176,7 +180,7 @@ console.log('Bridge Transaction:', {
   status: transaction.status,
   amount: transaction.amount.toString()
 });
-```
+```text
 
 ### Transaction Monitoring
 
@@ -196,7 +200,7 @@ console.log('Bridge Stats:', {
   totalVolume: stats.totalVolume.toString(),
   completedTransactions: stats.completedTransactions
 });
-```
+```text
 
 ### Fee Estimation
 
@@ -213,7 +217,7 @@ console.log('Bridge Fees:', {
   totalFee: fees.totalFee.toString(),
   estimatedTime: `${fees.estimatedTime}s`
 });
-```
+```text
 
 ## Mining Application
 
@@ -245,7 +249,7 @@ const miningApp = new MiningApplication(
 );
 
 await miningApp.initialize();
-```
+```text
 
 ### Mining Session
 
@@ -269,7 +273,7 @@ console.log('Contribution processed:', {
   cid: result.cid,
   rewards: result.rewards.toString()
 });
-```
+```text
 
 ### Mining Status
 
@@ -285,7 +289,7 @@ console.log('Mining Status:', {
 // Stop mining session
 await miningApp.stopMiningSession(session.id);
 console.log('Mining session completed');
-```
+```text
 
 ### Redemption
 
@@ -302,7 +306,7 @@ console.log('Redemption Intent:', {
 // Complete redemption
 const success = await miningApp.completeRedemption(intent.id);
 console.log('Redemption completed:', success);
-```
+```text
 
 ## Wallet Integration
 
@@ -324,7 +328,7 @@ console.log('BLOOM Balance:', balance);
 // Send BLOOM tokens
 const txHash = await evmManager.sendBloom(recipientAddress, amount);
 console.log('Transaction:', txHash);
-```
+```text
 
 ### Solana Wallet
 
@@ -344,7 +348,7 @@ console.log('BLOOM Balance:', balance);
 // Send BLOOM tokens
 const txHash = await solanaManager.sendBloom(recipientPublicKey, amount);
 console.log('Transaction:', txHash);
-```
+```text
 
 ### Cross-Chain Wallet
 
@@ -366,7 +370,7 @@ console.log(`Total BLOOM Balance: ${totalBalance}`);
 // Get BTC equivalent
 const totalBtc = await crossChainManager.getTotalBloomBalanceInBtc();
 console.log(`Total BTC Equivalent: ${totalBtc} BTC`);
-```
+```text
 
 ## React Integration
 
@@ -417,7 +421,7 @@ function WalletComponent() {
     </div>
   );
 }
-```
+```text
 
 ### Cross-Chain Dashboard
 
@@ -484,7 +488,7 @@ function CrossChainDashboard() {
     </div>
   );
 }
-```
+```text
 
 ### Wallet Components
 
@@ -516,7 +520,7 @@ function App() {
     </div>
   );
 }
-```
+```text
 
 ## Best Practices
 
@@ -551,7 +555,7 @@ try {
     console.error('Unexpected error:', error);
   }
 }
-```
+```text
 
 ### Testing
 
@@ -571,7 +575,7 @@ describe('Mycelia SDK', () => {
     expect(wallet).toBeDefined();
   });
 });
-```
+```text
 
 ---
 

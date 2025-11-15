@@ -1,3 +1,7 @@
+---
+title: Chaos Week1
+---
+
 # Week One Chaos Drill
 
 ## Overview
@@ -46,7 +50,7 @@ The Week One Chaos Drill is a comprehensive test of the Mycelia system's resilie
 1. **Enable Slow Mode**
    ```bash
    mycelia-launchctl slow rewards
-   ```
+   ```text
 
 2. **Monitor System Behavior**
    - Check rewards processing rate
@@ -66,7 +70,7 @@ The Week One Chaos Drill is a comprehensive test of the Mycelia system's resilie
 1. **Pause Redemption**
    ```bash
    mycelia-launchctl pause redemption
-   ```
+   ```text
 
 2. **Wait Period**
    - Wait 5 minutes (simulated)
@@ -76,7 +80,7 @@ The Week One Chaos Drill is a comprehensive test of the Mycelia system's resilie
 3. **Resume Redemption**
    ```bash
    mycelia-launchctl resume redemption
-   ```
+   ```text
 
 **Expected Results**:
 - Redemption system pauses immediately
@@ -91,7 +95,7 @@ The Week One Chaos Drill is a comprehensive test of the Mycelia system's resilie
 1. **Cap Oracle Read Scope**
    ```bash
    mycelia-launchctl cap oracle 0
-   ```
+   ```text
 
 2. **Monitor Oracle Behavior**
    - Check Oracle response times
@@ -126,7 +130,7 @@ The Week One Chaos Drill is a comprehensive test of the Mycelia system's resilie
 ```bash
 # Run the complete drill
 mycelia-launchctl drill week1
-```
+```text
 
 **Drill Steps**:
 1. **Simulate PoR Stale** ✅
@@ -162,7 +166,7 @@ graph LR
     B --> D{Peg Valid?}
     D -->|Yes| E[System Normal]
     D -->|No| F[Emergency Mode]
-```
+```text
 
 ### System Performance Metrics
 - **Redemption Queue Length**: Should remain stable during drill
@@ -188,7 +192,7 @@ pnpm run diagnose | grep "Peg math is exact"
 
 # Check reserve status
 mycelia-attest verify ./release/mainnet/por.json
-```
+```text
 
 ### System Health Verification
 ```bash
@@ -200,7 +204,7 @@ pnpm run diagnose
 
 # Check SLO compliance
 pnpm run ops:lint
-```
+```text
 
 ### Emergency Control Verification
 ```bash
@@ -212,7 +216,7 @@ mycelia-launchctl status
 
 # Check system logs
 pnpm run ops:tail
-```
+```text
 
 ## Success Criteria
 
@@ -269,13 +273,13 @@ pnpm run ops:tail
 mycelia-launchctl drill week1
 
 # Report saved to: ./drill-reports/week1-{timestamp}.json
-```
+```text
 
 ### Report Verification
 ```bash
 # Verify report signature
 mycelia-disclosure verify ./drill-reports/week1-{timestamp}.json
-```
+```text
 
 ## Lessons Learned
 

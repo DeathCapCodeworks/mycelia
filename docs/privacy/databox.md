@@ -1,3 +1,7 @@
+---
+title: Databox
+---
+
 # Databox v0
 
 Databox v0 is an encrypted personal ledger that stores user interactions, consent logs, content keys, and preferences. It provides data portability, key-shred deletion, and truthful deletion capabilities while maintaining user privacy and control over their data.
@@ -26,7 +30,7 @@ class Databox {
   shredKeys(): Promise<void>
   tombstone(consentId: string): Promise<void>
 }
-```
+```text
 
 #### Storage Backends
 Multiple storage options for different use cases:
@@ -54,7 +58,7 @@ interface DataboxEntry {
   encrypted: boolean;
   contentKeyId?: string; // Link to a content key
 }
-```
+```text
 
 #### DataboxContentKey
 ```typescript
@@ -65,7 +69,7 @@ interface DataboxContentKey {
   rotatedAt?: number;
   isActive: boolean;
 }
-```
+```text
 
 #### DataboxExport
 ```typescript
@@ -80,7 +84,7 @@ interface DataboxExport {
     contentKeys: number;
   };
 }
-```
+```text
 
 ## Data Types
 
@@ -130,7 +134,7 @@ const encryptedData = CryptoJS.AES.encrypt(data, contentKey).toString();
 
 // Store the encrypted content key
 const encryptedContentKey = CryptoJS.AES.encrypt(contentKey, masterKey).toString();
-```
+```text
 
 ### Key Shredding
 The key shredding process:
@@ -182,7 +186,7 @@ const entry: DataboxEntry = {
 };
 
 await databox.addEntry(entry);
-```
+```text
 
 #### Export Data
 ```typescript
@@ -198,7 +202,7 @@ const a = document.createElement('a');
 a.href = url;
 a.download = 'mycelia-databox-export.json';
 a.click();
-```
+```text
 
 #### Import Data
 ```typescript
@@ -209,7 +213,7 @@ const text = await file.text();
 const importData = JSON.parse(text);
 
 await databox.import(importData);
-```
+```text
 
 #### Shred Keys
 ```typescript
@@ -217,13 +221,13 @@ await databox.import(importData);
 await databox.shredKeys();
 
 // This will make all encrypted content permanently unreadable
-```
+```text
 
 #### Tombstone Consent
 ```typescript
 // Mark a consent as revoked
 await databox.tombstone('consent-123');
-```
+```text
 
 ### Advanced Operations
 
@@ -240,7 +244,7 @@ await databox.setStorageBackend('trusted-host', {
   hostUrl: 'https://trusted-host.example.com',
   credentials: 'your-credentials'
 });
-```
+```text
 
 #### Key Rotation
 ```typescript
@@ -249,7 +253,7 @@ await databox.rotateContentKeys();
 
 // Rotate master key
 await databox.rotateMasterKey();
-```
+```text
 
 ## Truthful Deletion Model
 
@@ -293,7 +297,7 @@ What happens when you shred keys:
 • Local pins are removed
 • Third-party mirrors may still exist
 `;
-```
+```text
 
 ## UI Integration
 
@@ -325,7 +329,7 @@ const DataboxPanel = () => (
     </div>
   </div>
 );
-```
+```text
 
 ### Data Entries Display
 Users can view their data entries:
@@ -347,7 +351,7 @@ const DataEntries = ({ entries }) => (
     ))}
   </div>
 );
-```
+```text
 
 ## Privacy and Compliance
 
@@ -401,7 +405,7 @@ observability.logEvent('databox_exported', {
   entryCount: exportData.entries.length,
   keyCount: exportData.contentKeys.length
 });
-```
+```text
 
 ### Health Checks
 The system includes health checks:
@@ -458,7 +462,7 @@ Enable debug logging for troubleshooting:
 
 ```bash
 DEBUG=databox:* npm start
-```
+```text
 
 ## Future Enhancements
 

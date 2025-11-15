@@ -58,22 +58,22 @@ const sfu = new SFUClient(url: string, token?: string);
 
 #### Methods
 
-**connect(): Promise<void>**
+**connect(): Promise&lt;void&gt;**
 Establishes connection to the SFU server.
 
-**disconnect(): Promise<void>**
+**disconnect(): Promise&lt;void&gt;**
 Closes connection and cleans up resources.
 
-**createPeer(options?: PeerOptions): Promise<Peer>**
+**createPeer(options?: PeerOptions): Promise&lt;Peer&gt;**
 Creates a new peer connection with specified options.
 
-**removePeer(peerId: string): Promise<void>**
+**removePeer(peerId: string): Promise&lt;void&gt;**
 Removes and closes a peer connection.
 
-**getPeers(): Peer[]**
+**getPeers(): Peer\\[]**
 Returns array of all connected peers.
 
-**getStats(): Promise<SFUStats>**
+**getStats(): Promise&lt;SFUStats&gt;**
 Returns aggregated statistics for all peers.
 
 ```typescript
@@ -112,7 +112,7 @@ Enables or disables adaptive bitrate control.
 **setSimulcast(enabled: boolean): void**
 Enables or disables simulcast streaming.
 
-**getStats(): Promise<PeerStats>**
+**getStats(): Promise&lt;PeerStats&gt;**
 Returns detailed peer statistics.
 
 **getConnectionState(): ConnectionState**

@@ -14,5 +14,5 @@ flowchart LR
     A --> IBC[Interchain Link IBC or Parachain]
     S --> BTC[Anchoring Module]
     BTC -->|Periodic block hash| B[(Bitcoin L1)]
-```
+```text
 

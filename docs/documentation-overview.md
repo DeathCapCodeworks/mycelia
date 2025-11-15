@@ -1,3 +1,7 @@
+---
+title: Documentation Overview
+---
+
 # Mycelia Developer Documentation - Complete
 
 This document provides a comprehensive overview of the complete Mycelia developer documentation suite.
@@ -150,7 +154,7 @@ const wallet = sdk.createEVMWallet('your-private-key');
 const balance = await wallet.getBloomBalance();
 const sats = bloomToSats(balance);
 const btc = Number(sats) / 100_000_000;
-```
+```text
 
 ### **Cross-Chain Bridge**
 ```typescript
@@ -165,7 +169,7 @@ const transaction = await bridge.crossChainTransfer(
   amount,
   privateKey
 );
-```
+```text
 
 ### **Mining Application**
 ```typescript
@@ -175,7 +179,7 @@ const miningApp = new MiningApplication(ipfsConfig, supplyLedger, mintingFeeds);
 await miningApp.initialize();
 const session = await miningApp.startMiningSession('miner1');
 const result = await miningApp.processContribution(session.id, contribution);
-```
+```text
 
 ### **Wallet Integration**
 ```typescript
@@ -186,7 +190,7 @@ const solanaManager = new SolanaWalletManager();
 
 await evmManager.connectMetaMask();
 await solanaManager.connectPhantom();
-```
+```text
 
 ## 📦 Package Documentation
 

@@ -1,3 +1,7 @@
+---
+title: Key Ceremony
+---
+
 # Key Ceremony Runbook
 
 ## Overview
@@ -37,13 +41,13 @@ This runbook describes the key ceremony process for generating and managing oper
    
    # Install dependencies
    npm install @mycelia/kms-local
-   ```
+   ```text
 
 2. **Verify Dependencies**
    ```bash
    # Check libsodium installation
    node -e "console.log(require('libsodium-wrappers').crypto_sign_KEYBYTES)"
-   ```
+   ```text
 
 ### Phase 2: Key Generation
 
@@ -56,7 +60,7 @@ This runbook describes the key ceremony process for generating and managing oper
    
    console.log('Public Key:', Buffer.from(keyPair.publicKey).toString('hex'));
    console.log('Private Key:', Buffer.from(keyPair.privateKey).toString('hex'));
-   ```
+   ```text
 
 2. **Generate BIP32 Keys**
    ```typescript
@@ -72,7 +76,7 @@ This runbook describes the key ceremony process for generating and managing oper
    
    // Derive Solana key
    const solKey = await kms.deriveBIP32Key(seed, "m/44'/501'/0'/0/0");
-   ```
+   ```text
 
 ### Phase 3: Key Encryption
 
@@ -86,7 +90,7 @@ This runbook describes the key ceremony process for generating and managing oper
    // Encrypt BIP32 keys
    const encryptedBtcKey = await kms.encrypt(btcKey.privateKey, password);
    const encryptedSolKey = await kms.encrypt(solKey.privateKey, password);
-   ```
+   ```text
 
 2. **Store Encrypted Keys**
    ```typescript
@@ -124,7 +128,7 @@ This runbook describes the key ceremony process for generating and managing oper
    
    // Write to secure file
    require('fs').writeFileSync('keystore.json', JSON.stringify(keystore, null, 2));
-   ```
+   ```text
 
 ### Phase 4: Key Distribution
 
@@ -148,13 +152,13 @@ This runbook describes the key ceremony process for generating and managing oper
    const isValid = await kms.verify(message, signature, keyPair.publicKey);
    
    console.log('Signature valid:', isValid);
-   ```
+   ```text
 
 2. **Test Decryption**
    ```typescript
    const decryptedKey = await kms.decrypt(encryptedOperatorKey, password);
    console.log('Decryption successful:', decryptedKey.equals(keyPair.privateKey));
-   ```
+   ```text
 
 ## Key Rotation
 
@@ -168,7 +172,7 @@ if (shouldRotate) {
   console.log('Key rotation required');
   // Initiate rotation ceremony
 }
-```
+```text
 
 ### Rotation Process
 
@@ -224,21 +228,21 @@ if (shouldRotate) {
 ```bash
 # Run KMS tests
 npm test -- @mycelia/kms-local
-```
+```text
 
 ### Integration Tests
 
 ```bash
 # Test key operations
 npm run test:integration -- kms
-```
+```text
 
 ### Security Tests
 
 ```bash
 # Run security scans
 npm run sec:scan
-```
+```text
 
 ## Monitoring
 

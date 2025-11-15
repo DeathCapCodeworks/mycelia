@@ -84,7 +84,7 @@ mycelia-disclosure receipt --severity high --hash <sha256-of-report>
 
 # Verify receipt
 mycelia-disclosure verify ./receipts/receipt-001.json
-```
+```text
 
 ### 3. Report Requirements
 Your report should include:
@@ -103,13 +103,13 @@ Your report should include:
 
 ## PGP Key for Secure Communication
 
-```
+```text
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: Mycelia Security
 
 mQENBF4ABCABCADK...
 -----END PGP PUBLIC KEY BLOCK-----
-```
+```text
 
 **Fingerprint**: `ABCD 1234 EFGH 5678 IJKL 9012 MNOP 3456`
 
@@ -130,7 +130,7 @@ mycelia-disclosure list
 
 # Export receipts
 mycelia-disclosure export --out ./receipts.jsonl
-```
+```text
 
 ### Receipt Verification
 All receipts are cryptographically signed and can be verified:
@@ -138,7 +138,7 @@ All receipts are cryptographically signed and can be verified:
 ```bash
 # Verify receipt signature
 mycelia-disclosure verify ./receipts/receipt-001.json
-```
+```text
 
 ### Receipt Benefits
 - **Proof of Submission**: Cryptographic proof of report submission

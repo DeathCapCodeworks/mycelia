@@ -114,11 +114,11 @@ Validator B Reward: (60,000 / 100,000) × 1,000 = 600 BLOOM
 class StakingEngine {
   registerValidator(pubkey: string, stake: bigint): Validator;
   delegate(delegator: string, validator: string, amount: bigint): Delegation;
-  async tickEpoch(): Promise<EpochRewards>;
+  async tickEpoch(): Promise&lt;EpochRewards&gt;;
   getValidatorStats(pubkey: string): ValidatorStats | null;
-  getAllValidators(): Validator[];
-  getAllDelegations(): Delegation[];
-  getDelegatorDelegations(delegator: string): Delegation[];
+  getAllValidators(): Validato\1\[];
+  getAllDelegations(): Delegatio\1\[];
+  getDelegatorDelegations(delegator: string): Delegatio\1\[];
   getCurrentEpoch(): number;
 }
 ```

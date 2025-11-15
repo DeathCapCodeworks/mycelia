@@ -1,3 +1,7 @@
+---
+title: Upgrade Playbook
+---
+
 # Upgrade Playbook
 
 ## Overview
@@ -38,7 +42,7 @@ pnpm run ops:lint
 
 # Verify system status
 curl -f http://localhost:3000/ops/status.json
-```
+```text
 
 ### 2. Backup Procedures
 ```bash
@@ -50,7 +54,7 @@ cp -r config/ config-backup-$(date +%Y%m%d-%H%M%S)/
 
 # Backup logs
 pnpm run ops:tail > logs-backup-$(date +%Y%m%d-%H%M%S).json
-```
+```text
 
 ### 3. Stakeholder Notification
 - **Internal**: Notify team members
@@ -62,7 +66,7 @@ pnpm run ops:tail > logs-backup-$(date +%Y%m%d-%H%M%S).json
 # Deploy to staging
 # Run integration tests
 # Verify feature functionality
-```
+```text
 
 ## Feature Flag Upgrades
 
@@ -75,7 +79,7 @@ pnpm --filter @mycelia/feature-flags start -- --enable feature-name
 curl -X POST http://localhost:3000/api/feature-flags/enable \
   -H "Content-Type: application/json" \
   -d '{"name": "feature-name"}'
-```
+```text
 
 ### 2. Monitor Feature
 ```bash
@@ -84,13 +88,13 @@ pnpm run ops:tail | grep "feature-name"
 
 # Check error rates
 pnpm run ops:lint
-```
+```text
 
 ### 3. Rollback Feature Flag
 ```bash
 # Disable feature
 pnpm --filter @mycelia/feature-flags start -- --disable feature-name
-```
+```text
 
 ### Feature Flag Upgrade Process
 
@@ -132,7 +136,7 @@ cat CHANGELOG.md
 
 # Run diagnostics
 pnpm run diagnose
-```
+```text
 
 #### Upgrade Process
 ```bash
@@ -147,7 +151,7 @@ pnpm test
 
 # Deploy to staging
 # (Implementation depends on deployment system)
-```
+```text
 
 #### Post-Upgrade
 ```bash
@@ -159,7 +163,7 @@ pnpm run diagnose
 
 # Monitor system health
 pnpm run ops:tail
-```
+```text
 
 ### 2. Major Version Upgrade
 
@@ -182,7 +186,7 @@ cp -r dist/ dist-backup-$(date +%Y%m%d-%H%M%S)/
 
 # Start services
 # (Implementation depends on deployment system)
-```
+```text
 
 #### Post-Upgrade Verification
 ```bash
@@ -197,7 +201,7 @@ pnpm run ops:lint
 
 # Test critical paths
 pnpm --filter @mycelia/redemption start -- --test-flow
-```
+```text
 
 ## Emergency Upgrades
 
@@ -208,7 +212,7 @@ pnpm --filter @mycelia/redemption start -- --test-flow
 # Assess security impact
 # Review security advisory
 # Determine urgency level
-```
+```text
 
 #### Emergency Deployment
 ```bash
@@ -218,14 +222,14 @@ pnpm --filter @mycelia/redemption start -- --test-flow
 # Verify patch application
 # Test security fix
 # Monitor for issues
-```
+```text
 
 #### Post-Emergency
 ```bash
 # Document incident
 # Update security procedures
 # Conduct post-incident review
-```
+```text
 
 ### 2. Critical Bug Fixes
 
@@ -234,7 +238,7 @@ pnpm --filter @mycelia/redemption start -- --test-flow
 # Identify affected systems
 # Assess user impact
 # Determine fix priority
-```
+```text
 
 #### Emergency Fix
 ```bash
@@ -244,7 +248,7 @@ pnpm --filter @mycelia/redemption start -- --test-flow
 # Verify fix
 # Monitor system stability
 # Notify stakeholders
-```
+```text
 
 ## Rollback Procedures
 
@@ -258,7 +262,7 @@ pnpm run ops:tail
 
 # Verify system health
 pnpm run diagnose
-```
+```text
 
 ### 2. Version Rollback
 
@@ -272,7 +276,7 @@ pnpm run diagnose
 
 # Start services
 # (Implementation depends on deployment system)
-```
+```text
 
 #### Verification
 ```bash
@@ -284,7 +288,7 @@ pnpm run diagnose
 
 # Check SLO compliance
 pnpm run ops:lint
-```
+```text
 
 ### 3. Database Rollback
 ```bash
@@ -296,7 +300,7 @@ pnpm --filter @mycelia/shared-kernel start -- --verify-data
 
 # Test critical functionality
 pnpm --filter @mycelia/redemption start -- --test-flow
-```
+```text
 
 ## Upgrade Monitoring
 
@@ -310,7 +314,7 @@ pnpm run ops:lint
 
 # Monitor error rates
 # (Implementation depends on monitoring system)
-```
+```text
 
 ### 2. Health Checks
 ```bash
@@ -322,7 +326,7 @@ curl -f http://localhost:3000/ops/status.json
 
 # Diagnostics
 pnpm run diagnose
-```
+```text
 
 ### 3. User Impact Monitoring
 - **Error rates**: Monitor application errors
@@ -333,7 +337,7 @@ pnpm run diagnose
 ## Communication Procedures
 
 ### 1. Pre-Upgrade Communication
-```
+```text
 Subject: Scheduled Upgrade: [Version/Feature] - [Date/Time]
 
 Upgrade Details:
@@ -343,27 +347,27 @@ Upgrade Details:
 - Rollback Plan: [Rollback procedure]
 
 Contact: [Contact information]
-```
+```text
 
 ### 2. Upgrade Progress Updates
-```
+```text
 Subject: Upgrade Progress: [Version/Feature] - [Status]
 
 Current Status: [In Progress/Completed/Failed]
 Progress: [Description of current status]
 ETA: [Estimated completion time]
 Issues: [Any issues encountered]
-```
+```text
 
 ### 3. Post-Upgrade Communication
-```
+```text
 Subject: Upgrade Completed: [Version/Feature] - [Status]
 
 Upgrade Status: [Success/Failed/Partial]
 Issues: [Any issues encountered]
 Next Steps: [Follow-up actions]
 Contact: [Contact information]
-```
+```text
 
 ## Testing Procedures
 
@@ -377,7 +381,7 @@ pnpm test:integration
 
 # Run security tests
 pnpm run sec:scan
-```
+```text
 
 ### 2. Post-Upgrade Testing
 ```bash
@@ -389,7 +393,7 @@ pnpm --filter @mycelia/redemption start -- --test-flow
 
 # Check SLO compliance
 pnpm run ops:lint
-```
+```text
 
 ### 3. User Acceptance Testing
 - **Functionality**: Verify all features work
@@ -451,7 +455,7 @@ pnpm run ops:tail | grep "feature-name"
 
 # Re-enable after fix
 pnpm --filter @mycelia/feature-flags start -- --enable feature-name
-```
+```text
 
 ### 2. Version Upgrade Issues
 **Issue**: System not starting after upgrade
@@ -465,7 +469,7 @@ pnpm run ops:tail
 
 # Investigate issue
 # Fix and redeploy
-```
+```text
 
 ### 3. Performance Issues
 **Issue**: System performance degraded
@@ -479,7 +483,7 @@ pnpm run ops:tail
 
 # Scale resources if needed
 # (Implementation depends on deployment system)
-```
+```text
 
 ## Tools and Resources
 

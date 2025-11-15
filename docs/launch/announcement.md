@@ -1,3 +1,7 @@
+---
+title: Announcement
+---
+
 # Golden Path Demo
 
 Watch our 60-second demonstration of Mycelia's core features and capabilities.
@@ -53,7 +57,7 @@ pnpm demo:serve      # macOS/Linux
 # Record demo
 pnpm demo:record                    # Captioned only
 pnpm demo:record:narrated          # With TTS narration (local only)
-```
+```text
 
 Output files:
 - `release/public/golden-path.mp4` - Video file

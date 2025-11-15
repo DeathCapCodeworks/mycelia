@@ -1,3 +1,7 @@
+---
+title: Rollout Playbook
+---
+
 # Rollout Playbook
 
 This document outlines the progressive rollout process for Web4 features, including percentage-based rollouts, canary deployments, and rollback procedures.
@@ -64,7 +68,7 @@ mycelia-flags rollout applets_v1_rollout 25
 
 # Set Live Captions rollout to 50%
 mycelia-flags rollout live_captions_rollout 50
-```
+```text
 
 ### Canary Management
 ```bash
@@ -82,7 +86,7 @@ mycelia-flags canary-list
 
 # Disable canary mode
 mycelia-flags canary off
-```
+```text
 
 ### Status Monitoring
 ```bash
@@ -91,7 +95,7 @@ mycelia-flags status
 
 # Get specific flag status
 mycelia-flags get intent_bar_v1_rollout
-```
+```text
 
 ## Rollout Process
 
@@ -131,7 +135,7 @@ mycelia-flags rollout intent_bar_v1_rollout 0
 
 # Disable canary mode
 mycelia-flags canary off
-```
+```text
 
 ### Gradual Rollback
 ```bash
@@ -140,7 +144,7 @@ mycelia-flags rollout intent_bar_v1_rollout 25
 
 # Remove users from canary
 mycelia-flags canary-remove user123
-```
+```text
 
 ### Emergency Rollback
 1. **Identify Issue**: Determine root cause
@@ -174,10 +178,10 @@ mycelia-flags canary-remove user123
 
 ### Rollout Notification
 Users see a banner when features are rolled out:
-```
+```text
 🎯 New Feature Available
 Intent Bar is now available for 10% of users.
-```
+```text
 
 ### Feature Discovery
 - **Progressive Disclosure**: Features appear gradually

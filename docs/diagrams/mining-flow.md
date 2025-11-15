@@ -12,5 +12,5 @@ flowchart TD
     IPFS --> Meter[Contribution Metering]
     Meter --> Rewards[Streaming BLOOM Rewards]
     Rewards --> W
-```
+```text
 

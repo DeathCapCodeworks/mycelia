@@ -16,5 +16,5 @@ gantt
     section Pathway B Parallel
     Parallel Tracks               :2025-10, 18M
     Integration and Hardening     :2027-04, 18M
-```
+```text
 
