@@ -83,7 +83,7 @@ class DemoRecorder {
         
         console.log(`⚠️ Server responded with ${response.status}, retrying...`);
       } catch (error) {
-        console.log(`❌ Attempt ${attempt}/${maxAttempts} failed: ${error.message}`);
+        console.log(`❌ Attempt ${attempt}/${maxAttempts} failed: ${error instanceof Error ? error.message : String(error)}`);
         
         if (attempt === maxAttempts) {
           console.error('🚨 SERVER NOT REACHABLE - DEMO RECORDING FAILED');

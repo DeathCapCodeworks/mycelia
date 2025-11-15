@@ -349,5 +349,4 @@ export async function runAV1MicroSuiteCLI(): Promise<void> {
   }
 }
 
-// Export for programmatic use
-export { AV1MicroSuite };
+// Already exported above

@@ -606,7 +606,7 @@ export class BatteryMonitor {
     };
 
     // Log power metrics
-    observability.logEvent('power_metrics', {
+    logEvent('power_metrics', {
       battery_cost_per_minute: batteryCostPerMinute,
       cpu_load_percent: cpuLoad,
       thermal_state: thermalState,

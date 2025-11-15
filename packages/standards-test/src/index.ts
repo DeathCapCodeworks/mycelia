@@ -102,7 +102,7 @@ export class StandardsTestHarness {
 
           const support = await VideoEncoder.isConfigSupported(config);
           return {
-            passed: support.supported,
+            passed: support.supported ?? false,
             message: support.supported ? 'WebCodecs AV1 encoder is supported' : 'WebCodecs AV1 encoder is not supported',
             duration: performance.now() - start,
             suite: 'wpt'
@@ -143,7 +143,7 @@ export class StandardsTestHarness {
 
           const support = await VideoDecoder.isConfigSupported(config);
           return {
-            passed: support.supported,
+            passed: support.supported ?? false,
             message: support.supported ? 'WebCodecs AV1 decoder is supported' : 'WebCodecs AV1 decoder is not supported',
             duration: performance.now() - start,
             suite: 'wpt'
@@ -519,7 +519,7 @@ export class StandardsTestHarness {
 }
 
 // Legacy function for backward compatibility
-export function runWptSubset(): { passed: number; failed: number } {
+export function runWptSubset(): Promise<{ passed: number; failed: number }> {
   const harness = new StandardsTestHarness();
   return harness.runWptSubset().then(report => ({
     passed: report.passed,

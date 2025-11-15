@@ -155,7 +155,7 @@ export class SLOEvaluator {
     name: string, 
     target: SLOTarget, 
     actual: number | boolean, 
-    allMetrics: Record<string, number | boolean>
+    allMetrics: Record<string, number | boolean | string>
   ): SLOResult {
     // Check condition if specified
     if (target.condition && !this.evaluateCondition(target.condition, allMetrics)) {
@@ -198,7 +198,7 @@ export class SLOEvaluator {
     };
   }
 
-  private evaluateCondition(condition: string, metrics: Record<string, number | boolean>): boolean {
+  private evaluateCondition(condition: string, metrics: Record<string, number | boolean | string>): boolean {
     switch (condition) {
       case 'hardware_decode_available':
         return metrics.hardware_decode_available === true;

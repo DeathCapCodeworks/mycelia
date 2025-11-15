@@ -1,6 +1,6 @@
 // Feature Flags and Safety Controls - Web4 feature flags with safety controls
 
-import { observability } from '@mycelia/observability';
+import { getObservability } from '@mycelia/observability';
 
 export interface Web4FeatureFlag {
   id: string;
@@ -888,7 +888,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('feature_flag_toggled', {
+    getObservability().logEvent('feature_flag_toggled', {
       flagId,
       flagName: flag.name,
       from: oldValue,
@@ -949,7 +949,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('feature_flag_rollout_set', {
+    getObservability().logEvent('feature_flag_rollout_set', {
       flagId,
       flagName: flag.name,
       percentage
@@ -969,7 +969,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('canary_mode_enabled', {
+    getObservability().logEvent('canary_mode_enabled', {
       allowlistSize: this.canaryAllowlist.size
     });
   }
@@ -979,7 +979,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('canary_mode_disabled', {
+    getObservability().logEvent('canary_mode_disabled', {
       allowlistSize: this.canaryAllowlist.size
     });
   }
@@ -993,7 +993,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('canary_user_added', {
+    getObservability().logEvent('canary_user_added', {
       userId,
       allowlistSize: this.canaryAllowlist.size
     });
@@ -1004,7 +1004,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('canary_user_removed', {
+    getObservability().logEvent('canary_user_removed', {
       userId,
       allowlistSize: this.canaryAllowlist.size
     });
@@ -1019,7 +1019,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('canary_allowlist_cleared');
+    getObservability().logEvent('canary_allowlist_cleared', {});
   }
 
   // Utility methods
@@ -1068,7 +1068,7 @@ export class Web4FeatureFlagsManager {
     this.saveToStorage();
     this.notifyUpdate();
 
-    observability.logEvent('safety_control_toggled', {
+    getObservability().logEvent('safety_control_toggled', {
       controlId,
       controlName: control.name,
       enabled: control.enabled
@@ -1086,16 +1086,17 @@ export class Web4FeatureFlagsManager {
     control.lastTriggered = Date.now();
     control.triggerCount++;
 
-    const actions = control.actions[`on${level.charAt(0).toUpperCase() + level.slice(1)}`];
+    const actionKey = `on${level.charAt(0).toUpperCase() + level.slice(1)}` as 'onWarning' | 'onCritical' | 'onMax';
+    const actions = control.actions[actionKey];
     
-    actions.forEach(action => {
+    actions.forEach((action: string) => {
       this.executeSafetyAction(action, control, level);
     });
 
     this.controls.set(controlId, control);
     this.saveToStorage();
 
-    observability.logEvent('safety_control_triggered', {
+    getObservability().logEvent('safety_control_triggered', {
       controlId,
       controlName: control.name,
       level,
@@ -1339,7 +1340,7 @@ export class Web4FeatureFlagsManager {
     this.isInitialized = true;
     this.notifyUpdate();
     
-    observability.logEvent('feature_flags_initialized', {
+    getObservability().logEvent('feature_flags_initialized', {
       totalFlags: this.flags.size,
       totalControls: this.controls.size
     });

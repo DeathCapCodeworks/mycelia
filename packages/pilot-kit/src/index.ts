@@ -1,7 +1,7 @@
 // Pilot Kit - Real-world pilot scaffolding for Web4 features
 
-import { observability } from '@mycelia/observability';
-import { featureFlags } from '@mycelia/web4-feature-flags';
+import { getObservability } from '@mycelia/observability';
+import { getFeatureFlagsManager } from '@mycelia/web4-feature-flags';
 
 export interface PilotConfig {
   pilotId: string;
@@ -169,7 +169,7 @@ export class PilotKitManager {
     this.pilots.set(pilotConfig.pilotId, pilotConfig);
     this.saveToStorage();
 
-    observability.logEvent('pilot_created', {
+    getObservability().logEvent('pilot_created', {
       pilotId: pilotConfig.pilotId,
       pilotType: pilotConfig.pilotType,
       features: pilotConfig.features,
@@ -207,7 +207,7 @@ export class PilotKitManager {
     this.pilots.set(pilotConfig.pilotId, pilotConfig);
     this.saveToStorage();
 
-    observability.logEvent('pilot_created', {
+    getObservability().logEvent('pilot_created', {
       pilotId: pilotConfig.pilotId,
       pilotType: pilotConfig.pilotType,
       features: pilotConfig.features,
@@ -252,7 +252,7 @@ export class PilotKitManager {
     // Enable pilot features
     this.enablePilotFeatures(pilot.features);
 
-    observability.logEvent('pilot_joined', {
+    getObservability().logEvent('pilot_joined', {
       pilotId,
       participantId,
       pilotType: pilot.pilotType,
@@ -282,7 +282,7 @@ export class PilotKitManager {
       this.currentPilotId = null;
     }
 
-    observability.logEvent('pilot_left', {
+    getObservability().logEvent('pilot_left', {
       pilotId: participant.pilotId,
       participantId,
       reason: 'manual_leave'
@@ -302,7 +302,7 @@ export class PilotKitManager {
     this.participants.set(participantId, participant);
     this.saveToStorage();
 
-    observability.logEvent('pilot_completed', {
+    getObservability().logEvent('pilot_completed', {
       pilotId: participant.pilotId,
       participantId,
       duration: Date.now() - participant.joinedAt
@@ -330,7 +330,7 @@ export class PilotKitManager {
       this.participants.set(feedback.participantId, participant);
     }
 
-    observability.logEvent('pilot_feedback_submitted', {
+    getObservability().logEvent('pilot_feedback_submitted', {
       pilotId: feedback.pilotId,
       participantId: feedback.participantId,
       rating: feedback.rating,
@@ -361,7 +361,7 @@ export class PilotKitManager {
     // Update pilot metrics
     this.updatePilotMetrics(metric.pilotId);
 
-    observability.logEvent('pilot_metric_recorded', {
+    getObservability().logEvent('pilot_metric_recorded', {
       pilotId: metric.pilotId,
       participantId: metric.participantId,
       feature: metric.feature,
@@ -608,7 +608,7 @@ export class PilotKitManager {
     features.forEach(feature => {
       // Enable corresponding feature flags
       const flagId = `${feature}_rollout`;
-      featureFlags.setRolloutPercentage(flagId, 100);
+      getFeatureFlagsManager().setRolloutPercentage(flagId, 100);
     });
   }
 
@@ -657,8 +657,8 @@ export function getPilotKitManager(): PilotKitManager {
 
 // Convenience exports
 export const pilotKit = {
-  createPublisherPilot: (config?: Partial<PilotConfig>) => getPilotKitManager().createPublisherPilot(config),
-  createOrgPilot: (config?: Partial<PilotConfig>) => getPilotKitManager().createOrgPilot(config),
+  createPublisherPilot: (config?: Partial<PilotConfig>) => getPilotKitManager().createPublisherPilot(config || {}),
+  createOrgPilot: (config?: Partial<PilotConfig>) => getPilotKitManager().createOrgPilot(config || {}),
   joinPilot: (pilotId: string, participantId: string) => getPilotKitManager().joinPilot(pilotId, participantId),
   leavePilot: (participantId: string) => getPilotKitManager().leavePilot(participantId),
   completePilot: (participantId: string) => getPilotKitManager().completePilot(participantId),

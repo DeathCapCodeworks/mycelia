@@ -48,7 +48,7 @@ class MDXChecker {
       this.checkImports(filePath, body, dirname(filePath));
       
     } catch (error) {
-      this.addIssue(filePath, `Failed to parse file: ${error.message}`, 'error');
+      this.addIssue(filePath, `Failed to parse file: ${error instanceof Error ? error.message : String(error)}`, 'error');
     }
   }
 

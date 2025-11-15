@@ -93,7 +93,7 @@ export class MediaPipelineBenchmark {
     const testFrames = this.generateTestFrames(profile.sample_frames);
     
     // Warmup
-    await this.warmup(profile.test_config.warmup_frames);
+    await this.warmup(this.config.test_config.warmup_frames);
     
     // Run benchmark
     const results = await this.runProfileBenchmark(profile, testFrames, hardwareCaps);
@@ -332,5 +332,4 @@ export async function runBenchmarkCLI(): Promise<void> {
   }
 }
 
-// Export for programmatic use
-export { MediaPipelineBenchmark };
+// Already exported above

@@ -1,8 +1,8 @@
 // Wallet GA Polish - Peg proof panel, 2FA hooks, per-site allowances
 
 import React, { useState, useEffect } from 'react';
-import { observability } from '@mycelia/observability';
-import { featureFlags } from '@mycelia/web4-feature-flags';
+import { getObservability } from '@mycelia/observability';
+import { getFeatureFlagsManager } from '@mycelia/web4-feature-flags';
 
 export interface PegProof {
   operation: string;
@@ -181,7 +181,7 @@ export class WalletManager {
     this.saveWalletData();
 
     // Log transaction event
-    observability.logEvent('wallet_transaction', {
+    getObservability().logEvent('wallet_transaction', {
       transaction_id: id,
       type: transaction.type,
       amount_sats: transaction.amount_sats,
@@ -218,7 +218,7 @@ export class WalletManager {
     this.siteAllowances.set(domain, allowance);
     this.saveSiteAllowances();
 
-    observability.logEvent('wallet_site_allowance_created', {
+    getObservability().logEvent('wallet_site_allowance_created', {
       domain,
       max_amount_sats: maxAmountSats,
       daily_limit: dailyLimit
@@ -236,7 +236,7 @@ export class WalletManager {
     this.siteAllowances.delete(domain);
     this.saveSiteAllowances();
 
-    observability.logEvent('wallet_site_allowance_revoked', {
+    getObservability().logEvent('wallet_site_allowance_revoked', {
       domain,
       allowance_duration: Date.now() - allowance.created_at
     });
@@ -277,7 +277,7 @@ export class WalletManager {
 
       this.saveWebAuthn2FA();
 
-      observability.logEvent('wallet_webauthn_enabled', {
+      getObservability().logEvent('wallet_webauthn_enabled', {
         threshold_sats: thresholdSats,
         threshold_bloom: thresholdBloom
       });
@@ -300,7 +300,7 @@ export class WalletManager {
 
     this.saveWebAuthn2FA();
 
-    observability.logEvent('wallet_webauthn_disabled', {});
+    getObservability().logEvent('wallet_webauthn_disabled', {});
 
     return true;
   }
@@ -444,7 +444,7 @@ export const WalletDashboard: React.FC = () => {
       alert('Rewards spent successfully!');
     } catch (error) {
       console.error('Failed to spend rewards:', error);
-      alert('Failed to spend rewards: ' + error.message);
+      alert('Failed to spend rewards: ' + (error instanceof Error ? error.message : String(error)));
     }
   };
 
@@ -647,7 +647,7 @@ export const WalletDashboard: React.FC = () => {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .wallet-dashboard {
           max-width: 1000px;
           margin: 0 auto;

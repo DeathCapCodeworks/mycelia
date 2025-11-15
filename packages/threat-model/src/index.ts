@@ -355,7 +355,7 @@ export function createRedemptionThreatModel(): ThreatModel {
 import { Command } from 'commander';
 import { promises as fs } from 'fs';
 
-const program = new Command();
+export const program = new Command();
 
 program
   .name('mycelia-threat')
