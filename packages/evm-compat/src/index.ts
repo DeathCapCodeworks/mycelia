@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { bloomToSats, satsToBloom } from '@mycelia/tokenomics';
+import { bloomToSats, satsToBloom, checkPegStatus, type ReserveFeed, type SupplyFeed } from '@mycelia/tokenomics';
 
 // Re-export common Ethereum types for compatibility
 export type { 
@@ -64,15 +64,23 @@ export class MyceliaEVMProvider implements MyceliaProvider {
   private provider: ethers.Provider;
   private bloomTokenAddress: string;
   private gasOracleAddress: string;
+  private reserveFeed?: ReserveFeed;
+  private supplyFeed?: SupplyFeed;
 
   constructor(
     provider: ethers.Provider,
     bloomTokenAddress: string,
-    gasOracleAddress: string
+    gasOracleAddress: string,
+    options?: {
+      reserveFeed?: ReserveFeed;
+      supplyFeed?: SupplyFeed;
+    }
   ) {
     this.provider = provider;
     this.bloomTokenAddress = bloomTokenAddress;
     this.gasOracleAddress = gasOracleAddress;
+    this.reserveFeed = options?.reserveFeed;
+    this.supplyFeed = options?.supplyFeed;
   }
 
   // Standard Provider interface delegation
@@ -153,10 +161,25 @@ export class MyceliaEVMProvider implements MyceliaProvider {
   }> {
     const network = await this.getNetwork();
     
+    // Use unified peg status checking if feeds are available
+    let pegStatus: 'active' | 'maintenance' = 'active';
+    if (this.reserveFeed && this.supplyFeed) {
+      try {
+        const status = await checkPegStatus({
+          reserve: this.reserveFeed,
+          supply: this.supplyFeed
+        });
+        pegStatus = status.status;
+      } catch (error) {
+        // If peg status check fails, default to 'active' for backward compatibility
+        console.warn('Failed to check peg status:', error);
+      }
+    }
+    
     return {
       chainId: Number(network.chainId),
       name: network.name,
-      pegStatus: 'active', // TODO: Implement actual peg status checking
+      pegStatus,
       bloomPerBtc: 10 // Hard-coded peg ratio
     };
   }
@@ -258,10 +281,14 @@ export class MyceliaEVMSigner implements MyceliaSigner {
 export function createMyceliaProvider(
   rpcUrl: string,
   bloomTokenAddress: string,
-  gasOracleAddress: string
+  gasOracleAddress: string,
+  options?: {
+    reserveFeed?: ReserveFeed;
+    supplyFeed?: SupplyFeed;
+  }
 ): MyceliaEVMProvider {
   const provider = new ethers.JsonRpcProvider(rpcUrl);
-  return new MyceliaEVMProvider(provider, bloomTokenAddress, gasOracleAddress);
+  return new MyceliaEVMProvider(provider, bloomTokenAddress, gasOracleAddress, options);
 }
 
 export function createMyceliaSigner(
