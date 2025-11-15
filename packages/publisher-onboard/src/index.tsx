@@ -1,8 +1,8 @@
 // Publisher Onboarding Wizard - Domain verification and snippet integration
 
 import React, { useState, useEffect } from 'react';
-import { observability } from '@mycelia/observability';
-import { featureFlags } from '@mycelia/web4-feature-flags';
+import { getObservability } from '@mycelia/observability';
+import { getFeatureFlagsManager } from '@mycelia/web4-feature-flags';
 
 export interface PublisherOnboardingStep {
   id: string;
@@ -43,6 +43,7 @@ export interface LiveCheck {
   features_working: string[];
   performance_score: number;
   errors: string[];
+  warnings: string[];
 }
 
 export class PublisherOnboardingManager {
@@ -148,7 +149,7 @@ export class PublisherOnboardingManager {
     this.onboardingData.domainVerification = verification;
     this.saveOnboardingData();
 
-    observability.logEvent('publisher_domain_verified', {
+    getObservability().logEvent('publisher_domain_verified', {
       domain,
       verification_method: verification.verification_method
     });
@@ -187,7 +188,7 @@ export class PublisherOnboardingManager {
     this.onboardingData.snippetCheck = check;
     this.saveOnboardingData();
 
-    observability.logEvent('publisher_snippet_checked', {
+    getObservability().logEvent('publisher_snippet_checked', {
       domain,
       snippet_present: check.snippet_present,
       features_detected: check.features_detected.length
@@ -211,7 +212,7 @@ export class PublisherOnboardingManager {
     this.onboardingData.liveCheckPassed = true;
     this.saveOnboardingData();
 
-    observability.logEvent('publisher_live_check', {
+    getObservability().logEvent('publisher_live_check', {
       domain,
       site_accessible: check.site_accessible,
       performance_score: check.performance_score
@@ -223,13 +224,13 @@ export class PublisherOnboardingManager {
   async enableFeatures(features: string[]): Promise<void> {
     // Enable features via feature flags
     features.forEach(feature => {
-      featureFlags.set(feature, true);
+      getFeatureFlagsManager().setFlag(feature, true);
     });
 
     this.onboardingData.featuresEnabled = features;
     this.saveOnboardingData();
 
-    observability.logEvent('publisher_features_enabled', {
+    getObservability().logEvent('publisher_features_enabled', {
       features,
       count: features.length
     });
@@ -252,7 +253,7 @@ export class PublisherOnboardingManager {
     this.siteReceipt = receipt;
     this.saveOnboardingData();
 
-    observability.logEvent('publisher_site_receipt_generated', {
+    getObservability().logEvent('publisher_site_receipt_generated', {
       domain,
       domain_hash: domainHash,
       features_enabled: features.length
@@ -658,7 +659,7 @@ export const PublisherOnboardingWizard: React.FC = () => {
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .publisher-onboarding {
           max-width: 800px;
           margin: 0 auto;

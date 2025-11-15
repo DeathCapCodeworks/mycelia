@@ -10,7 +10,10 @@
     "typecheck": "tsc --noEmit",
     "start": "node dist/index.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@mycelia/observability": "workspace:*",
+    "@mycelia/web4-feature-flags": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^5.6.3"
   }

@@ -16,7 +16,8 @@
     "flags": "dist/cli.js"
   },
   "dependencies": {
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "@mycelia/observability": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.6.3",

@@ -1,6 +1,6 @@
 // Compatibility Matrix - Hardware capability detection and auto-fallback
 
-import { observability } from '@mycelia/observability';
+import { getObservability } from '@mycelia/observability';
 
 export interface HardwareCapabilities {
   os: string;
@@ -101,7 +101,7 @@ export class CompatibilityMatrixManager {
     this.saveToStorage();
 
     // Log detection event
-    observability.logEvent('hardware_capabilities_detected', {
+    getObservability().logEvent('hardware_capabilities_detected', {
       install_id: this.installId,
       os: capabilities.os,
       gpu_driver: capabilities.gpu_driver,
@@ -145,9 +145,9 @@ export class CompatibilityMatrixManager {
         return 'unknown';
       }
 
-      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      const debugInfo = (gl as WebGLRenderingContext).getExtension('WEBGL_debug_renderer_info');
       if (debugInfo) {
-        const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        const renderer = (gl as WebGLRenderingContext).getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
         return this.parseGPUDriver(renderer);
       }
 

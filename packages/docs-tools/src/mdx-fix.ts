@@ -118,8 +118,9 @@ class MDXFixer {
       }
 
     } catch (error) {
-      result.errors.push(`Failed to process file: ${error.message}`);
-      console.error(`❌ Failed to fix ${filePath}:`, error.message);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      result.errors.push(`Failed to process file: ${errorMsg}`);
+      console.error(`❌ Failed to fix ${filePath}:`, errorMsg);
     }
 
     this.changes.push(result);

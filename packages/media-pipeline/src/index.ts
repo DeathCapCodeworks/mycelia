@@ -150,6 +150,7 @@ export class MediaPipeline {
 
     try {
       // Dynamic import of SVT AV1 WASM module
+      // @ts-ignore - Optional module, may not be available
       const module = await import('@mycelia/svt-av1-wasm');
       this.svtAv1Module = module;
       console.log('SVT AV1 WASM module loaded');
@@ -346,7 +347,7 @@ export class MediaPipeline {
         bitrate: 1000000,
         framerate: 30
       });
-      return support.supported;
+      return support.supported ?? false;
     } catch (error) {
       return false;
     }

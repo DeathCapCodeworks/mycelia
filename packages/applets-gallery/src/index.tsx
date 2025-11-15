@@ -1,8 +1,8 @@
 // Applets Gallery - User installable applets with manifest and scopes
 
 import React, { useState, useEffect } from 'react';
-import { observability } from '@mycelia/observability';
-import { featureFlags } from '@mycelia/web4-feature-flags';
+import { getObservability } from '@mycelia/observability';
+import { getFeatureFlagsManager } from '@mycelia/web4-feature-flags';
 
 export interface AppletManifest {
   id: string;
@@ -298,7 +298,7 @@ export class AppletsGalleryManager {
       this.saveInstalledApplets();
 
       // Log installation event
-      observability.logEvent('applet_install', {
+      getObservability().logEvent('applet_install', {
         applet_id: applet.id,
         size_kb: applet.size_kb,
         permissions_granted: grantedPermissions.length,
@@ -328,7 +328,7 @@ export class AppletsGalleryManager {
       this.saveInstalledApplets();
 
       // Log uninstallation event
-      observability.logEvent('applet_uninstall', {
+      getObservability().logEvent('applet_uninstall', {
         applet_id: appletId,
         installed_duration: Date.now() - installation.installed_at
       });
@@ -580,7 +580,7 @@ export const AppletsGallery: React.FC = () => {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .applets-gallery {
           max-width: 1200px;
           margin: 0 auto;
