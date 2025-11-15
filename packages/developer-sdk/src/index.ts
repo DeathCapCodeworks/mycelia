@@ -17,7 +17,7 @@ import {
   MYCELIA_SOLANA_ADDRESSES,
   SPLTokenCompatibility
 } from '@mycelia/solana-compat';
-import { bloomToSats, satsToBloom, assertPeg } from '@mycelia/tokenomics';
+import { bloomToSats, satsToBloom, assertPeg, type ReserveFeed, type SupplyFeed } from '@mycelia/tokenomics';
 
 // Re-export compatibility layers
 export * from '@mycelia/evm-compat';
@@ -73,8 +73,16 @@ export class MyceliaSDK {
   private evmProvider?: MyceliaEVMProvider;
   private solanaConnection?: MyceliaSolanaConnection;
   private wallets = new Map<string, UniversalWallet>();
+  private reserveFeed?: ReserveFeed;
+  private supplyFeed?: SupplyFeed;
 
-  constructor() {}
+  constructor(options?: {
+    reserveFeed?: ReserveFeed;
+    supplyFeed?: SupplyFeed;
+  }) {
+    this.reserveFeed = options?.reserveFeed;
+    this.supplyFeed = options?.supplyFeed;
+  }
 
   /**
    * Initialize EVM compatibility
@@ -84,7 +92,10 @@ export class MyceliaSDK {
     bloomTokenAddress: string,
     gasOracleAddress: string
   ): MyceliaEVMProvider {
-    this.evmProvider = createEVMProvider(rpcUrl, bloomTokenAddress, gasOracleAddress);
+    this.evmProvider = createEVMProvider(rpcUrl, bloomTokenAddress, gasOracleAddress, {
+      reserveFeed: this.reserveFeed,
+      supplyFeed: this.supplyFeed
+    });
     return this.evmProvider;
   }
 
@@ -96,7 +107,10 @@ export class MyceliaSDK {
     bloomTokenMint: string,
     rentOracleProgram: string
   ): MyceliaSolanaConnection {
-    this.solanaConnection = createMyceliaSolanaConnection(rpcUrl, bloomTokenMint, rentOracleProgram);
+    this.solanaConnection = createMyceliaSolanaConnection(rpcUrl, bloomTokenMint, rentOracleProgram, {
+      reserveFeed: this.reserveFeed,
+      supplyFeed: this.supplyFeed
+    });
     return this.solanaConnection;
   }
 
@@ -464,9 +478,16 @@ export function setupMyceliaSDK(config: {
     bloomTokenMint: string;
     rentOracleProgram: string;
   };
+  reserveFeed?: ReserveFeed;
+  supplyFeed?: SupplyFeed;
 }): MyceliaSDK {
+  const sdk = new MyceliaSDK({
+    reserveFeed: config.reserveFeed,
+    supplyFeed: config.supplyFeed
+  });
+
   if (config.evm) {
-    myceliaSDK.initializeEVM(
+    sdk.initializeEVM(
       config.evm.rpcUrl,
       config.evm.bloomTokenAddress,
       config.evm.gasOracleAddress
@@ -474,12 +495,12 @@ export function setupMyceliaSDK(config: {
   }
 
   if (config.solana) {
-    myceliaSDK.initializeSolana(
+    sdk.initializeSolana(
       config.solana.rpcUrl,
       config.solana.bloomTokenMint,
       config.solana.rentOracleProgram
     );
   }
 
-  return myceliaSDK;
+  return sdk;
 }

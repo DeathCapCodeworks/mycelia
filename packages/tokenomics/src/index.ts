@@ -40,6 +40,17 @@ export interface SupplyFeed {
 }
 
 /**
+ * Supply feed implementation that wraps a SupplyLedger-like object
+ */
+export class SupplyLedgerFeed implements SupplyFeed {
+  constructor(private ledger: { currentSupply(): bigint }) {}
+
+  async getBloomOutstanding(): Promise<bigint> {
+    return this.ledger.currentSupply();
+  }
+}
+
+/**
  * Calculate required satoshis to fully collateralize a given BLOOM supply
  * @param outstandingBloom Current BLOOM supply
  * @returns Required locked BTC satoshis
@@ -124,4 +135,44 @@ export function maxRedeemableBloom(lockedSats: bigint, outstandingBloom: bigint)
  */
 export function quoteRedeemBloomToSats(bloom: bigint): bigint {
   return bloomToSats(bloom);
+}
+
+/**
+ * Peg status result
+ */
+export interface PegStatus {
+  status: 'active' | 'maintenance';
+  collateralizationRatio: number;
+  lockedSats: bigint;
+  outstandingBloom: bigint;
+  requiredSats: bigint;
+  isFullyReserved: boolean;
+}
+
+/**
+ * Check peg status using reserve and supply feeds
+ * Returns 'active' if fully collateralized (100%+), 'maintenance' if under-collateralized
+ * @param feeds Reserve and supply feeds
+ * @returns Promise<PegStatus> Current peg status with detailed metrics
+ */
+export async function checkPegStatus(
+  feeds: { reserve: ReserveFeed; supply: SupplyFeed }
+): Promise<PegStatus> {
+  const [lockedSats, outstandingBloom] = await Promise.all([
+    feeds.reserve.getLockedBtcSats(),
+    feeds.supply.getBloomOutstanding()
+  ]);
+  
+  const requiredSats = requiredSatsForSupply(outstandingBloom);
+  const ratio = collateralizationRatio(lockedSats, outstandingBloom);
+  const fullyReserved = isFullyReserved(lockedSats, outstandingBloom);
+  
+  return {
+    status: fullyReserved ? 'active' : 'maintenance',
+    collateralizationRatio: ratio,
+    lockedSats,
+    outstandingBloom,
+    requiredSats,
+    isFullyReserved: fullyReserved
+  };
 }
