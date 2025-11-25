@@ -19,7 +19,7 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet, BN } from '@coral-xyz/anchor';
-import { bloomToSats, satsToBloom } from '@mycelia/tokenomics';
+import { bloomToSats, satsToBloom, checkPegStatus, type ReserveFeed, type SupplyFeed } from '@mycelia/tokenomics';
 
 // Re-export common Solana types for compatibility
 export type {
@@ -95,15 +95,23 @@ export class MyceliaSolanaConnectionImpl implements MyceliaSolanaConnection {
   private connection: Connection;
   private bloomTokenMint: PublicKey;
   private rentOracleProgram: PublicKey;
+  private reserveFeed?: ReserveFeed;
+  private supplyFeed?: SupplyFeed;
 
   constructor(
     connection: Connection,
     bloomTokenMint: PublicKey,
-    rentOracleProgram: PublicKey
+    rentOracleProgram: PublicKey,
+    options?: {
+      reserveFeed?: ReserveFeed;
+      supplyFeed?: SupplyFeed;
+    }
   ) {
     this.connection = connection;
     this.bloomTokenMint = bloomTokenMint;
     this.rentOracleProgram = rentOracleProgram;
+    this.reserveFeed = options?.reserveFeed;
+    this.supplyFeed = options?.supplyFeed;
   }
 
   // Standard Connection interface delegation
@@ -170,9 +178,24 @@ export class MyceliaSolanaConnectionImpl implements MyceliaSolanaConnection {
     const cluster = this.connection.rpcEndpoint.includes('devnet') ? 'devnet' : 
                    this.connection.rpcEndpoint.includes('testnet') ? 'testnet' : 'mainnet';
     
+    // Use unified peg status checking if feeds are available
+    let pegStatus: 'active' | 'maintenance' = 'active';
+    if (this.reserveFeed && this.supplyFeed) {
+      try {
+        const status = await checkPegStatus({
+          reserve: this.reserveFeed,
+          supply: this.supplyFeed
+        });
+        pegStatus = status.status;
+      } catch (error) {
+        // If peg status check fails, default to 'active' for backward compatibility
+        console.warn('Failed to check peg status:', error);
+      }
+    }
+    
     return {
       cluster,
-      pegStatus: 'active', // TODO: Implement actual peg status checking
+      pegStatus,
       bloomPerBtc: 10, // Hard-coded peg ratio
       solPerBloom: 0.1 // Example rate
     };
@@ -314,13 +337,17 @@ export class MyceliaAnchorProgram<T = any> extends Program<T> {
 export function createMyceliaSolanaConnection(
   rpcUrl: string,
   bloomTokenMint: string,
-  rentOracleProgram: string
+  rentOracleProgram: string,
+  options?: {
+    reserveFeed?: ReserveFeed;
+    supplyFeed?: SupplyFeed;
+  }
 ): MyceliaSolanaConnection {
   const connection = new Connection(rpcUrl);
   const bloomMint = new PublicKey(bloomTokenMint);
   const rentOracle = new PublicKey(rentOracleProgram);
   
-  return new MyceliaSolanaConnectionImpl(connection, bloomMint, rentOracle);
+  return new MyceliaSolanaConnectionImpl(connection, bloomMint, rentOracle, options);
 }
 
 export function createMyceliaSolanaWallet(
