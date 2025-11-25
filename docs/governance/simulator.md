@@ -1,3 +1,7 @@
+---
+title: Simulator
+---
+
 # Governance Simulator
 
 This document describes Mycelia's governance simulator for safely testing and validating governance proposals before execution.
@@ -41,7 +45,7 @@ const result = await simulator.simulate('P-0001');
 console.log('Simulation success:', result.success);
 console.log('Can proceed:', result.canProceed);
 console.log('Health checks:', result.healthChecklist);
-```
+```text
 
 ### Simulation Result
 
@@ -54,7 +58,7 @@ interface SimulationResult {
   riskAssessment: string;             // Risk evaluation
   canProceed: boolean;                // Whether execution is safe
 }
-```
+```text
 
 ### Health Checklist
 
@@ -65,7 +69,7 @@ interface HealthChecklist {
   slos: { status: 'pass' | 'fail'; value: number; threshold: number };
   rollouts: { status: 'pass' | 'fail'; value: number; threshold: number };
 }
-```
+```text
 
 ## P-0001 Proposal Details
 
@@ -127,7 +131,7 @@ async function checkPoRAge(): Promise<HealthCheckResult> {
     threshold: 60
   };
 }
-```
+```text
 
 ### Diagnostics Check
 
@@ -142,7 +146,7 @@ async function checkDiagnostics(): Promise<HealthCheckResult> {
     threshold: 0.9
   };
 }
-```
+```text
 
 ### SLO Check
 
@@ -157,7 +161,7 @@ async function checkSLOs(): Promise<HealthCheckResult> {
     threshold: 0.9
   };
 }
-```
+```text
 
 ### Rollout Check
 
@@ -172,7 +176,7 @@ async function checkRollouts(): Promise<HealthCheckResult> {
     threshold: 0.95
   };
 }
-```
+```text
 
 ## Rollback Procedures
 
@@ -221,7 +225,7 @@ interface VotePackage {
   signature: string;        // Cryptographic signature
   voterDid: string;        // Voter decentralized identifier
 }
-```
+```text
 
 ### Signature Generation
 
@@ -243,7 +247,7 @@ async function generateVoteSignature(
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
 }
-```
+```text
 
 ## Integration Examples
 
@@ -293,7 +297,7 @@ const GovernanceDashboard: React.FC = () => {
     </div>
   );
 };
-```
+```text
 
 ### CLI Integration
 
@@ -306,7 +310,7 @@ npx @mycelia/governance-ui vote --proposal P-0001 --choice for --did did:mycelia
 
 # Check health status
 npx @mycelia/governance-ui health-check
-```
+```text
 
 ## Monitoring and Alerting
 
@@ -325,7 +329,7 @@ setInterval(async () => {
     alert('Diagnostics score below threshold');
   }
 }, 60000); // Check every minute
-```
+```text
 
 ### Alert Configuration
 
@@ -346,7 +350,7 @@ alerts:
     condition: slo_compliance < 0.9
     severity: critical
     action: emergency_response
-```
+```text
 
 ## Testing
 
@@ -371,7 +375,7 @@ describe('Governance Simulator', () => {
     expect(result.rollbackPlan.length).toBeGreaterThan(0);
   });
 });
-```
+```text
 
 ### Integration Tests
 
@@ -389,7 +393,7 @@ test('should handle health check failures', async () => {
   expect(result.success).toBe(false);
   expect(result.canProceed).toBe(false);
 });
-```
+```text
 
 ## Security Considerations
 

@@ -1,3 +1,7 @@
+---
+title: Payouts
+---
+
 # Radio Payouts
 
 Radio Payouts is a proof-of-distribution system that calculates provisional BLOOM token distributions based on content contribution and bandwidth sharing. It provides a fair and transparent mechanism for rewarding users who contribute to the Radio v0 ecosystem.
@@ -27,7 +31,7 @@ interface DistributionReceipt {
   }[];
   timestamp: number;
 }
-```
+```text
 
 #### Provisional Payouts
 Calculated BLOOM distributions:
@@ -36,7 +40,7 @@ interface ProvisionalPayout {
   did: string;
   bloomAmount: number;
 }
-```
+```text
 
 #### Payouts Calculator
 Off-chain calculator that processes receipts and generates payout calculations.
@@ -75,9 +79,9 @@ The system implements a proof-of-distribution mechanism that:
 ### Base Formula
 The payout calculation uses a weighted formula:
 
-```
+```text
 BLOOM = (BytesOut × BaseRate × TimeFactor × QualityFactor) / TotalContributions
-```
+```text
 
 Where:
 - **BytesOut**: Amount of data distributed
@@ -134,7 +138,7 @@ const receipt: DistributionReceipt = {
   ],
   timestamp: Date.now()
 };
-```
+```text
 
 ### Payout Calculation
 The calculator processes receipts and generates payouts:
@@ -144,7 +148,7 @@ import { RadioPayoutsCalculator } from '@mycelia/radio-payouts';
 
 const calculator = new RadioPayoutsCalculator();
 const payouts = calculator.calculateProvisionalShares(receipts);
-```
+```text
 
 ### Demo Mode
 The system includes a demo mode for testing:
@@ -169,7 +173,7 @@ setInterval(() => {
     });
   });
 }, 10000);
-```
+```text
 
 ### Payouts Calculator
 The calculator processes receipts and generates payouts:
@@ -177,7 +181,7 @@ The calculator processes receipts and generates payouts:
 ```typescript
 const calculator = new RadioPayoutsCalculator();
 const payouts = calculator.calculateProvisionalShares(receipts);
-```
+```text
 
 ### UI Integration
 The Radio UX displays provisional payouts:
@@ -188,7 +192,7 @@ setInterval(() => {
   const payouts = calculator.calculateProvisionalShares(mockReceipts);
   setProvisionalPayouts(payouts);
 }, 5000);
-```
+```text
 
 ## Transparency and Verification
 
@@ -312,7 +316,7 @@ Enable debug logging for troubleshooting:
 
 ```bash
 DEBUG=radio-payouts:* npm start
-```
+```text
 
 ## Future Enhancements
 

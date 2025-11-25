@@ -1,3 +1,7 @@
+---
+title: Public Directory
+---
+
 # Public Directory
 
 The Public Directory is a searchable index of NFT envelopes that have been explicitly marked as indexable by their creators. It provides a way to discover and browse public content while respecting privacy controls and implementing moderation policies.
@@ -47,7 +51,7 @@ interface IndexedEnvelope {
   moderationFlags: string[]; // e.g., 'DMCA', 'NSFW', 'Reported'
   isModerated: boolean;
 }
-```
+```text
 
 ## API Endpoints
 
@@ -74,7 +78,7 @@ Add an envelope to the public directory index.
   },
   "ownerDid": "did:mycelia:user123"
 }
-```
+```text
 
 **Response:** `200 OK` or error with details
 
@@ -88,7 +92,7 @@ Remove an envelope from the index.
   "ownerDid": "did:mycelia:user123",
   "signature": "mock-deindex-signature-for-..."
 }
-```
+```text
 
 ### Browsing
 
@@ -117,7 +121,7 @@ List envelopes with optional filters.
     }
   ]
 }
-```
+```text
 
 ### Moderation
 
@@ -138,7 +142,7 @@ Submit a DMCA takedown request.
     "description": "Description of copyrighted work"
   }
 }
-```
+```text
 
 #### POST /moderate
 Perform moderation actions (admin-only).
@@ -151,7 +155,7 @@ Perform moderation actions (admin-only).
   "moderatorDid": "did:mycelia:moderator123",
   "signature": "mock-moderator-signature-for-..."
 }
-```
+```text
 
 ## Moderation Policies
 
@@ -219,7 +223,7 @@ The Public Directory respects regional restrictions:
 ### Installation
 ```bash
 pnpm install @mycelia/public-directory
-```
+```text
 
 ### Basic Commands
 
@@ -233,14 +237,14 @@ public-directory add \
   --mediaTypes "image/jpeg,video/mp4" \
   --license "Original" \
   --regions "US,EU"
-```
+```text
 
 #### Remove an Envelope
 ```bash
 public-directory remove \
   --envelopeCid bafybeih123456789 \
   --ownerDid did:mycelia:user123
-```
+```text
 
 #### List Envelopes
 ```bash
@@ -248,7 +252,7 @@ public-directory list \
   --query "digital art" \
   --region "US" \
   --limit 20
-```
+```text
 
 #### Moderate Content
 ```bash
@@ -256,7 +260,7 @@ public-directory moderate \
   --envelopeCid bafybeih123456789 \
   --action "hide" \
   --moderatorDid did:mycelia:moderator123
-```
+```text
 
 ## Deployment
 
@@ -276,7 +280,7 @@ services:
       - PORT=3001
     depends_on:
       - ipfs
-```
+```text
 
 ### Environment Variables
 - `PORT`: Server port (default: 3001)
@@ -354,7 +358,7 @@ Enable debug logging for troubleshooting:
 
 ```bash
 DEBUG=public-directory:* npm start
-```
+```text
 
 ## Future Enhancements
 

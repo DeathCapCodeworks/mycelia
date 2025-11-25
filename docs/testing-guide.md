@@ -1,3 +1,7 @@
+---
+title: Testing Guide
+---
+
 # Mycelia Testing Guide
 
 This guide provides comprehensive testing strategies and examples for the Mycelia ecosystem.
@@ -17,7 +21,7 @@ This guide provides comprehensive testing strategies and examples for the Myceli
 
 ### Testing Pyramid
 
-```
+```text
         /\
        /  \
       / E2E \     ← Few, slow, expensive
@@ -28,7 +32,7 @@ This guide provides comprehensive testing strategies and examples for the Myceli
  /              \
 /   Unit Tests   \ ← Many, fast, cheap
 /________________\
-```
+```text
 
 ### Test Types
 
@@ -134,7 +138,7 @@ describe('Tokenomics', () => {
     });
   });
 });
-```
+```text
 
 ### Bridge Testing
 
@@ -246,7 +250,7 @@ describe('CrossChainBridge', () => {
     });
   });
 });
-```
+```text
 
 ### Mining Application Testing
 
@@ -391,7 +395,7 @@ describe('MiningApplication', () => {
     });
   });
 });
-```
+```text
 
 ### Wallet Integration Testing
 
@@ -493,7 +497,7 @@ describe('Wallet Integration', () => {
     });
   });
 });
-```
+```text
 
 ## Integration Testing
 
@@ -555,7 +559,7 @@ describe('MyceliaSDK Integration', () => {
     });
   });
 });
-```
+```text
 
 ### Cross-Package Integration Testing
 
@@ -712,7 +716,7 @@ describe('Cross-Package Integration', () => {
     });
   });
 });
-```
+```text
 
 ## End-to-End Testing
 
@@ -890,7 +894,7 @@ describe('End-to-End User Workflows', () => {
     });
   });
 });
-```
+```text
 
 ## Performance Testing
 
@@ -1062,7 +1066,7 @@ describe('Performance Testing', () => {
     });
   });
 });
-```
+```text
 
 ## Security Testing
 
@@ -1180,7 +1184,7 @@ describe('Security Testing', () => {
     });
   });
 });
-```
+```text
 
 ## Test Configuration
 
@@ -1210,7 +1214,7 @@ export default defineConfig({
     hookTimeout: 30000
   }
 });
-```
+```text
 
 ### Test Setup
 
@@ -1236,7 +1240,7 @@ global.console = {
   error: vi.fn(),
   warn: vi.fn()
 };
-```
+```text
 
 ### Package.json Test Scripts
 
@@ -1252,7 +1256,7 @@ global.console = {
     "test:e2e": "vitest run --config vitest.e2e.config.ts"
   }
 }
-```
+```text
 
 ## CI/CD Integration
 
@@ -1306,7 +1310,7 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage/lcov.info
-```
+```text
 
 ### Test Reports
 
@@ -1331,7 +1335,7 @@ describe('Test Reporting', () => {
     expect(report.security).toBeDefined();
   });
 });
-```
+```text
 
 ---
 

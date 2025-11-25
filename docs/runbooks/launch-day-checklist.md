@@ -1,3 +1,7 @@
+---
+title: Launch Day Checklist
+---
+
 # Launch Day Checklist
 
 ## Overview
@@ -10,21 +14,21 @@ This checklist provides step-by-step procedures for executing the Mycelia mainne
 - [ ] **Run release verification**
   ```bash
   pnpm run release:verify
-  ```
+  ```text
   - All checks must pass (exit code 0)
   - No critical failures allowed
 
 - [ ] **Verify PoR attestation**
   ```bash
   mycelia-attest verify ./release/mainnet/por.json
-  ```
+  ```text
   - Attestation must be valid and fresh (< 24 hours)
   - Signature verification must pass
 
 - [ ] **Check feature flags**
   ```bash
   mycelia-launchctl status
-  ```
+  ```text
   - Verify mainnet defaults are set
   - `btc_mainnet_redemption` must be disabled
 
@@ -61,14 +65,14 @@ This checklist provides step-by-step procedures for executing the Mycelia mainne
 - [ ] **Run go/no-go gate**
   ```bash
   mycelia-launchctl go
-  ```
+  ```text
   - All systems must be green
   - No blocking issues
 
 - [ ] **Final PoR attestation**
   ```bash
   mycelia-attest sign --out ./release/mainnet/por.json
-  ```
+  ```text
   - Generate fresh attestation
   - Verify signature and freshness
 
@@ -82,14 +86,14 @@ This checklist provides step-by-step procedures for executing the Mycelia mainne
   ```bash
   git tag -a v1.0.0 -m "Mycelia Mainnet Launch"
   git push origin v1.0.0
-  ```
+  ```text
   - Tag with semantic version
   - Push to remote repository
 
 - [ ] **Publish documentation**
   ```bash
   pnpm run release:publish
-  ```
+  ```text
   - Build and deploy docs
   - Update status page
   - Publish attestations
@@ -191,7 +195,7 @@ If critical issues are detected:
 1. **Pause operations**
    ```bash
    mycelia-launchctl pause redemption
-   ```
+   ```text
 
 2. **Notify team**
    - Alert incident response team

@@ -1,3 +1,7 @@
+---
+title: Overview
+---
+
 # Project Mycelia Status Overview
 
 This page provides a real-time overview of Project Mycelia's current status, including what's live, what's in preview, and system health metrics.

@@ -1,3 +1,7 @@
+---
+title: Developer Guide
+---
+
 # Mycelia Developer Documentation
 
 Welcome to the Mycelia Developer Documentation! This comprehensive guide will help you integrate with the Mycelia ecosystem, including BLOOM token operations, cross-chain functionality, mining rewards, and wallet integration.
@@ -53,7 +57,7 @@ pnpm add @mycelia/mining-app
 
 # Smart contracts
 pnpm add @mycelia/bloom-contracts
-```
+```text
 
 ### Quick Start
 
@@ -89,7 +93,7 @@ console.log(`BLOOM Balance: ${balance}`);
 const sats = bloomToSats(balance);
 const btc = Number(sats) / 100_000_000;
 console.log(`BTC Equivalent: ${btc} BTC`);
-```
+```text
 
 ## Core Concepts
 
@@ -114,7 +118,7 @@ const bloom = satsToBloom(satsAmount); // 1 BLOOM
 
 // Get peg statement
 const pegStatement = assertPeg(); // "Peg: 10 BLOOM = 1 BTC"
-```
+```text
 
 ### Cross-Chain Architecture
 
@@ -154,7 +158,7 @@ console.log(`BTC Equivalent: ${btcEquivalent} BTC`);
 // Send BLOOM tokens
 const txHash = await wallet.sendBloom(recipientAddress, amount);
 console.log(`Transaction: ${txHash}`);
-```
+```text
 
 ### Peg Enforcement
 
@@ -175,7 +179,7 @@ if (canMintTokens) {
 } else {
   throw new Error('Minting would break peg');
 }
-```
+```text
 
 ### Supply Management
 
@@ -195,7 +199,7 @@ supplyLedger.recordBurn(500000000000000000n); // 0.5 BLOOM
 // Get current supply
 const currentSupply = supplyLedger.currentSupply();
 console.log(`Current Supply: ${currentSupply} BLOOM`);
-```
+```text
 
 ## Cross-Chain Development
 
@@ -219,7 +223,7 @@ const transaction = await bridge.crossChainTransfer(
 );
 
 console.log(`Bridge Transaction: ${transaction.id}`);
-```
+```text
 
 ### Bridge Monitoring
 
@@ -241,7 +245,7 @@ console.log('Bridge Stats:', {
   totalVolume: stats.totalVolume.toString(),
   completedTransactions: stats.completedTransactions
 });
-```
+```text
 
 ### Fee Estimation
 
@@ -260,7 +264,7 @@ console.log('Bridge Fees:', {
   totalFee: fees.totalFee.toString(),
   estimatedTime: `${fees.estimatedTime}s`
 });
-```
+```text
 
 ## Mining Application
 
@@ -284,7 +288,7 @@ const session = await miningApp.startMiningSession('miner1', {
   storageUsed: 1024 * 1024 * 1024, // 1GB
   bandwidthUsed: 100 * 1024 * 1024 // 100MB
 });
-```
+```text
 
 ### Contribution Processing
 
@@ -302,7 +306,7 @@ console.log('Contribution processed:', {
   cid: result.cid,
   rewards: result.rewards.toString()
 });
-```
+```text
 
 ### Mining Statistics
 
@@ -317,7 +321,7 @@ console.log('Mining Status:', {
   totalStorageUsed: status.totalStorageUsed,
   totalBandwidthUsed: status.totalBandwidthUsed
 });
-```
+```text
 
 ### Redemption
 
@@ -336,7 +340,7 @@ console.log('Redemption Intent:', {
 // Complete redemption
 const success = await miningApp.completeRedemption(intent.id);
 console.log('Redemption completed:', success);
-```
+```text
 
 ## Wallet Integration
 
@@ -356,7 +360,7 @@ console.log('MetaMask connected:', state.address);
 // Connect to Coinbase Wallet
 const coinbaseState = await evmManager.connectCoinbase();
 console.log('Coinbase connected:', coinbaseState.address);
-```
+```text
 
 ### Solana Wallet Connection
 
@@ -374,7 +378,7 @@ console.log('Phantom connected:', phantomState.publicKey?.toBase58());
 // Connect to Solflare
 const solflareState = await solanaManager.connectSolflare();
 console.log('Solflare connected:', solflareState.publicKey?.toBase58());
-```
+```text
 
 ### Cross-Chain Wallet Management
 
@@ -398,7 +402,7 @@ console.log(`Total BLOOM Balance: ${totalBalance}`);
 // Get BTC equivalent
 const totalBtc = await crossChainManager.getTotalBloomBalanceInBtc();
 console.log(`Total BTC Equivalent: ${totalBtc} BTC`);
-```
+```text
 
 ### React Integration
 
@@ -450,7 +454,7 @@ function WalletComponent() {
     </div>
   );
 }
-```
+```text
 
 ## Smart Contracts
 
@@ -477,7 +481,7 @@ const symbol = await contract.symbol();
 const totalSupply = await contract.totalSupply();
 
 console.log('Token Info:', { name, symbol, totalSupply: totalSupply.toString() });
-```
+```text
 
 ### Solana Programs
 
@@ -504,7 +508,7 @@ const tx = await program.methods
   .rpc();
 
 console.log('Mint initialized:', tx);
-```
+```text
 
 ### Contract Integration
 
@@ -525,7 +529,7 @@ console.log('Contract Balance:', {
   bloom: bloomBalance.toString(),
   btc: btcEquivalent
 });
-```
+```text
 
 ## API Reference
 
@@ -543,7 +547,7 @@ class MyceliaSDK {
   getEVMProvider(): MyceliaEVMProvider;
   getSolanaConnection(): MyceliaSolanaConnection;
 }
-```
+```text
 
 #### IMyceliaWallet
 
@@ -556,7 +560,7 @@ interface IMyceliaWallet {
   getBloomBalanceInBtc(): Promise<number>;
   getAddress(): string | PublicKey;
 }
-```
+```text
 
 ### Tokenomics
 
@@ -585,7 +589,7 @@ function assertCanMint(mintAmountBloom: bigint, feeds: {reserve: ReserveFeed; su
 // Redemption functions
 function maxRedeemableBloom(lockedSats: bigint, outstandingBloom: bigint): bigint;
 function quoteRedeemBloomToSats(bloom: bigint): bigint;
-```
+```text
 
 ### Bridge Infrastructure
 
@@ -608,7 +612,7 @@ class CrossChainBridge {
   getBridgeStatistics(): BridgeStatistics;
   estimateBridgeFees(fromChain: BridgeChain, toChain: BridgeChain, amount: bigint): Promise<BridgeFees>;
 }
-```
+```text
 
 ### Mining Application
 
@@ -629,7 +633,7 @@ class MiningApplication {
   requestRedemption(sessionId: string, btcAddress: string): Promise<RedeemIntent>;
   shutdown(): Promise<void>;
 }
-```
+```text
 
 ### Wallet Integration
 
@@ -651,7 +655,7 @@ class EVMWalletManager {
   static isMetaMaskInstalled(): boolean;
   static isCoinbaseInstalled(): boolean;
 }
-```
+```text
 
 #### SolanaWalletManager
 
@@ -673,7 +677,7 @@ class SolanaWalletManager {
   static isSolflareInstalled(): boolean;
   static isBackpackInstalled(): boolean;
 }
-```
+```text
 
 ## Examples & Tutorials
 
@@ -716,7 +720,7 @@ async function basicBloomOperations() {
   const txHash = await wallet.sendBloom('0xRecipientAddress', 1000000000000000000n);
   console.log(`Transaction: ${txHash}`);
 }
-```
+```text
 
 ### Tutorial 2: Cross-Chain Bridge Usage
 
@@ -776,7 +780,7 @@ async function crossChainBridgeTutorial() {
     });
   });
 }
-```
+```text
 
 ### Tutorial 3: Mining Application Setup
 
@@ -843,7 +847,7 @@ async function miningApplicationTutorial() {
   await miningApp.stopMiningSession(session.id);
   console.log('Mining session completed');
 }
-```
+```text
 
 ### Tutorial 4: React Wallet Integration
 
@@ -935,7 +939,7 @@ function WalletIntegrationTutorial() {
 }
 
 export default WalletIntegrationTutorial;
-```
+```text
 
 ## Best Practices
 
@@ -1001,7 +1005,7 @@ try {
     console.log('Connection already in progress');
   }
 }
-```
+```text
 
 #### Bridge Transaction Issues
 
@@ -1025,7 +1029,7 @@ bridge.subscribeToTransaction(transactionId, (tx) => {
     console.error('Transaction failed:', tx.metadata?.error);
   }
 });
-```
+```text
 
 #### Mining Application Issues
 
@@ -1049,7 +1053,7 @@ if (!resources) {
   console.log('No resources allocated');
   await miningApp.resourceEngine.allocateResources(minerId, requirements);
 }
-```
+```text
 
 ### Error Codes
 
@@ -1084,7 +1088,7 @@ process.env.DEBUG = 'mycelia:*';
 
 // Or specific modules
 process.env.DEBUG = 'mycelia:bridge,mycelia:wallet';
-```
+```text
 
 #### Transaction Debugging
 
@@ -1101,7 +1105,7 @@ console.log('Transaction details:', {
   txHash: transaction.txHash,
   proof: transaction.proof
 });
-```
+```text
 
 #### Wallet Debugging
 
@@ -1114,7 +1118,7 @@ console.log('EVM Wallet State:', {
   balance: evmState.balance?.toString(),
   error: evmState.error
 });
-```
+```text
 
 ### Support
 

@@ -133,8 +133,8 @@ The roadmap for SPV implementation:
 class SpvUtxoFeed implements ReserveFeed {
   constructor(config: SpvUtxoConfig);
   
-  async getLockedBtcSats(): Promise<bigint>;
-  async getUtxoResult(): Promise<SpvUtxoResult>;
+  async getLockedBtcSats(): Promise&lt;bigint&gt;;
+  async getUtxoResult(): Promise&lt;SpvUtxoResult&gt;;
   addUtxo(txid: string, vout: number, value: bigint, confirmed: boolean): void;
   removeUtxo(txid: string, vout: number): void;
 }
@@ -146,9 +146,9 @@ class SpvUtxoFeed implements ReserveFeed {
 class ComposableReserveFeed implements ReserveFeed {
   constructor(primary: SpvProofFeed, fallback: ReserveFeed);
   
-  async getLockedBtcSats(): Promise<bigint>;
+  async getLockedBtcSats(): Promise&lt;bigint&gt;;
   getLastWarning(): string | undefined;
-  async isSpvAvailable(): Promise<boolean>;
+  async isSpvAvailable(): Promise&lt;boolean&gt;;
 }
 ```
 

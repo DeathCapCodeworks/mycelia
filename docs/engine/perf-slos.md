@@ -1,3 +1,7 @@
+---
+title: Perf Slos
+---
+
 # Performance SLOs and CI Gates
 
 This document outlines the performance Service Level Objectives (SLOs) and CI gates for AV1 encoding, decoding, and playback in the Web4 Engine.
@@ -61,7 +65,7 @@ pnpm run bench:webrtc
 # AV1 Standards Tests
 cd packages/standards-test
 pnpm run bench:av1
-```
+```text
 
 ## Reproducing Locally
 
@@ -86,7 +90,7 @@ pnpm --filter @mycelia/webrtc-enhanced run bench:webrtc
 
 # Run AV1 standards tests
 pnpm --filter @mycelia/standards-test run bench:av1
-```
+```text
 
 ### Expected Output
 Each benchmark outputs JSON results with:
@@ -132,7 +136,7 @@ Benchmark targets can be adjusted in `packages/media-pipeline/bench/profiles.jso
     }
   }
 }
-```
+```text
 
 ## Monitoring
 

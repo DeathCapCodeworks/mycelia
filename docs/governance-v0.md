@@ -1,3 +1,7 @@
+---
+title: Governance V0
+---
+
 # Governance v0
 
 ## Overview

@@ -15,7 +15,7 @@ The BLOOM token maintains a hard peg to Bitcoin at a fixed rate of 10 BLOOM = 1 
 const SATS_PER_BTC = 100_000_000n;
 const BTC_PER_BLOOM = 10n; // 10 BLOOM = 1 BTC
 const SATS_PER_BLOOM = SATS_PER_BTC / BTC_PER_BLOOM; // 10,000,000 sats per BLOOM
-```
+```text
 
 #### Conversion Functions
 
@@ -27,7 +27,7 @@ function bloomToSats(bloom: bigint): bigint {
 function satsToBloom(sats: bigint): bigint {
   return sats / SATS_PER_BLOOM; // Floor division
 }
-```
+```text
 
 #### Collateralization Invariant
 
@@ -37,7 +37,7 @@ The system maintains full collateralization through the following invariant:
 function isFullyReserved(lockedSats: bigint, outstandingBloom: bigint): boolean {
   return lockedSats >= bloomToSats(outstandingBloom);
 }
-```
+```text
 
 ### A.2 Mint Guard
 
@@ -55,7 +55,7 @@ async function assertCanMint(mintAmountBloom: bigint, feeds: {reserve: ReserveFe
     throw new Error("Mint denied: collateral shortfall. Peg requires locked BTC sats >= BLOOM * 10 ratio.");
   }
 }
-```
+```text
 
 ### A.3 Redemption Flow
 
@@ -74,7 +74,7 @@ The supply schedule defines initial supply, ongoing emissions, and allocation to
 ```text
 Let S0 be initial supply, E(t) the emissions at time t.
 Total Supply S(t) = S0 + ∫ E(t) dt.
-```
+```text
 
 ### A.5 Validator and Delegator Rewards
 

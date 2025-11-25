@@ -118,7 +118,7 @@ interface EffectOptions {
 }
 ```
 
-**getStats(): MediaPipelineStats[]**
+**getStats(): MediaPipelineStat\1\[]**
 Returns detailed performance statistics.
 
 ```typescript

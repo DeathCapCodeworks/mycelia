@@ -17,4 +17,4 @@ flowchart LR
   F --> G[HTLC on Bitcoin]
   G --> H[Burn BLOOM]
   H --> D[Outstanding Supply-]
-```
+```text

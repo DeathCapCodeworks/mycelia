@@ -16,4 +16,4 @@ flowchart TB
   L --> MG[Mint Guard]
   MG --> MINT[Mint BLOOM]
   MG --> REJECT[Reject Mint]
-```
+```text

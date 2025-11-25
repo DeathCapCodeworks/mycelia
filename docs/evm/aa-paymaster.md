@@ -1,3 +1,7 @@
+---
+title: Aa Paymaster
+---
+
 # Account Abstraction & Paymaster
 
 This document covers the Account Abstraction (ERC-4337) and Paymaster functionality in Project Mycelia, enabling gasless transactions and advanced wallet features.
@@ -26,7 +30,7 @@ const smartAccountAddress = await aa.createSmartAccount(
 );
 
 console.log('Smart account created:', smartAccountAddress);
-```
+```text
 
 ### User Operations
 
@@ -50,7 +54,7 @@ const userOpHash = await aa.sendUserOperation(signedUserOp);
 // Wait for confirmation
 const receipt = await aa.waitForUserOperation(userOpHash);
 console.log('Transaction confirmed:', receipt.success);
-```
+```text
 
 ### Gas Estimation
 
@@ -72,7 +76,7 @@ const optimizedUserOp = {
   verificationGasLimit: gasEstimate.verificationGasLimit,
   preVerificationGas: gasEstimate.preVerificationGas
 };
-```
+```text
 
 ## Paymaster Integration
 
@@ -101,7 +105,7 @@ if (canSponsor) {
 } else {
   console.log('Transaction cannot be sponsored');
 }
-```
+```text
 
 ### Gas Sponsorship
 
@@ -127,7 +131,7 @@ const sponsoredUserOp = {
   maxFeePerGas: sponsorship.maxFeePerGas,
   maxPriorityFeePerGas: sponsorship.maxPriorityFeePerGas
 };
-```
+```text
 
 ### BLOOM Token Sponsorship
 
@@ -147,7 +151,7 @@ const bloomSponsorship = await paymaster.sponsorWithBLOOM(
 );
 
 console.log('BLOOM sponsorship:', bloomSponsorship);
-```
+```text
 
 ## Session Keys
 
@@ -172,7 +176,7 @@ const sessionUserOp = await aa.createUserOperation(
 
 // Sign with session key instead of main key
 const sessionSignedUserOp = await aa.signUserOperation(sessionUserOp, sessionPrivateKey);
-```
+```text
 
 ### Session Key Management
 
@@ -182,7 +186,7 @@ await aa.revokeSessionKey(sessionKeyAddress);
 
 // Check session key status
 const isActive = await aa.isSessionKeyActive(sessionKeyAddress);
-```
+```text
 
 ## Paymaster Policies
 
@@ -203,7 +207,7 @@ await paymaster.updatePolicy({
   dailyLimit: '0x16345785d8a0000',    // 0.1 ETH daily limit
   perUserLimit: '0x38d7ea4c68000'     // 0.01 ETH per user limit
 });
-```
+```text
 
 ### Policy Enforcement
 
@@ -220,7 +224,7 @@ console.log('Paymaster status:', {
   dailyLimit: status.dailyLimit,
   isActive: status.isActive
 });
-```
+```text
 
 ## Batch Operations
 
@@ -240,7 +244,7 @@ const batchUserOp = await aa.createBatchUserOperation(userOps);
 // Sign and send
 const signedBatchUserOp = await aa.signUserOperation(batchUserOp, privateKey);
 const batchHash = await aa.sendUserOperation(signedBatchUserOp);
-```
+```text
 
 ## Error Handling
 
@@ -265,7 +269,7 @@ try {
     console.error('Unexpected error:', error);
   }
 }
-```
+```text
 
 ## Security Best Practices
 
@@ -286,7 +290,7 @@ const sessionKey = await aa.createSessionKey({
   spendingCap: '100000000000000000', // 0.1 BLOOM max
   expiresAt: Date.now() + 3600000   // 1 hour expiry
 });
-```
+```text
 
 ### Paymaster Security
 
@@ -306,7 +310,7 @@ All AA and paymaster operations are automatically logged:
 // - aa_user_operation_confirmed
 // - evm_paymaster_sponsorship_granted
 // - evm_paymaster_sponsorship_denied
-```
+```text
 
 ### Custom Monitoring
 
@@ -320,7 +324,7 @@ observability.logEvent('custom_aa_operation', {
   gas_cost: receipt.actualGasCost,
   success: receipt.success
 });
-```
+```text
 
 ## Troubleshooting
 
@@ -333,7 +337,7 @@ const receipt = await aa.getUserOperationReceipt(userOpHash);
 if (!receipt) {
   console.log('User operation not found or still pending');
 }
-```
+```text
 
 **Sponsorship denied**
 ```typescript
@@ -342,7 +346,7 @@ const status = await paymaster.getSponsorshipStatus();
 if (status.dailyUsed >= status.dailyLimit) {
   console.log('Daily sponsorship limit reached');
 }
-```
+```text
 
 **Session key expired**
 ```typescript
@@ -351,7 +355,7 @@ const isValid = await aa.isSessionKeyValid(sessionKeyAddress);
 if (!isValid) {
   console.log('Session key has expired');
 }
-```
+```text
 
 ### Debug Mode
 
@@ -363,7 +367,7 @@ process.env.DEBUG = 'mycelia:aa:*,mycelia:paymaster:*';
 
 // Or enable specific modules
 process.env.DEBUG = 'mycelia:aa:userop,mycelia:paymaster:sponsorship';
-```
+```text
 
 ## API Reference
 

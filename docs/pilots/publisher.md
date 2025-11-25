@@ -1,3 +1,7 @@
+---
+title: Publisher
+---
+
 # Publisher Pilot Program
 
 This document outlines the Publisher Pilot Program for testing Web4 features in real-world publishing environments.
@@ -70,13 +74,13 @@ const pilot = pilotKit.createPublisherPilot({
   maxParticipants: 10,
   duration: 7 // 1 week for demo
 });
-```
+```text
 
 ### 2. Join Pilot
 ```javascript
 const participantId = `publisher_${Date.now()}`;
 const success = pilotKit.joinPilot(pilot.pilotId, participantId);
-```
+```text
 
 ### 3. Enable Features
 ```javascript
@@ -87,7 +91,7 @@ featureFlags.set('bloom_rewards', true);
 
 // Enable Live Captions
 featureFlags.set('live_captions_vault', true);
-```
+```text
 
 ## Testing Workflows
 
@@ -129,7 +133,7 @@ pilotKit.submitFeedback({
   feature: 'bloom_rewards',
   category: 'usability'
 });
-```
+```text
 
 ## Pilot Management
 
@@ -194,7 +198,7 @@ const report = pilotKit.generatePilotReport(pilot.pilotId);
 
 // Export CSV data
 console.log(report.csvExport);
-```
+```text
 
 ## Risk Management
 

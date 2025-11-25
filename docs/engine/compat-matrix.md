@@ -1,3 +1,7 @@
+---
+title: Compat Matrix
+---
+
 # Compatibility Matrix and Auto-Fallback
 
 This document describes the compatibility matrix system that detects hardware capabilities and automatically falls back to software encoding/decoding when needed.
@@ -118,19 +122,19 @@ import { engine } from '@mycelia/engine-bridge';
 
 // Force software encoding/decoding
 engine.overridePath('sw');
-```
+```text
 
 ### Clear Override
 ```javascript
 // Clear override and use automatic detection
 engine.clearOverridePath();
-```
+```text
 
 ### Check Override Status
 ```javascript
 const overridePath = engine.getOverridePath();
 console.log('Current override:', overridePath); // 'hw', 'sw', or null
-```
+```text
 
 ## Demo Mode
 
@@ -140,14 +144,14 @@ import { compatMatrix } from '@mycelia/compat-matrix';
 
 // Enable demo mode for capability aggregation
 compatMatrix.enableDemoMode();
-```
+```text
 
 ### Export Aggregated Data
 ```javascript
 // Export aggregated compatibility data
 const aggregatedData = compatMatrix.exportAggregatedData();
 console.log(aggregatedData);
-```
+```text
 
 ## Usage Examples
 
@@ -165,7 +169,7 @@ console.log('OS:', result.capabilities.os);
 console.log('GPU Driver:', result.capabilities.gpu_driver);
 console.log('Encode Path:', result.fallback_decisions.encode_path);
 console.log('Decode Path:', result.fallback_decisions.decode_path);
-```
+```text
 
 ### Performance Estimation
 ```javascript
@@ -174,7 +178,7 @@ const result = compatMatrix.getResult();
 console.log('Encode Performance:', result.performance_estimate.encode_performance);
 console.log('Decode Performance:', result.performance_estimate.decode_performance);
 console.log('Confidence:', result.performance_estimate.confidence);
-```
+```text
 
 ### Override Testing
 ```javascript
@@ -188,7 +192,7 @@ const result = await engine.mediaEncode(input, 'vod_1080p30_high');
 
 // Clear override
 engine.clearOverridePath();
-```
+```text
 
 ## Troubleshooting
 

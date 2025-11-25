@@ -16,5 +16,5 @@ sequenceDiagram
     N->>V: Fetch scoped data
     N->>D: Provide signed capability
     D->>N: Service response
-```
+```text
 

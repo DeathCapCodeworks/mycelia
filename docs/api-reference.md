@@ -1,3 +1,7 @@
+---
+title: Api Reference
+---
+
 # Mycelia API Reference
 
 This document provides comprehensive API reference for all Mycelia packages and their interfaces.
@@ -29,13 +33,13 @@ class MyceliaSDK {
   getEVMProvider(): MyceliaEVMProvider;
   getSolanaConnection(): MyceliaSolanaConnection;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(config: MyceliaSDKConfig)
-```
+```text
 
 **Parameters:**
 - `config` (MyceliaSDKConfig): SDK configuration object
@@ -54,7 +58,7 @@ const sdk = new MyceliaSDK({
     rentOracleProgram: '11111111111111111111111111111112'
   }
 });
-```
+```text
 
 #### Methods
 
@@ -62,7 +66,7 @@ const sdk = new MyceliaSDK({
 
 ```typescript
 createEVMWallet(privateKey: string): IMyceliaWallet
-```
+```text
 
 Creates an EVM wallet instance.
 
@@ -75,13 +79,13 @@ Creates an EVM wallet instance.
 **Example:**
 ```typescript
 const wallet = sdk.createEVMWallet('0x1234567890123456789012345678901234567890123456789012345678901234');
-```
+```text
 
 ##### createSolanaWallet
 
 ```typescript
 createSolanaWallet(privateKey: string): IMyceliaWallet
-```
+```text
 
 Creates a Solana wallet instance.
 
@@ -94,13 +98,13 @@ Creates a Solana wallet instance.
 **Example:**
 ```typescript
 const wallet = sdk.createSolanaWallet('your-solana-private-key');
-```
+```text
 
 ##### getEVMProvider
 
 ```typescript
 getEVMProvider(): MyceliaEVMProvider
-```
+```text
 
 Gets the EVM provider instance.
 
@@ -111,7 +115,7 @@ Gets the EVM provider instance.
 
 ```typescript
 getSolanaConnection(): MyceliaSolanaConnection
-```
+```text
 
 Gets the Solana connection instance.
 
@@ -129,7 +133,7 @@ interface IMyceliaWallet {
   getBloomBalanceInBtc(): Promise<number>;
   getAddress(): string | PublicKey;
 }
-```
+```text
 
 #### Methods
 
@@ -137,7 +141,7 @@ interface IMyceliaWallet {
 
 ```typescript
 getBloomBalance(): Promise<bigint>
-```
+```text
 
 Gets the BLOOM token balance.
 
@@ -148,7 +152,7 @@ Gets the BLOOM token balance.
 
 ```typescript
 sendBloom(to: string | PublicKey, amount: bigint): Promise<any>
-```
+```text
 
 Sends BLOOM tokens to the specified address.
 
@@ -163,7 +167,7 @@ Sends BLOOM tokens to the specified address.
 
 ```typescript
 getBloomBalanceInBtc(): Promise<number>
-```
+```text
 
 Gets the BLOOM balance in BTC equivalent.
 
@@ -174,7 +178,7 @@ Gets the BLOOM balance in BTC equivalent.
 
 ```typescript
 getAddress(): string | PublicKey
-```
+```text
 
 Gets the wallet address.
 
@@ -189,7 +193,7 @@ Gets the wallet address.
 const SATS_PER_BTC = 100_000_000n;
 const BTC_PER_BLOOM_RATIO = 10n;
 const SATS_PER_BLOOM = SATS_PER_BTC / BTC_PER_BLOOM_RATIO;
-```
+```text
 
 ### Functions
 
@@ -197,7 +201,7 @@ const SATS_PER_BLOOM = SATS_PER_BTC / BTC_PER_BLOOM_RATIO;
 
 ```typescript
 function bloomToSats(bloom: bigint): bigint
-```
+```text
 
 Converts BLOOM amount to satoshis.
 
@@ -210,13 +214,13 @@ Converts BLOOM amount to satoshis.
 **Example:**
 ```typescript
 const sats = bloomToSats(1000000000000000000n); // 1 BLOOM = 10,000,000 sats
-```
+```text
 
 #### satsToBloom
 
 ```typescript
 function satsToBloom(sats: bigint): bigint
-```
+```text
 
 Converts satoshis to BLOOM amount (floor division).
 
@@ -229,13 +233,13 @@ Converts satoshis to BLOOM amount (floor division).
 **Example:**
 ```typescript
 const bloom = satsToBloom(10000000n); // 10,000,000 sats = 1 BLOOM
-```
+```text
 
 #### assertPeg
 
 ```typescript
 function assertPeg(): string
-```
+```text
 
 Returns the canonical peg statement.
 
@@ -245,13 +249,13 @@ Returns the canonical peg statement.
 **Example:**
 ```typescript
 const pegStatement = assertPeg(); // "Peg: 10 BLOOM = 1 BTC"
-```
+```text
 
 #### requiredSatsForSupply
 
 ```typescript
 function requiredSatsForSupply(outstandingBloom: bigint): bigint
-```
+```text
 
 Calculates required satoshis for outstanding BLOOM supply.
 
@@ -265,7 +269,7 @@ Calculates required satoshis for outstanding BLOOM supply.
 
 ```typescript
 function collateralizationRatio(lockedSats: bigint, outstandingBloom: bigint): number
-```
+```text
 
 Calculates collateralization ratio.
 
@@ -280,7 +284,7 @@ Calculates collateralization ratio.
 
 ```typescript
 function isFullyReserved(lockedSats: bigint, outstandingBloom: bigint): boolean
-```
+```text
 
 Checks if system is fully reserved.
 
@@ -295,7 +299,7 @@ Checks if system is fully reserved.
 
 ```typescript
 function canMint(mintAmountBloom: bigint, feeds: {reserve: ReserveFeed; supply: SupplyFeed}): Promise<boolean>
-```
+```text
 
 Checks if minting is allowed.
 
@@ -310,7 +314,7 @@ Checks if minting is allowed.
 
 ```typescript
 function assertCanMint(mintAmountBloom: bigint, feeds: {reserve: ReserveFeed; supply: SupplyFeed}): Promise<void>
-```
+```text
 
 Asserts that minting is allowed, throws error if not.
 
@@ -325,7 +329,7 @@ Asserts that minting is allowed, throws error if not.
 
 ```typescript
 function maxRedeemableBloom(lockedSats: bigint, outstandingBloom: bigint): bigint
-```
+```text
 
 Calculates maximum redeemable BLOOM.
 
@@ -340,7 +344,7 @@ Calculates maximum redeemable BLOOM.
 
 ```typescript
 function quoteRedeemBloomToSats(bloom: bigint): bigint
-```
+```text
 
 Quotes BLOOM redemption in satoshis.
 
@@ -358,7 +362,7 @@ Quotes BLOOM redemption in satoshis.
 interface ReserveFeed {
   getLockedBtcSats(): Promise<bigint>;
 }
-```
+```text
 
 #### SupplyFeed
 
@@ -366,7 +370,7 @@ interface ReserveFeed {
 interface SupplyFeed {
   getBloomOutstanding(): Promise<bigint>;
 }
-```
+```text
 
 ## EVM Compatibility (@mycelia/evm-compat)
 
@@ -381,13 +385,13 @@ class MyceliaEVMProvider extends ethers.JsonRpcProvider {
   getBloomBalanceInBtc(address: string): Promise<number>;
   getGasPriceInBloom(): Promise<bigint>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(rpcUrl: string, bloomTokenAddress: string, gasOracleAddress: string)
-```
+```text
 
 **Parameters:**
 - `rpcUrl` (string): RPC URL
@@ -400,7 +404,7 @@ constructor(rpcUrl: string, bloomTokenAddress: string, gasOracleAddress: string)
 
 ```typescript
 getBloomBalance(address: string): Promise<bigint>
-```
+```text
 
 Gets BLOOM token balance for address.
 
@@ -414,7 +418,7 @@ Gets BLOOM token balance for address.
 
 ```typescript
 getBloomBalanceInBtc(address: string): Promise<number>
-```
+```text
 
 Gets BLOOM balance in BTC equivalent.
 
@@ -428,7 +432,7 @@ Gets BLOOM balance in BTC equivalent.
 
 ```typescript
 getGasPriceInBloom(): Promise<bigint>
-```
+```text
 
 Gets gas price in BLOOM tokens.
 
@@ -445,13 +449,13 @@ class MyceliaEVMSigner extends ethers.Wallet {
   getBloomBalance(): Promise<bigint>;
   sendBloom(to: string, amount: bigint): Promise<ethers.TransactionResponse>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(privateKey: string, provider: MyceliaEVMProvider, bloomTokenAddress: string)
-```
+```text
 
 **Parameters:**
 - `privateKey` (string): Private key
@@ -464,7 +468,7 @@ constructor(privateKey: string, provider: MyceliaEVMProvider, bloomTokenAddress:
 
 ```typescript
 getBloomBalance(): Promise<bigint>
-```
+```text
 
 Gets BLOOM token balance.
 
@@ -475,7 +479,7 @@ Gets BLOOM token balance.
 
 ```typescript
 sendBloom(to: string, amount: bigint): Promise<ethers.TransactionResponse>
-```
+```text
 
 Sends BLOOM tokens.
 
@@ -499,13 +503,13 @@ class MyceliaSolanaConnection extends Connection {
   getBloomBalanceInBtc(owner: PublicKey): Promise<number>;
   getRentInBloom(dataSize: number): Promise<bigint>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(endpoint: string, bloomTokenMint: PublicKey, rentOracleProgram: PublicKey)
-```
+```text
 
 **Parameters:**
 - `endpoint` (string): Solana RPC endpoint
@@ -518,7 +522,7 @@ constructor(endpoint: string, bloomTokenMint: PublicKey, rentOracleProgram: Publ
 
 ```typescript
 getBloomBalance(owner: PublicKey): Promise<bigint>
-```
+```text
 
 Gets BLOOM token balance for owner.
 
@@ -532,7 +536,7 @@ Gets BLOOM token balance for owner.
 
 ```typescript
 getBloomBalanceInBtc(owner: PublicKey): Promise<number>
-```
+```text
 
 Gets BLOOM balance in BTC equivalent.
 
@@ -546,7 +550,7 @@ Gets BLOOM balance in BTC equivalent.
 
 ```typescript
 getRentInBloom(dataSize: number): Promise<bigint>
-```
+```text
 
 Gets rent cost in BLOOM tokens.
 
@@ -567,13 +571,13 @@ class MyceliaSolanaWallet {
   getBloomBalance(): Promise<bigint>;
   sendBloom(recipient: PublicKey, amount: bigint): Promise<string>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(privateKey: string, connection: MyceliaSolanaConnection, bloomTokenMint: PublicKey)
-```
+```text
 
 **Parameters:**
 - `privateKey` (string): Private key
@@ -586,7 +590,7 @@ constructor(privateKey: string, connection: MyceliaSolanaConnection, bloomTokenM
 
 ```typescript
 get publicKey(): PublicKey
-```
+```text
 
 Gets the public key.
 
@@ -599,7 +603,7 @@ Gets the public key.
 
 ```typescript
 getBloomBalance(): Promise<bigint>
-```
+```text
 
 Gets BLOOM token balance.
 
@@ -610,7 +614,7 @@ Gets BLOOM token balance.
 
 ```typescript
 sendBloom(recipient: PublicKey, amount: bigint): Promise<string>
-```
+```text
 
 Sends BLOOM tokens.
 
@@ -642,13 +646,13 @@ class CrossChainBridge {
   getBridgeStatistics(): BridgeStatistics;
   estimateBridgeFees(fromChain: BridgeChain, toChain: BridgeChain, amount: bigint): Promise<BridgeFees>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(config: BridgeConfig)
-```
+```text
 
 **Parameters:**
 - `config` (BridgeConfig): Bridge configuration
@@ -659,7 +663,7 @@ constructor(config: BridgeConfig)
 
 ```typescript
 lockAndMint(fromAddress: string, toAddress: string, amount: bigint, privateKey: string): Promise<BridgeTransaction>
-```
+```text
 
 Locks tokens on EVM and mints on Solana.
 
@@ -676,7 +680,7 @@ Locks tokens on EVM and mints on Solana.
 
 ```typescript
 burnAndUnlock(fromAddress: string, toAddress: string, amount: bigint, privateKey: string): Promise<BridgeTransaction>
-```
+```text
 
 Burns tokens on Solana and unlocks on EVM.
 
@@ -693,7 +697,7 @@ Burns tokens on Solana and unlocks on EVM.
 
 ```typescript
 crossChainTransfer(fromChain: BridgeChain, toChain: BridgeChain, fromAddress: string, toAddress: string, amount: bigint, privateKey: string): Promise<BridgeTransaction>
-```
+```text
 
 Performs cross-chain transfer.
 
@@ -712,7 +716,7 @@ Performs cross-chain transfer.
 
 ```typescript
 getTransaction(transactionId: string): BridgeTransaction | undefined
-```
+```text
 
 Gets transaction by ID.
 
@@ -726,7 +730,7 @@ Gets transaction by ID.
 
 ```typescript
 getAllTransactions(): BridgeTransaction[]
-```
+```text
 
 Gets all transactions.
 
@@ -737,7 +741,7 @@ Gets all transactions.
 
 ```typescript
 getTransactionsByStatus(status: BridgeStatus): BridgeTransaction[]
-```
+```text
 
 Gets transactions by status.
 
@@ -751,7 +755,7 @@ Gets transactions by status.
 
 ```typescript
 getTransactionsByChain(chain: BridgeChain): BridgeTransaction[]
-```
+```text
 
 Gets transactions by chain.
 
@@ -765,7 +769,7 @@ Gets transactions by chain.
 
 ```typescript
 subscribeToTransaction(transactionId: string, callback: (tx: BridgeTransaction) => void): void
-```
+```text
 
 Subscribes to transaction updates.
 
@@ -777,7 +781,7 @@ Subscribes to transaction updates.
 
 ```typescript
 unsubscribeFromTransaction(transactionId: string): void
-```
+```text
 
 Unsubscribes from transaction updates.
 
@@ -788,7 +792,7 @@ Unsubscribes from transaction updates.
 
 ```typescript
 getBridgeStatistics(): BridgeStatistics
-```
+```text
 
 Gets bridge statistics.
 
@@ -799,7 +803,7 @@ Gets bridge statistics.
 
 ```typescript
 estimateBridgeFees(fromChain: BridgeChain, toChain: BridgeChain, amount: bigint): Promise<BridgeFees>
-```
+```text
 
 Estimates bridge fees.
 
@@ -821,7 +825,7 @@ enum BridgeChain {
   SOLANA = 'solana',
   BITCOIN = 'bitcoin'
 }
-```
+```text
 
 #### BridgeStatus
 
@@ -833,7 +837,7 @@ enum BridgeStatus {
   FAILED = 'failed',
   EXPIRED = 'expired'
 }
-```
+```text
 
 #### BridgeType
 
@@ -843,7 +847,7 @@ enum BridgeType {
   BURN_AND_UNLOCK = 'burn_and_unlock',
   CROSS_CHAIN_TRANSFER = 'cross_chain_transfer'
 }
-```
+```text
 
 ### Interfaces
 
@@ -866,7 +870,7 @@ interface BridgeTransaction {
   proof?: string;
   metadata?: Record<string, any>;
 }
-```
+```text
 
 #### BridgeConfig
 
@@ -894,7 +898,7 @@ interface BridgeConfig {
     apiKey?: string;
   };
 }
-```
+```text
 
 ## Mining Application (@mycelia/mining-app)
 
@@ -915,13 +919,13 @@ class MiningApplication {
   requestRedemption(sessionId: string, btcAddress: string): Promise<RedeemIntent>;
   shutdown(): Promise<void>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(ipfsConfig: IPFSConfig, supplyLedger: SupplyLedger, mintingFeeds: MintingFeeds)
-```
+```text
 
 **Parameters:**
 - `ipfsConfig` (IPFSConfig): IPFS configuration
@@ -934,7 +938,7 @@ constructor(ipfsConfig: IPFSConfig, supplyLedger: SupplyLedger, mintingFeeds: Mi
 
 ```typescript
 initialize(): Promise<void>
-```
+```text
 
 Initializes the mining application.
 
@@ -942,7 +946,7 @@ Initializes the mining application.
 
 ```typescript
 startMiningSession(minerId: string, requirements?: Partial<ResourceMetrics>): Promise<MiningSession>
-```
+```text
 
 Starts a mining session.
 
@@ -957,7 +961,7 @@ Starts a mining session.
 
 ```typescript
 processContribution(sessionId: string, contribution: ContributionData): Promise<ContributionResult>
-```
+```text
 
 Processes a mining contribution.
 
@@ -972,7 +976,7 @@ Processes a mining contribution.
 
 ```typescript
 stopMiningSession(sessionId: string): Promise<MiningSession>
-```
+```text
 
 Stops a mining session.
 
@@ -986,7 +990,7 @@ Stops a mining session.
 
 ```typescript
 getMiningSession(sessionId: string): MiningSession | undefined
-```
+```text
 
 Gets a mining session.
 
@@ -1000,7 +1004,7 @@ Gets a mining session.
 
 ```typescript
 getAllMiningSessions(): MiningSession[]
-```
+```text
 
 Gets all mining sessions.
 
@@ -1011,7 +1015,7 @@ Gets all mining sessions.
 
 ```typescript
 getMiningStatus(): MiningStatus
-```
+```text
 
 Gets mining status.
 
@@ -1022,7 +1026,7 @@ Gets mining status.
 
 ```typescript
 requestRedemption(sessionId: string, btcAddress: string): Promise<RedeemIntent>
-```
+```text
 
 Requests redemption of mining rewards.
 
@@ -1037,7 +1041,7 @@ Requests redemption of mining rewards.
 
 ```typescript
 shutdown(): Promise<void>
-```
+```text
 
 Shuts down the mining application.
 
@@ -1055,7 +1059,7 @@ interface MiningSession {
   rewardsEarned: bigint;
   status: 'active' | 'completed' | 'failed';
 }
-```
+```text
 
 #### ResourceMetrics
 
@@ -1068,7 +1072,7 @@ interface ResourceMetrics {
   uptime: number;
   lastSeen: number;
 }
-```
+```text
 
 #### ContributionScore
 
@@ -1081,7 +1085,7 @@ interface ContributionScore {
   tier: 1 | 2 | 3;
   multiplier: number;
 }
-```
+```text
 
 ## Wallet Integration (@mycelia/wallet-integration)
 
@@ -1103,7 +1107,7 @@ class EVMWalletManager {
   static isMetaMaskInstalled(): boolean;
   static isCoinbaseInstalled(): boolean;
 }
-```
+```text
 
 #### Methods
 
@@ -1111,7 +1115,7 @@ class EVMWalletManager {
 
 ```typescript
 connectMetaMask(): Promise<WalletState>
-```
+```text
 
 Connects to MetaMask wallet.
 
@@ -1122,7 +1126,7 @@ Connects to MetaMask wallet.
 
 ```typescript
 connectCoinbase(): Promise<WalletState>
-```
+```text
 
 Connects to Coinbase wallet.
 
@@ -1133,7 +1137,7 @@ Connects to Coinbase wallet.
 
 ```typescript
 disconnect(): Promise<void>
-```
+```text
 
 Disconnects the wallet.
 
@@ -1141,7 +1145,7 @@ Disconnects the wallet.
 
 ```typescript
 getState(): WalletState
-```
+```text
 
 Gets the current wallet state.
 
@@ -1152,7 +1156,7 @@ Gets the current wallet state.
 
 ```typescript
 getBloomBalance(): Promise<bigint>
-```
+```text
 
 Gets BLOOM token balance.
 
@@ -1163,7 +1167,7 @@ Gets BLOOM token balance.
 
 ```typescript
 getBloomBalanceInBtc(): Promise<number>
-```
+```text
 
 Gets BLOOM balance in BTC equivalent.
 
@@ -1174,7 +1178,7 @@ Gets BLOOM balance in BTC equivalent.
 
 ```typescript
 sendBloom(to: string, amount: bigint): Promise<string>
-```
+```text
 
 Sends BLOOM tokens.
 
@@ -1189,7 +1193,7 @@ Sends BLOOM tokens.
 
 ```typescript
 addEventListener(listener: WalletEventListener): void
-```
+```text
 
 Adds event listener.
 
@@ -1200,7 +1204,7 @@ Adds event listener.
 
 ```typescript
 removeEventListener(listener: WalletEventListener): void
-```
+```text
 
 Removes event listener.
 
@@ -1211,7 +1215,7 @@ Removes event listener.
 
 ```typescript
 static isMetaMaskInstalled(): boolean
-```
+```text
 
 Checks if MetaMask is installed.
 
@@ -1222,7 +1226,7 @@ Checks if MetaMask is installed.
 
 ```typescript
 static isCoinbaseInstalled(): boolean
-```
+```text
 
 Checks if Coinbase wallet is installed.
 
@@ -1249,7 +1253,7 @@ class SolanaWalletManager {
   static isSolflareInstalled(): boolean;
   static isBackpackInstalled(): boolean;
 }
-```
+```text
 
 #### Methods
 
@@ -1257,7 +1261,7 @@ class SolanaWalletManager {
 
 ```typescript
 connectPhantom(): Promise<WalletState>
-```
+```text
 
 Connects to Phantom wallet.
 
@@ -1268,7 +1272,7 @@ Connects to Phantom wallet.
 
 ```typescript
 connectSolflare(): Promise<WalletState>
-```
+```text
 
 Connects to Solflare wallet.
 
@@ -1279,7 +1283,7 @@ Connects to Solflare wallet.
 
 ```typescript
 connectBackpack(): Promise<WalletState>
-```
+```text
 
 Connects to Backpack wallet.
 
@@ -1290,7 +1294,7 @@ Connects to Backpack wallet.
 
 ```typescript
 disconnect(): Promise<void>
-```
+```text
 
 Disconnects the wallet.
 
@@ -1298,7 +1302,7 @@ Disconnects the wallet.
 
 ```typescript
 getState(): WalletState
-```
+```text
 
 Gets the current wallet state.
 
@@ -1309,7 +1313,7 @@ Gets the current wallet state.
 
 ```typescript
 getBloomBalance(): Promise<bigint>
-```
+```text
 
 Gets BLOOM token balance.
 
@@ -1320,7 +1324,7 @@ Gets BLOOM token balance.
 
 ```typescript
 getBloomBalanceInBtc(): Promise<number>
-```
+```text
 
 Gets BLOOM balance in BTC equivalent.
 
@@ -1331,7 +1335,7 @@ Gets BLOOM balance in BTC equivalent.
 
 ```typescript
 sendBloom(to: PublicKey, amount: bigint): Promise<string>
-```
+```text
 
 Sends BLOOM tokens.
 
@@ -1346,7 +1350,7 @@ Sends BLOOM tokens.
 
 ```typescript
 addEventListener(listener: WalletEventListener): void
-```
+```text
 
 Adds event listener.
 
@@ -1357,7 +1361,7 @@ Adds event listener.
 
 ```typescript
 removeEventListener(listener: WalletEventListener): void
-```
+```text
 
 Removes event listener.
 
@@ -1368,7 +1372,7 @@ Removes event listener.
 
 ```typescript
 static isPhantomInstalled(): boolean
-```
+```text
 
 Checks if Phantom is installed.
 
@@ -1379,7 +1383,7 @@ Checks if Phantom is installed.
 
 ```typescript
 static isSolflareInstalled(): boolean
-```
+```text
 
 Checks if Solflare is installed.
 
@@ -1390,7 +1394,7 @@ Checks if Solflare is installed.
 
 ```typescript
 static isBackpackInstalled(): boolean
-```
+```text
 
 Checks if Backpack is installed.
 
@@ -1417,13 +1421,13 @@ class CrossChainWalletManager {
   addEventListener(listener: WalletEventListener): void;
   removeEventListener(listener: WalletEventListener): void;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(sdkConfig?: MyceliaSDKConfig, bridgeConfig?: BridgeConfig)
-```
+```text
 
 **Parameters:**
 - `sdkConfig` (MyceliaSDKConfig): SDK configuration
@@ -1435,7 +1439,7 @@ constructor(sdkConfig?: MyceliaSDKConfig, bridgeConfig?: BridgeConfig)
 
 ```typescript
 connectEVM(walletType: WalletType): Promise<WalletState>
-```
+```text
 
 Connects EVM wallet.
 
@@ -1449,7 +1453,7 @@ Connects EVM wallet.
 
 ```typescript
 connectSolana(walletType: WalletType): Promise<WalletState>
-```
+```text
 
 Connects Solana wallet.
 
@@ -1463,7 +1467,7 @@ Connects Solana wallet.
 
 ```typescript
 disconnectEVM(): Promise<void>
-```
+```text
 
 Disconnects EVM wallet.
 
@@ -1471,7 +1475,7 @@ Disconnects EVM wallet.
 
 ```typescript
 disconnectSolana(): Promise<void>
-```
+```text
 
 Disconnects Solana wallet.
 
@@ -1479,7 +1483,7 @@ Disconnects Solana wallet.
 
 ```typescript
 disconnectAll(): Promise<void>
-```
+```text
 
 Disconnects all wallets.
 
@@ -1487,7 +1491,7 @@ Disconnects all wallets.
 
 ```typescript
 getState(): CrossChainWalletState
-```
+```text
 
 Gets cross-chain wallet state.
 
@@ -1498,7 +1502,7 @@ Gets cross-chain wallet state.
 
 ```typescript
 getTotalBloomBalance(): Promise<bigint>
-```
+```text
 
 Gets total BLOOM balance across chains.
 
@@ -1509,7 +1513,7 @@ Gets total BLOOM balance across chains.
 
 ```typescript
 getTotalBloomBalanceInBtc(): Promise<number>
-```
+```text
 
 Gets total BLOOM balance in BTC equivalent.
 
@@ -1520,7 +1524,7 @@ Gets total BLOOM balance in BTC equivalent.
 
 ```typescript
 crossChainTransfer(fromChain: BridgeChain, toChain: BridgeChain, toAddress: string, amount: bigint): Promise<string>
-```
+```text
 
 Performs cross-chain transfer.
 
@@ -1537,7 +1541,7 @@ Performs cross-chain transfer.
 
 ```typescript
 getAvailableWallets(): WalletInfo[]
-```
+```text
 
 Gets available wallets.
 
@@ -1548,7 +1552,7 @@ Gets available wallets.
 
 ```typescript
 addEventListener(listener: WalletEventListener): void
-```
+```text
 
 Adds event listener.
 
@@ -1559,7 +1563,7 @@ Adds event listener.
 
 ```typescript
 removeEventListener(listener: WalletEventListener): void
-```
+```text
 
 Removes event listener.
 
@@ -1579,7 +1583,7 @@ enum WalletType {
   COINBASE = 'coinbase',
   WALLETCONNECT = 'walletconnect'
 }
-```
+```text
 
 #### WalletStatus
 
@@ -1590,7 +1594,7 @@ enum WalletStatus {
   CONNECTED = 'connected',
   ERROR = 'error'
 }
-```
+```text
 
 ### Interfaces
 
@@ -1606,7 +1610,7 @@ interface WalletState {
   error?: string;
   connectedAt?: number;
 }
-```
+```text
 
 #### CrossChainWalletState
 
@@ -1616,7 +1620,7 @@ interface CrossChainWalletState {
   solana: WalletState;
   bridge?: CrossChainBridge;
 }
-```
+```text
 
 #### WalletInfo
 
@@ -1628,7 +1632,7 @@ interface WalletInfo {
   installed: boolean;
   supported: boolean;
 }
-```
+```text
 
 #### WalletEventListener
 
@@ -1638,7 +1642,7 @@ type WalletEventListener = (event: {
   wallet: WalletType;
   data?: any;
 }) => void;
-```
+```text
 
 ## Bloom Contracts (@mycelia/bloom-contracts)
 
@@ -1666,13 +1670,13 @@ class BloomTokenEVM {
   bloomToSats(bloomAmount: bigint): Promise<bigint>;
   satsToBloom(sats: bigint): Promise<bigint>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(contractAddress: string, signer: MyceliaEVMSigner)
-```
+```text
 
 **Parameters:**
 - `contractAddress` (string): Contract address
@@ -1684,7 +1688,7 @@ constructor(contractAddress: string, signer: MyceliaEVMSigner)
 
 ```typescript
 name(): Promise<string>
-```
+```text
 
 Gets token name.
 
@@ -1695,7 +1699,7 @@ Gets token name.
 
 ```typescript
 symbol(): Promise<string>
-```
+```text
 
 Gets token symbol.
 
@@ -1706,7 +1710,7 @@ Gets token symbol.
 
 ```typescript
 decimals(): Promise<number>
-```
+```text
 
 Gets token decimals.
 
@@ -1717,7 +1721,7 @@ Gets token decimals.
 
 ```typescript
 totalSupply(): Promise<bigint>
-```
+```text
 
 Gets total supply.
 
@@ -1728,7 +1732,7 @@ Gets total supply.
 
 ```typescript
 balanceOf(address: string): Promise<bigint>
-```
+```text
 
 Gets balance of address.
 
@@ -1742,7 +1746,7 @@ Gets balance of address.
 
 ```typescript
 transfer(to: string, amount: bigint): Promise<ethers.ContractTransactionResponse>
-```
+```text
 
 Transfers tokens.
 
@@ -1757,7 +1761,7 @@ Transfers tokens.
 
 ```typescript
 approve(spender: string, amount: bigint): Promise<ethers.ContractTransactionResponse>
-```
+```text
 
 Approves spender.
 
@@ -1772,7 +1776,7 @@ Approves spender.
 
 ```typescript
 allowance(owner: string, spender: string): Promise<bigint>
-```
+```text
 
 Gets allowance.
 
@@ -1787,7 +1791,7 @@ Gets allowance.
 
 ```typescript
 transferFrom(from: string, to: string, amount: bigint): Promise<ethers.ContractTransactionResponse>
-```
+```text
 
 Transfers from address.
 
@@ -1803,7 +1807,7 @@ Transfers from address.
 
 ```typescript
 mint(to: string, amount: bigint, reason: string): Promise<ethers.ContractTransactionResponse>
-```
+```text
 
 Mints tokens.
 
@@ -1819,7 +1823,7 @@ Mints tokens.
 
 ```typescript
 burn(amount: bigint): Promise<ethers.ContractTransactionResponse>
-```
+```text
 
 Burns tokens.
 
@@ -1833,7 +1837,7 @@ Burns tokens.
 
 ```typescript
 burnFrom(from: string, amount: bigint, reason: string): Promise<ethers.ContractTransactionResponse>
-```
+```text
 
 Burns tokens from address.
 
@@ -1849,7 +1853,7 @@ Burns tokens from address.
 
 ```typescript
 getSupplyStats(): Promise<SupplyStats>
-```
+```text
 
 Gets supply statistics.
 
@@ -1860,7 +1864,7 @@ Gets supply statistics.
 
 ```typescript
 getPegStatement(): Promise<string>
-```
+```text
 
 Gets peg statement.
 
@@ -1871,7 +1875,7 @@ Gets peg statement.
 
 ```typescript
 bloomToSats(bloomAmount: bigint): Promise<bigint>
-```
+```text
 
 Converts BLOOM to satoshis.
 
@@ -1885,7 +1889,7 @@ Converts BLOOM to satoshis.
 
 ```typescript
 satsToBloom(sats: bigint): Promise<bigint>
-```
+```text
 
 Converts satoshis to BLOOM.
 
@@ -1910,13 +1914,13 @@ class BloomTokenSolana {
   getPegInfo(): Promise<PegInfo>;
   getMintData(): Promise<MintData>;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(program: Program, mintData: PublicKey, mint: PublicKey)
-```
+```text
 
 **Parameters:**
 - `program` (Program): Anchor program
@@ -1929,7 +1933,7 @@ constructor(program: Program, mintData: PublicKey, mint: PublicKey)
 
 ```typescript
 initializeBloomMint(name: string, symbol: string, decimals: number): Promise<string>
-```
+```text
 
 Initializes BLOOM token mint.
 
@@ -1945,7 +1949,7 @@ Initializes BLOOM token mint.
 
 ```typescript
 setMintGuard(mintGuard: PublicKey): Promise<string>
-```
+```text
 
 Sets mint guard.
 
@@ -1959,7 +1963,7 @@ Sets mint guard.
 
 ```typescript
 setReserveFeed(reserveFeed: PublicKey): Promise<string>
-```
+```text
 
 Sets reserve feed.
 
@@ -1973,7 +1977,7 @@ Sets reserve feed.
 
 ```typescript
 mintBloom(to: PublicKey, amount: bigint, reason: string): Promise<string>
-```
+```text
 
 Mints BLOOM tokens.
 
@@ -1989,7 +1993,7 @@ Mints BLOOM tokens.
 
 ```typescript
 burnBloom(from: PublicKey, amount: bigint, reason: string): Promise<string>
-```
+```text
 
 Burns BLOOM tokens.
 
@@ -2005,7 +2009,7 @@ Burns BLOOM tokens.
 
 ```typescript
 getPegInfo(): Promise<PegInfo>
-```
+```text
 
 Gets peg information.
 
@@ -2016,7 +2020,7 @@ Gets peg information.
 
 ```typescript
 getMintData(): Promise<MintData>
-```
+```text
 
 Gets mint data.
 
@@ -2034,7 +2038,7 @@ class ContractDeployment {
   static deployMiningRewardsEVM(signer: MyceliaEVMSigner, bloomTokenAddress: string, mintGuardAddress: string): Promise<{contract: MiningRewardsEVM; address: string}>;
   static deployBloomTokenSolana(provider: AnchorProvider, idl: any): Promise<{program: Program; mintData: PublicKey; mint: PublicKey}>;
 }
-```
+```text
 
 #### Methods
 
@@ -2042,7 +2046,7 @@ class ContractDeployment {
 
 ```typescript
 static deployBloomTokenEVM(signer: MyceliaEVMSigner, name: string, symbol: string, maxSupply: bigint): Promise<{contract: BloomTokenEVM; address: string}>
-```
+```text
 
 Deploys BLOOM token contract on EVM.
 
@@ -2059,7 +2063,7 @@ Deploys BLOOM token contract on EVM.
 
 ```typescript
 static deployMintGuardEVM(signer: MyceliaEVMSigner, bloomTokenAddress: string, reserveFeedAddress: string): Promise<{contract: MintGuardEVM; address: string}>
-```
+```text
 
 Deploys mint guard contract on EVM.
 
@@ -2075,7 +2079,7 @@ Deploys mint guard contract on EVM.
 
 ```typescript
 static deployMiningRewardsEVM(signer: MyceliaEVMSigner, bloomTokenAddress: string, mintGuardAddress: string): Promise<{contract: MiningRewardsEVM; address: string}>
-```
+```text
 
 Deploys mining rewards contract on EVM.
 
@@ -2091,7 +2095,7 @@ Deploys mining rewards contract on EVM.
 
 ```typescript
 static deployBloomTokenSolana(provider: AnchorProvider, idl: any): Promise<{program: Program; mintData: PublicKey; mint: PublicKey}>
-```
+```text
 
 Deploys BLOOM token program on Solana.
 
@@ -2113,7 +2117,7 @@ interface SupplyStats {
   totalBurned: bigint;
   maxSupply: bigint;
 }
-```
+```text
 
 #### PegInfo
 
@@ -2123,7 +2127,7 @@ interface PegInfo {
   satsPerBloom: bigint;
   pegStatement: string;
 }
-```
+```text
 
 #### MintData
 
@@ -2139,7 +2143,7 @@ interface MintData {
   mintGuard: PublicKey;
   reserveFeed: PublicKey;
 }
-```
+```text
 
 ## Shared Kernel (@mycelia/shared-kernel)
 
@@ -2156,7 +2160,7 @@ class SupplyLedger {
   getBurnHistory(): Array<{amount: bigint; timestamp: number}>;
   reset(): void;
 }
-```
+```text
 
 #### Methods
 
@@ -2164,7 +2168,7 @@ class SupplyLedger {
 
 ```typescript
 currentSupply(): bigint
-```
+```text
 
 Gets current supply.
 
@@ -2175,7 +2179,7 @@ Gets current supply.
 
 ```typescript
 recordMint(amount: bigint): void
-```
+```text
 
 Records mint operation.
 
@@ -2186,7 +2190,7 @@ Records mint operation.
 
 ```typescript
 recordBurn(amount: bigint): void
-```
+```text
 
 Records burn operation.
 
@@ -2197,7 +2201,7 @@ Records burn operation.
 
 ```typescript
 getMintHistory(): Array<{amount: bigint; timestamp: number}>
-```
+```text
 
 Gets mint history.
 
@@ -2208,7 +2212,7 @@ Gets mint history.
 
 ```typescript
 getBurnHistory(): Array<{amount: bigint; timestamp: number}>
-```
+```text
 
 Gets burn history.
 
@@ -2219,7 +2223,7 @@ Gets burn history.
 
 ```typescript
 reset(): void
-```
+```text
 
 Resets the ledger.
 
@@ -2235,13 +2239,13 @@ class StaticReserveFeed implements ReserveFeed {
   getLockedBtcSats(): Promise<bigint>;
   setLockedBtcSats(sats: bigint): void;
 }
-```
+```text
 
 #### Constructor
 
 ```typescript
 constructor(initialLockedSats: bigint)
-```
+```text
 
 **Parameters:**
 - `initialLockedSats` (bigint): Initial locked satoshis
@@ -2252,7 +2256,7 @@ constructor(initialLockedSats: bigint)
 
 ```typescript
 getLockedBtcSats(): Promise<bigint>
-```
+```text
 
 Gets locked BTC satoshis.
 
@@ -2263,7 +2267,7 @@ Gets locked BTC satoshis.
 
 ```typescript
 setLockedBtcSats(sats: bigint): void
-```
+```text
 
 Sets locked BTC satoshis.
 
@@ -2278,7 +2282,7 @@ Mock SPV proof feed.
 class MockSpvProofFeed implements ReserveFeed {
   getLockedBtcSats(): Promise<bigint>;
 }
-```
+```text
 
 #### Methods
 
@@ -2286,7 +2290,7 @@ class MockSpvProofFeed implements ReserveFeed {
 
 ```typescript
 getLockedBtcSats(): Promise<bigint>
-```
+```text
 
 Gets locked BTC satoshis (mock implementation).
 
@@ -2299,7 +2303,7 @@ Composes reserve feeds with fallback.
 
 ```typescript
 function composeReserveFeed(primary: ReserveFeed, fallback: ReserveFeed): ReserveFeed
-```
+```text
 
 **Parameters:**
 - `primary` (ReserveFeed): Primary feed
